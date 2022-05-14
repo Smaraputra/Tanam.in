@@ -10,6 +10,36 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Tanamin">
         <activity
+            android:name=".view.futurefeature.FutureFeatureActivity"
+            android:exported="true" />
+        <activity
+            android:name=".view.register.RegisterActivity"
+            android:exported="true" />
+        <activity
+            android:name=".view.profileedit.ProfileEditActivity"
+            android:exported="true" />
+        <activity
+            android:name=".view.login.LoginActivity"
+            android:exported="true" />
+        <activity
+            android:name=".view.forumresult.ForumResultActivity"
+            android:exported="true" />
+        <activity
+            android:name=".view.forumcreate.ForumCreateActivity"
+            android:exported="true" />
+        <activity
+            android:name=".view.detectionresult.DetectionResultActivity"
+            android:exported="true" />
+        <activity
+            android:name=".view.classmodule.ClassModuleActivity"
+            android:exported="true" />
+        <activity
+            android:name=".view.classfinished.ClassFinishedActivity"
+            android:exported="true" />
+        <activity
+            android:name=".view.classdetail.ClassDetailActivity"
+            android:exported="true" />
+        <activity
             android:name=".view.MainActivity"
             android:exported="true" />
         <activity
