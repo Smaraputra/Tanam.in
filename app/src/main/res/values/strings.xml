@@ -3,4 +3,5 @@
     <string name="app_logo_splash">App Logo Splash</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="detail_kelas_title">Detail Kelas</string>
 </resources>

@@ -3,8 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/activity_detection.xml" value="0.22871376811594202" />
-        <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/activity_splash_screen.xml" value="0.22708333333333333" />
+        <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/layout/activity_class_detail.xml" value="0.22" />
+        <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/layout/fragment_classes.xml" value="0.14130434782608695" />
+        <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/layout/fragment_forum.xml" value="0.14130434782608695" />
+        <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/layout/fragment_silabus.xml" value="0.22" />
+        <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/layout/viewholder_class_detail.xml" value="0.22" />
       </map>
     </option>
   </component>
