@@ -16,13 +16,19 @@
     <string name="don_t_have_an_account_sign_up">Belum memiliki akun? Daftar disini</string>
     <string name="login">Masuk</string>
     <string name="password">Kata Sandi</string>
-
+    <string name="register_button_text">Daftar</string>
     <string name="already_have_an_account_sign_in">Sudah memiliki akun? Masuk disini</string>
     <string name="greetings">Salam!</string>
     <string name="fill_this_form_to_create_your_new_account">Silahkan isi form ini untuk membuat akun baru.</string>
     <string name="register_welcome_image">Gambar Awal Pendaftaran</string>
     <string name="name_register">Nama</string>
-    <string name="register_button_text">Daftar</string>
+
+
+    <string name="class_detail_title">Detail Kelas</string>
+    <string name="class_detail_tablayouttext1">Silabus</string>
+    <string name="class_detail_tablayouttext2">Forum</string>
+    <string name="class_detail_button_text">Mulai Belajar</string>
+
 
     <string name="hello_blank_fragment">hello_blank_fragment</string>
 
