@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:text="Hai, Patara"
+        android:text="@string/name_home"
         android:textColor="@color/grey_soft"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -128,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:text="Kelas Menanam Cabai"
+                    android:text="@string/no_data"
                     android:textColor="@color/green_soft"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -155,7 +155,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="Masa Panen Cabai"
+                    android:text="@string/no_data"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -178,45 +178,46 @@
                     app:layout_constraintStart_toEndOf="@+id/classImage"
                     tools:text="70%" />
 
-                <Button
+                <TextView
                     android:id="@+id/button2"
                     android:layout_width="80dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
+                    android:background="@drawable/fake_button"
+                    android:gravity="center"
                     android:text="@string/continue_text"
-                    android:textAllCaps="false"
-                    android:textSize="11sp"
-                    app:cornerRadius="5dp"
+                    android:textColor="@color/grey_soft"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
-        <ImageView
+        <ImageButton
             android:id="@+id/marketplace"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="12dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/marketplace"
             android:src="@drawable/ic_logo_marketplace"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardView"
-            android:contentDescription="@string/marketplace" />
+            app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/encyclopedia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="12dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/encyclopedia"
             android:src="@drawable/ic_logo_encyclopedia"
             app:layout_constraintStart_toEndOf="@+id/marketplace"
-            app:layout_constraintTop_toBottomOf="@+id/cardView"
-            android:contentDescription="@string/encyclopedia" />
+            app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

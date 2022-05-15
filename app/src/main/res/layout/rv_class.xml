@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
-    android:layout_marginTop="10dp"
     android:layout_marginRight="10dp"
+    android:layout_marginBottom="10dp"
     android:padding="10dp"
     app:cardCornerRadius="10dp">
 
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:text="Kelas Menanam Cabai"
+            android:text="@string/no_data"
             android:textColor="@color/green_soft"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Masa Panen Cabai"
+            android:text="@string/no_data"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -86,18 +86,17 @@
             app:layout_constraintStart_toEndOf="@+id/classImage"
             tools:text="70%" />
 
-        <Button
-            android:id="@+id/button2"
+        <TextView
+            android:id="@+id/button3"
             android:layout_width="80dp"
             android:layout_height="24dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
+            android:background="@drawable/fake_button"
+            android:gravity="center"
             android:text="@string/continue_text"
-            android:textAllCaps="false"
-            android:textSize="11sp"
-            app:cornerRadius="5dp"
+            android:textColor="@color/grey_soft"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
