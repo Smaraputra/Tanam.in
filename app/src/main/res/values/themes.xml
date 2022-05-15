@@ -10,12 +10,4 @@
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
         <item name="android:windowSharedElementsUseOverlay">false</item>
     </style>
-    <style name="TextTabLayout" parent="Base.Widget.Design.TabLayout">
-        <item name="android:textSize">12sp</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textStyle">bold</item>
-        <item name="tabPaddingEnd">12dp</item>
-        <item name="tabTextColor">#80757575</item>
-        <item name="tabSelectedTextColor">#757575</item>
-    </style>
 </resources>

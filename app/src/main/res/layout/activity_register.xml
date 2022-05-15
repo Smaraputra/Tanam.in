@@ -7,6 +7,17 @@
     tools:context=".view.register.RegisterActivity">
 
     <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:contentDescription="@string/background_logo"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_background_logo" />
+
+    <ImageView
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="250dp"
@@ -148,11 +159,12 @@
         <Button
             android:id="@+id/registerButton"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="4dp"
             android:background="@drawable/button_background"
+            android:enabled="false"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:text="@string/register_button_text"

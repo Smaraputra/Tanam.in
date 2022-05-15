@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_baseline_home_24"
+        android:title="@string/home_nav" />
+    <item
+        android:id="@+id/navigation_class"
+        android:icon="@drawable/ic_baseline_menu_book_24"
+        android:title="@string/class_nav" />
+    <item
+        android:id="@+id/navigation_detection"
+        android:icon="@drawable/ic_baseline_camera_24"
+        android:title="@string/detection_nav" />
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_baseline_account_circle_24"
+        android:title="@string/profile_nav" />
+</menu>

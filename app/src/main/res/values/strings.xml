@@ -31,5 +31,18 @@
 
 
     <string name="hello_blank_fragment">hello_blank_fragment</string>
+    <string name="class_nav">Kelas</string>
+    <string name="home_nav">Home</string>
+    <string name="detection_nav">Deteksi</string>
+    <string name="profile_nav">Profil</string>
+    <string name="home_message">Apa kabar mu hari ini?</string>
+    <string name="home_illustration">Ilustrasi Halaman Home</string>
+    <string name="continue_title">Lanjutkan dari :</string>
+    <string name="fast_access">Akses Cepat</string>
+    <string name="marketplace">Marketplace Button</string>
+    <string name="encyclopedia">Encyclopedia Button</string>
+    <string name="continue_text">Lanjut</string>
+    <string name="class_illustration">Class Illustration</string>
+    <string name="classes_message">Mau belajar apa hari ini?</string>
 
 </resources>
