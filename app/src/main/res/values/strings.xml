@@ -1,6 +1,29 @@
 <resources>
     <string name="app_name">Tanam.in</string>
     <string name="app_logo_splash">App Logo Splash</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="email_input">Silahkan masukan alamat email anda.</string>
+    <string name="email_error">Alamat email salah.</string>
+    <string name="pass_input">Silahkan masukkan kata sandi anda.</string>
+    <string name="pass_error">Kata sandi tidak boleh kurang dari 6 karakter.</string>
+    <string name="name_input">Silahkan masukan nama anda.</string>
+    <string name="name_error">Nama tidak boleh lebih dari 30 karakter.</string>
+    <string name="background_logo">Latar Belakang Logo</string>
+    <string name="app_logo">Logo Aplikasi</string>
+    <string name="welcome_login">Selamat datang!</string>
+    <string name="please_use_your_own_account_to_enter">Silahkan gunakan akun anda untuk masuk.</string>
+    <string name="email_address">Alamat Email</string>
+    <string name="don_t_have_an_account_sign_up">Belum memiliki akun? Daftar disini</string>
+    <string name="login">Masuk</string>
+    <string name="password">Kata Sandi</string>
+
+    <string name="already_have_an_account_sign_in">Sudah memiliki akun? Masuk disini</string>
+    <string name="greetings">Salam!</string>
+    <string name="fill_this_form_to_create_your_new_account">Silahkan isi form ini untuk membuat akun baru.</string>
+    <string name="register_welcome_image">Gambar Awal Pendaftaran</string>
+    <string name="name_register">Nama</string>
+    <string name="register_button_text">Daftar</string>
+
+    <string name="hello_blank_fragment">hello_blank_fragment</string>
+
 </resources>
