@@ -21,20 +21,22 @@
     <string name="greetings">Salam!</string>
     <string name="fill_this_form_to_create_your_new_account">Silahkan isi form ini untuk membuat akun baru.</string>
     <string name="register_welcome_image">Gambar Awal Pendaftaran</string>
-    <string name="name_register">Nama</string>
-
+    <string name="name_register">Nama Lengkap</string>
 
     <string name="class_detail_title">Detail Kelas</string>
     <string name="class_detail_tablayouttext1">Silabus</string>
     <string name="class_detail_tablayouttext2">Forum</string>
-    <string name="class_detail_button_text">Mulai Belajar</string>
-
+    <string name="class_detail_silabus_button_text">Mulai Belajar</string>
+    <string name="class_detail_forum_button_text">Mulai Bertanya</string>
 
     <string name="hello_blank_fragment">hello_blank_fragment</string>
+
     <string name="class_nav">Kelas</string>
     <string name="home_nav">Home</string>
     <string name="detection_nav">Deteksi</string>
     <string name="profile_nav">Profil</string>
+
+    <string name="name_home">Hai,</string>
     <string name="home_message">Apa kabar mu hari ini?</string>
     <string name="home_illustration">Ilustrasi Halaman Home</string>
     <string name="continue_title">Lanjutkan dari :</string>
@@ -42,7 +44,39 @@
     <string name="marketplace">Marketplace Button</string>
     <string name="encyclopedia">Encyclopedia Button</string>
     <string name="continue_text">Lanjut</string>
+
     <string name="class_illustration">Class Illustration</string>
     <string name="classes_message">Mau belajar apa hari ini?</string>
+    <string name="module_next_button_text">Selanjutnya</string>
+    <string name="module_prev_button_text">Sebelumnya</string>
+    <string name="future_feature_text">Fitur Masa Depan</string>
+    <string name="future_feature_desc">Fitur dalam masa pengembangan</string>
+    <string name="read_more">Baca Selengkapnya</string>
+    <string name="nutritional_information_text">Informasi Gizi</string>
+    <string name="nutritional_content">Kandungan</string>
+    <string name="nutritional_benefit">Benefit</string>
+    <string name="edit_profile_text">Ubah Data Diri</string>
+    <string name="edit_profile_fullname">Nama Lengkap</string>
+    <string name="edit_profile_fullname_hint">Nama lengkap Anda</string>
+    <string name="edit_profile_age">Umur</string>
+    <string name="edit_profile_age_hint">Umur Anda</string>
+    <string name="edit_profile_address">Alamat</string>
+    <string name="edit_profile_address_hint">Alamat Anda</string>
+    <string name="edit_profile_save_button">Simpan</string>
+
+    <string name="take_picture_button">Ambil Gambar</string>
+    <string name="flip_camera_button">Balik Kamera</string>
+
+    <string name="statistic_title">Statistik</string>
+    <string name="class_finished">Class Finished Icon</string>
+    <string name="class_process">Class Process Icon</string>
+    <string name="profile_information_title">Data Diri</string>
+    <string name="age_title_profile">Umur</string>
+    <string name="address_title_profile">Alamat Rumah</string>
+    <string name="no_data">Tidak ada data</string>
+    <string name="change_profile">Ubah Data</string>
+    <string name="zero_process">0 Proses</string>
+    <string name="zero_finished">0 Selesai</string>
+    <string name="logout_button">Logout Button</string>
 
 </resources>

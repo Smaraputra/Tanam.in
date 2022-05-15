@@ -1,5 +1,6 @@
 package id.capstone.tanamin.view.classdetail
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.annotation.StringRes
@@ -8,6 +9,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import id.capstone.tanamin.R
 import id.capstone.tanamin.databinding.ActivityClassDetailBinding
+import id.capstone.tanamin.view.classmodule.ClassModuleActivity
 
 class ClassDetailActivity : AppCompatActivity() {
     private var _binding: ActivityClassDetailBinding?=null
@@ -17,6 +19,7 @@ class ClassDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         _binding= ActivityClassDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
         val sectionsPagerAdapter = ViewPagerAdapter(this)
         val viewPager: ViewPager2 = binding.viewPager
@@ -25,6 +28,11 @@ class ClassDetailActivity : AppCompatActivity() {
         TabLayoutMediator(tabs, viewPager) { tab, position ->
             tab.text = resources.getString(TAB_TITLES[position])
         }.attach()
+
+        binding.btnStartLearn.setOnClickListener {
+            val intent = Intent(this, ClassModuleActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     companion object {
