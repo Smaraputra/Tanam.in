@@ -78,5 +78,17 @@
     <string name="zero_process">0 Proses</string>
     <string name="zero_finished">0 Selesai</string>
     <string name="logout_button">Logout Button</string>
+    <string name="onboarding_item_1">Gambar Onboarding 1</string>
+    <string name="onboarding_item_2">Gambar Onboarding 2</string>
+    <string name="onboarding_item_3">Gambar Onboarding 3</string>
+    <string name="app_logo_onboarding">App Logo Onboarding</string>
+    <string name="learn_easy">Belajar Tanpa Hambatan</string>
+    <string name="learn_easy_content">Belajar dari manapun dan kapanpun melalui internet.</string>
+    <string name="learn_from_others">Dapatkan dan Berikan Bantuan</string>
+    <string name="learn_from_others_content">Bantu orang lain dan dapat bantuan belajar.</string>
+    <string name="get_started">Mulai</string>
+    <string name="build_community">Bangun Komunitas</string>
+    <string name="build_community_content">Bangun komunitas belajar yang aman dan nyaman.</string>
+
 
 </resources>
