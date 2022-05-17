@@ -6,7 +6,7 @@
         <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/drawable/list_background.xml" value="0.1805" />
         <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/drawable/loading_background.xml" value="0.192" />
         <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/drawable/login_register_background.xml" value="0.1805" />
-        <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/layout/activity_class_detail.xml" value="0.14666666666666667" />
+        <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/layout/activity_class_detail.xml" value="0.13333333333333333" />
         <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/layout/activity_class_finished.xml" value="0.16666666666666666" />
         <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/layout/activity_class_module.xml" value="0.22" />
         <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/layout/activity_forum_create.xml" value="0.1" />
@@ -16,6 +16,9 @@
         <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/layout/activity_on_boarding.xml" value="0.14666666666666667" />
         <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/layout/activity_profile_edit.xml" value="0.16666666666666666" />
         <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/layout/fragment_home.xml" value="0.1" />
+        <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/layout/rv_class.xml" value="0.18385416666666668" />
+        <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/layout/slider_item.xml" value="0.18385416666666668" />
+        <entry key="..\:/KULIAH/Bangkit/Capstone/Tanamin/app/src/main/res/layout/viewholder_class_detail_forum.xml" value="0.1" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable-v24/ic_background_logo.xml" value="0.246875" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable-v24/ic_baseline_access_time_24.xml" value="0.3111111111111111" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable-v24/ic_baseline_close_24.xml" value="0.3111111111111111" />

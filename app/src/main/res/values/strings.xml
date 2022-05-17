@@ -108,4 +108,5 @@
     <string name="profil_button_text">Profil</string>
     <string name="finished_class_desc">Anda telah berhasil menyelesaikan</string>
     <string name="finished_class_illustration">Finished Class Illustration</string>
+    <string name="image_slider_item">Gambar Kelas</string>
 </resources>

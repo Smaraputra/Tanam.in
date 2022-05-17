@@ -1,15 +1,18 @@
 package id.capstone.tanamin.view.classdetail
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import id.capstone.tanamin.R
+import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType
+import com.smarteist.autoimageslider.SliderAnimations
+import com.smarteist.autoimageslider.SliderView
 import id.capstone.tanamin.databinding.ActivityClassDetailBinding
 import id.capstone.tanamin.view.classmodule.ClassModuleActivity
+import id.capstone.tanamin.R
 
 class ClassDetailActivity : AppCompatActivity() {
     private var _binding: ActivityClassDetailBinding?=null
@@ -29,6 +32,11 @@ class ClassDetailActivity : AppCompatActivity() {
             tab.text = resources.getString(TAB_TITLES[position])
         }.attach()
 
+        val sliderView = findViewById<SliderView>(R.id.imageSlider)
+
+        val adapter = SliderAdapter(this)
+        sliderView.setSliderAdapter(adapter)
+        sliderView.startAutoCycle()
         binding.btnStartLearn.setOnClickListener {
             val intent = Intent(this, ClassModuleActivity::class.java)
             startActivity(intent)
