@@ -25,7 +25,8 @@
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
-            card_view:srcCompat="@drawable/ic_question_answer" />
+            card_view:srcCompat="@drawable/ic_question_answer"
+            android:contentDescription="@string/module_icon" />
 
         <TextView
             android:id="@+id/tvForumTitle"

@@ -28,7 +28,8 @@ tools:context=".view.detectionresult.DetectionResultActivity">
     app:layout_constraintBottom_toBottomOf="@+id/tvDetectionResultTitle"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="@+id/tvDetectionResultTitle"
-    app:srcCompat="@drawable/ic_back_arrow" />
+    app:srcCompat="@drawable/ic_back_arrow"
+    android:contentDescription="@string/back_button_action_bar" />
 
 
 <com.google.android.material.imageview.ShapeableImageView

@@ -17,42 +17,68 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".view.onboarding.OnBoardingActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"
             android:exported="true" />
         <activity
             android:name=".view.futurefeature.FutureFeatureActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"
             android:exported="true" />
         <activity
             android:name=".view.register.RegisterActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"
             android:exported="true" />
         <activity
             android:name=".view.profileedit.ProfileEditActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"
             android:exported="true" />
         <activity
             android:name=".view.login.LoginActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"
             android:exported="true" />
         <activity
             android:name=".view.forumresult.ForumResultActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"
             android:exported="true" />
         <activity
             android:name=".view.forumcreate.ForumCreateActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"
             android:exported="true" />
         <activity
             android:name=".view.detectionresult.DetectionResultActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"
             android:exported="true" />
         <activity
             android:name=".view.classmodule.ClassModuleActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"
             android:exported="true" />
         <activity
             android:name=".view.classfinished.ClassFinishedActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"
             android:exported="true" />
         <activity
             android:name=".view.classdetail.ClassDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"
             android:exported="true" />
         <activity
             android:name=".view.MainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"
             android:exported="true" />
         <activity
             android:name=".view.splashscreen.SplashScreenActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import id.capstone.tanamin.databinding.RvClassBinding
 import id.capstone.tanamin.databinding.ViewholderClassDetailSilabusBinding
 import id.capstone.tanamin.view.classmodule.ClassModuleActivity
 

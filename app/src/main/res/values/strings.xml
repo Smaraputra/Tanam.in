@@ -89,6 +89,20 @@
     <string name="get_started">Mulai</string>
     <string name="build_community">Bangun Komunitas</string>
     <string name="build_community_content">Bangun komunitas belajar yang aman dan nyaman.</string>
+    <string name="failed_open_camera">Kamera Gagal Dibuka</string>
+    <string name="permission_negative">Akses kamera tidak diberikan</string>
+    <string name="close_button">Tutup</string>
+    <string name="status_icon">Ikon Status</string>
+    <string name="status">Status Dialog</string>
+    <string name="failed_capture">Gagal Mengambil Gambar</string>
+    <string name="cancel">Batal</string>
+    <string name="logout">Keluar</string>
+    <string name="are_you_sure_want_to_logout">Apakah anda ingin keluar dari akun anda?</string>
+    <string name="see_detail">Lihat Detail</string>
+    <string name="back_button_action_bar">Tombol Mundur</string>
+    <string name="silabus_icon">Ikon Silabus</string>
+    <string name="module_icon">Ikon Modul</string>
+    <string name="future_feature_icon">Ikon Fitur Masa Depan</string>
 
 
 </resources>

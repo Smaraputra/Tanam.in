@@ -28,7 +28,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/tvFutureFeature"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvFutureFeature"
-        app:srcCompat="@drawable/ic_back_arrow" />
+        app:srcCompat="@drawable/ic_back_arrow"
+        android:contentDescription="@string/back_button_action_bar" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -5,22 +5,22 @@ import androidx.room.*
 
 @Dao
 interface TanaminDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertClasses(classes: List<Classes>)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertModuls(classes: List<Moduls>)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertInformations(classes: List<Informations>)
 
     @Query("SELECT * FROM classes")
-    fun getAllClasses(classes: LiveData<List<Classes>>)
+    fun getAllClasses(): LiveData<List<Classes>>
 
     @Query("SELECT * FROM moduls")
-    fun getAllModuls(classes: LiveData<List<Moduls>>)
+    fun getAllModuls(): LiveData<List<Moduls>>
 
     @Query("SELECT * FROM informations")
-    fun getAllInformations(classes: LiveData<List<Informations>>)
+    fun getAllInformations(): LiveData<List<Informations>>
 
 }

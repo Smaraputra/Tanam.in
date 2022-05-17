@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import id.capstone.tanamin.databinding.FragmentSilabusBinding
-import id.capstone.tanamin.view.classes.ClassesListAdapter
-
 
 class SilabusFragment : Fragment() {
     private var _binding: FragmentSilabusBinding? = null
@@ -17,7 +15,7 @@ class SilabusFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding= FragmentSilabusBinding.inflate(inflater,container,false)
         return binding.root
     }

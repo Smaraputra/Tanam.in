@@ -1,7 +1,6 @@
 package id.capstone.tanamin.view.classdetail
 
 import id.capstone.tanamin.R
-import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
