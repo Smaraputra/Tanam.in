@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="24dp"
-        android:background="@drawable/login_register_background"
+        android:background="@drawable/list_background"
         android:elevation="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -67,6 +67,7 @@
             android:layout_height="150dp"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
+            android:contentDescription="@string/future_feature_icon"
             android:elevation="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -74,8 +75,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.40"
-            tools:srcCompat="@drawable/ic_future_feature_illustration"
-            android:contentDescription="@string/future_feature_icon" />
+            tools:srcCompat="@drawable/ic_future_feature_illustration" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -37,7 +37,7 @@ tools:context=".view.profileedit.ProfileEditActivity">
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="24dp"
-        android:background="@drawable/login_register_background"
+        android:background="@drawable/list_background"
         android:elevation="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -110,6 +110,7 @@ tools:context=".view.profileedit.ProfileEditActivity">
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:alpha="1"
+            android:autofillHints=""
             android:background="@drawable/text_input"
             android:drawableStart="@drawable/ic_clock_24"
             android:drawablePadding="12dp"
@@ -120,8 +121,7 @@ tools:context=".view.profileedit.ProfileEditActivity">
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvAge"
-            android:autofillHints="" />
+            app:layout_constraintTop_toBottomOf="@+id/tvAge" />
 
         <TextView
             android:id="@+id/tvAddress"
@@ -143,6 +143,7 @@ tools:context=".view.profileedit.ProfileEditActivity">
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:alpha="1"
+            android:autofillHints=""
             android:background="@drawable/text_input"
             android:drawableStart="@drawable/ic_address_24"
             android:drawablePadding="12dp"
@@ -153,8 +154,7 @@ tools:context=".view.profileedit.ProfileEditActivity">
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvAddress"
-            android:autofillHints="" />
+            app:layout_constraintTop_toBottomOf="@+id/tvAddress" />
 
         <ProgressBar
             android:id="@+id/loadingModule"

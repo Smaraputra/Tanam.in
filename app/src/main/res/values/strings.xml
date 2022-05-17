@@ -104,5 +104,8 @@
     <string name="module_icon">Ikon Modul</string>
     <string name="future_feature_icon">Ikon Fitur Masa Depan</string>
 
-
+    <string name="back_button_text">Kembali</string>
+    <string name="profil_button_text">Profil</string>
+    <string name="finished_class_desc">Anda telah berhasil menyelesaikan</string>
+    <string name="finished_class_illustration">Finished Class Illustration</string>
 </resources>
