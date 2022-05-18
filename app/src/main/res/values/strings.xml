@@ -113,4 +113,9 @@
     <string name="enter_message">Masukkan pesan</string>
     <string name="send_chat">Kirim</string>
     <string name="forum_icon">Ikon Forum</string>
+    <string name="forum_title">Judul Pertanyaan</string>
+    <string name="forum_title_hint">Judul pertanyaan Anda</string>
+    <string name="forum_question">Detail Pertanyaan</string>
+    <string name="forum_question_hint">Jelaskan pertanyaan Anda</string>
+    <string name="forum_send">Kirim Pertanyaan</string>
 </resources>
