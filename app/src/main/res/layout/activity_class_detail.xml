@@ -25,17 +25,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
+        android:contentDescription="@string/back_button_action_bar"
         app:layout_constraintBottom_toBottomOf="@+id/tvDetectionResultTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvDetectionResultTitle"
-        app:srcCompat="@drawable/ic_back_arrow"
-        android:contentDescription="@string/back_button_action_bar" />
+        app:srcCompat="@drawable/ic_back_arrow" />
 
     <com.smarteist.autoimageslider.SliderView
         android:id="@+id/imageSlider"
         android:layout_width="match_parent"
         android:layout_height="150dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:elevation="16dp"
+        android:src="@drawable/ic_background_logo"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/constraintLayout4"
+        app:shapeAppearanceOverlay="@style/roundedAllCornersImageView"
         app:sliderAnimationDuration="500"
         app:sliderAutoCycleDirection="back_and_forth"
         app:sliderAutoCycleEnabled="true"
@@ -48,23 +56,19 @@
         app:sliderIndicatorSelectedColor="#009CF8"
         app:sliderIndicatorUnselectedColor="#FFF"
         app:sliderScrollTimeInSec="5"
-        app:sliderStartAutoCycle="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDetectionResultTitle"
-        app:shapeAppearanceOverlay="@style/roundedAllCornersImageView"
-        android:src="@drawable/ic_background_logo"/>
+        app:sliderStartAutoCycle="true" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout4"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="85dp"
+        android:layout_marginTop="90dp"
         android:background="@drawable/list_background"
         android:elevation="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageSlider">
+        app:layout_constraintTop_toBottomOf="@+id/tvDetectionResultTitle">
 
         <ScrollView
             android:id="@+id/scrollView2"

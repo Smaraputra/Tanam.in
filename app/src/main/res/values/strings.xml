@@ -109,4 +109,8 @@
     <string name="finished_class_desc">Anda telah berhasil menyelesaikan</string>
     <string name="finished_class_illustration">Finished Class Illustration</string>
     <string name="image_slider_item">Gambar Kelas</string>
+    <string name="me_chat">Saya</string>
+    <string name="enter_message">Masukkan pesan</string>
+    <string name="send_chat">Kirim</string>
+    <string name="forum_icon">Ikon Forum</string>
 </resources>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:background="#117C43"
-tools:context=".view.detectionresult.DetectionResultActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#117C43"
+    tools:context=".view.detectionresult.DetectionResultActivity">
 
     <TextView
         android:id="@+id/tvDetectionResultTitle"
@@ -20,45 +20,42 @@ tools:context=".view.detectionresult.DetectionResultActivity">
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-<ImageView
-    android:id="@+id/ivBackButton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="24dp"
-    app:layout_constraintBottom_toBottomOf="@+id/tvDetectionResultTitle"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="@+id/tvDetectionResultTitle"
-    app:srcCompat="@drawable/ic_back_arrow"
-    android:contentDescription="@string/back_button_action_bar" />
+    <ImageView
+        android:id="@+id/ivBackButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:contentDescription="@string/back_button_action_bar"
+        app:layout_constraintBottom_toBottomOf="@+id/tvDetectionResultTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvDetectionResultTitle"
+        app:srcCompat="@drawable/ic_back_arrow" />
 
-
-<com.google.android.material.imageview.ShapeableImageView
-    android:id="@+id/ivDetectionImage"
-    android:layout_width="0dp"
-    android:layout_height="150dp"
-    android:layout_marginStart="24dp"
-    android:layout_marginTop="24dp"
-    android:layout_marginEnd="24dp"
-    android:elevation="16dp"
-    android:scaleType="centerCrop"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/tvDetectionResultTitle"
-    app:shapeAppearanceOverlay="@style/roundedAllCornersImageView"
-    android:src="@drawable/ic_background_logo"/>
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivDetectionImage"
+        android:layout_width="363dp"
+        android:layout_height="150dp"
+        android:elevation="16dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_background_logo"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/constraintLayout3"
+        app:shapeAppearanceOverlay="@style/roundedAllCornersImageView" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="85dp"
-        android:background="@drawable/login_register_background"
+        android:layout_marginTop="90dp"
+        android:background="@drawable/list_background"
         android:elevation="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ivDetectionImage"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toBottomOf="@+id/tvDetectionResultTitle">
 
         <ScrollView
             android:id="@+id/scrollView2"
