@@ -37,13 +37,13 @@ class PreferencesViewModel(private val pref: LoginPreferences) : ViewModel() {
         }
     }
 
-    fun getEmailUser(): LiveData<String> {
-        return pref.getEmailUser().asLiveData()
+    fun getIDUser(): LiveData<Int> {
+        return pref.getIDUser().asLiveData()
     }
 
-    fun saveEmailUser(email: String) {
+    fun saveIDUser(id: Int) {
         viewModelScope.launch {
-            pref.saveEmailUser(email)
+            pref.saveIDUser(id)
         }
     }
 

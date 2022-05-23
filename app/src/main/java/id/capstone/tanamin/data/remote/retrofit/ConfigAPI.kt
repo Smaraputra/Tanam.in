@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class ConfigAPI {
     companion object {
-        var urlBase: String = BASE_URL_TANAMIN
+        private var urlBase: String = BASE_URL_TANAMIN
         fun getApiService(token: String): ServicesAPI {
             lateinit var client: OkHttpClient
             val loggingInterceptor = if(BuildConfig.DEBUG) {

@@ -25,6 +25,11 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
         super.onViewCreated(itemView, savedInstanceState)
+        setupView()
+        setupViewModel()
+    }
+
+    private fun setupView(){
         binding.cardView.setOnClickListener{
             val intent = Intent(requireContext(), ClassDetailActivity::class.java)
             startActivity(intent)
@@ -39,5 +44,9 @@ class HomeFragment : Fragment() {
             val intent = Intent(requireContext(), FutureFeatureActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun setupViewModel(){
+
     }
 }

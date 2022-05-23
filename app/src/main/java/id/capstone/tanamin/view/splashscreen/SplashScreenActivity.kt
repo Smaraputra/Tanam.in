@@ -24,6 +24,7 @@ class SplashScreenActivity : AppCompatActivity() {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
     private lateinit var binding: ActivitySplashScreenBinding
     private lateinit var preferencesViewModel: PreferencesViewModel
+    private var idUser: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,22 +41,24 @@ class SplashScreenActivity : AppCompatActivity() {
             PreferencesViewModel::class.java
         )
 
+        preferencesViewModel.getIDUser().observe(this){ id ->
+            idUser = id
+        }
+
         preferencesViewModel.getStatusOnBoard().observe(this){ statusOnBoard ->
             if(statusOnBoard){
-                preferencesViewModel.getTokenUser().observe(this){ token ->
-                    if(!token.isNullOrEmpty() && !token.equals("DEFAULT_VALUE")){
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            val intent = Intent(this, MainActivity::class.java)
-                            startActivity(intent)
-                            finish()
-                        }, splashDuration)
-                    }else{
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            val intent = Intent(this, LoginActivity::class.java)
-                            startActivity(intent)
-                            finish()
-                        }, splashDuration)
-                    }
+                if(idUser != 0){
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }, splashDuration)
+                }else{
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        val intent = Intent(this, LoginActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }, splashDuration)
                 }
             }else{
                 Handler(Looper.getMainLooper()).postDelayed({

@@ -11,6 +11,9 @@ import android.os.Environment
 import id.capstone.tanamin.R
 import id.capstone.tanamin.utils.Utils.FILENAME_FORMAT
 import java.io.*
+import java.math.BigInteger
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -80,6 +83,21 @@ fun reduceFileImage(file: File): File {
     bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
 
     return file
+}
+
+fun encryptInput(input: String): String {
+    return try {
+        val md = MessageDigest.getInstance("SHA-1")
+        val messageDigest = md.digest(input.toByteArray())
+        val no = BigInteger(1, messageDigest)
+        var hashtext = no.toString(16)
+        while (hashtext.length < 32) {
+            hashtext = "0$hashtext"
+        }
+        hashtext
+    } catch (e: NoSuchAlgorithmException) {
+        throw RuntimeException(e)
+    }
 }
 
 object Utils {
