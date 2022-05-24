@@ -81,7 +81,7 @@
             app:layout_constraintTop_toTopOf="@+id/classFinished" />
 
         <TextView
-            android:id="@+id/nameTitleProfile3"
+            android:id="@+id/processCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
@@ -100,7 +100,7 @@
             android:contentDescription="@string/class_process"
             android:src="@drawable/ic_process_profile"
             app:layout_constraintBottom_toBottomOf="@+id/classFinished"
-            app:layout_constraintEnd_toStartOf="@+id/nameTitleProfile3"
+            app:layout_constraintEnd_toStartOf="@+id/processCount"
             app:layout_constraintTop_toTopOf="@+id/classFinished" />
 
         <TextView

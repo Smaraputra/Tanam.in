@@ -118,4 +118,6 @@
     <string name="forum_question">Detail Pertanyaan</string>
     <string name="forum_question_hint">Jelaskan pertanyaan Anda</string>
     <string name="forum_send">Kirim Pertanyaan</string>
+
+    <string name="home_no_class">Anda belum mengikuti kelas</string>
 </resources>
