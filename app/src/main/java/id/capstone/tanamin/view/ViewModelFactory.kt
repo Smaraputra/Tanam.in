@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import id.capstone.tanamin.data.TanaminRepository
 import id.capstone.tanamin.data.di.Injection
+import id.capstone.tanamin.view.classes.ClassesViewModel
 import id.capstone.tanamin.view.home.HomeViewModel
 import id.capstone.tanamin.view.login.LoginViewModel
 import id.capstone.tanamin.view.profile.ProfileViewModel
@@ -22,6 +23,8 @@ class ViewModelFactory private constructor(private val tanaminRepository: Tanami
             return HomeViewModel(tanaminRepository) as T
         }else if(modelClass.isAssignableFrom(ProfileViewModel::class.java)){
             return ProfileViewModel(tanaminRepository) as T
+        }else if(modelClass.isAssignableFrom(ClassesViewModel::class.java)){
+            return ClassesViewModel(tanaminRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

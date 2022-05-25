@@ -120,4 +120,5 @@
     <string name="forum_send">Kirim Pertanyaan</string>
 
     <string name="home_no_class">Anda belum mengikuti kelas</string>
+    <string name="hint_search">Nama kelas …</string>
 </resources>

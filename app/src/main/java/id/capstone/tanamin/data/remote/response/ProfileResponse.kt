@@ -5,31 +5,37 @@ import com.google.gson.annotations.SerializedName
 data class ProfileResponse(
 
 	@field:SerializedName("data")
-	val data: ProfileUser,
+	val data: ProfileData,
 
 	@field:SerializedName("status")
 	val status: String
 )
 
-data class ProfileUser(
+data class ProfileData(
+
+	@field:SerializedName("progress")
+	val progress: Int?,
+
+	@field:SerializedName("finish")
+	val finish: Int?,
+
+	@field:SerializedName("user")
+	val user: User
+)
+
+data class User(
 
 	@field:SerializedName("password")
 	val password: String,
 
 	@field:SerializedName("address")
-	val address: String?=null,
+	val address: String?,
 
 	@field:SerializedName("name")
 	val name: String,
 
-	@field:SerializedName("progress")
-	val progress: Int?=null,
-
 	@field:SerializedName("profile_picture")
-	val profilePicture: String?=null,
-
-	@field:SerializedName("finish")
-	val finish: Int?=null,
+	val profilePicture: String?,
 
 	@field:SerializedName("id_user")
 	val idUser: Int,
@@ -38,5 +44,5 @@ data class ProfileUser(
 	val email: String,
 
 	@field:SerializedName("age")
-	val age: Int?=null
+	val age: Int?
 )

@@ -3,17 +3,20 @@ package id.capstone.tanamin.data.local.database
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity (tableName = "classes")
 data class Classes(
     @PrimaryKey
     val id_class: Int,
     val title:String,
     val detail:String,
     val picture:String,
-    val total_module:Int
+    val total_module:Int,
+    val progress: Float,
+    val modul_title: String,
+    val modul_id: Int
 )
 
-@Entity
+@Entity (tableName = "modules")
 data class Moduls(
     @PrimaryKey
     val id_moduls:Int,
@@ -24,7 +27,7 @@ data class Moduls(
     val quiz_id:Int
 )
 
-@Entity
+@Entity (tableName = "informations")
 data class Informations(
     @PrimaryKey
     val id_informations:Int,

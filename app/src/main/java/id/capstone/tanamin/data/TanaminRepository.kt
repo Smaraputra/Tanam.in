@@ -2,12 +2,11 @@ package id.capstone.tanamin.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import id.capstone.tanamin.data.local.database.Classes
 import id.capstone.tanamin.data.local.database.TanaminRoomDatabase
-import id.capstone.tanamin.data.remote.response.HomeResponse
-import id.capstone.tanamin.data.remote.response.LoginResponse
-import id.capstone.tanamin.data.remote.response.ProfileResponse
-import id.capstone.tanamin.data.remote.response.RegisterResponse
+import id.capstone.tanamin.data.remote.response.*
 import id.capstone.tanamin.data.remote.retrofit.ServicesAPI
+import kotlinx.coroutines.*
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -22,6 +21,7 @@ class TanaminRepository(
     private val resultRegister = MediatorLiveData<Result<RegisterResponse>>()
     private val resultHome=MediatorLiveData<Result<HomeResponse>>()
     private val resultProfile=MediatorLiveData<Result<ProfileResponse>>()
+    private val resultAllClasses=MediatorLiveData<Result<AllClassesResponse>>()
 
     fun registerUser(registerMap: HashMap<String, String>): LiveData<Result<RegisterResponse>> {
         resultRegister.value = Result.Loading
@@ -121,5 +121,53 @@ class TanaminRepository(
             }
         })
         return resultProfile
+    }
+
+    fun getAllClass(profileMap: String): LiveData<Result<AllClassesResponse>>{
+        resultAllClasses.value = Result.Loading
+        val client = apiService.getAllClass(profileMap)
+        client.enqueue(object : Callback<AllClassesResponse> {
+            override fun onResponse(call: Call<AllClassesResponse>, response: Response<AllClassesResponse>) {
+                if(response.isSuccessful){
+                    val classes = response.body()?.data?.jsonMemberClass
+                    val classesList = ArrayList<Classes>()
+                    runBlocking {
+                        classes?.forEach { it ->
+                            val news = Classes(
+                                it.id_class,
+                                it.title,
+                                it.detail,
+                                it.picture,
+                                it.total_module,
+                                it.progress,
+                                it.modul_title,
+                                it.modul_id
+                            )
+                            classesList.add(news)
+                        tanaminRoomDatabase.tanaminDao().deleteAllClasses()
+                        tanaminRoomDatabase.tanaminDao().insertClasses(classesList)
+                        }
+                    }
+                    resultAllClasses.value = Result.Success(response.body() as AllClassesResponse)
+                }else{
+                    lateinit var jsonObject: JSONObject
+                    try {
+                        jsonObject = JSONObject(response.errorBody()!!.string())
+                        resultAllClasses.value = Result.Error(jsonObject.getString("message"))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<AllClassesResponse>, t: Throwable) {
+                resultAllClasses.value = Result.Error(t.message.toString())
+            }
+        })
+        return resultAllClasses
+    }
+
+    fun getSearchClass(word: String): LiveData<List<Classes>>{
+        return tanaminRoomDatabase.tanaminDao().searchClasses(word)
     }
 }

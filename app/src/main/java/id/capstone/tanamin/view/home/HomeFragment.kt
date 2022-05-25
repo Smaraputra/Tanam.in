@@ -3,11 +3,9 @@ package id.capstone.tanamin.view.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -51,11 +49,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupView(){
-        binding.cardViewClass.setOnClickListener{
-            val intent = Intent(requireContext(), ClassDetailActivity::class.java)
-            startActivity(intent)
-        }
-
         binding.marketplace.setOnClickListener{
             val intent = Intent(requireContext(), FutureFeatureActivity::class.java)
             startActivity(intent)
@@ -78,40 +71,53 @@ class HomeFragment : Fragment() {
         }
         this.homeViewModel=homeViewModel
     }
+
     private fun getHomeData(){
         val homeMap: HashMap<String, String> = HashMap()
-        preferencesViewModel.getIDUser().observe(requireActivity()){
-            homeMap["userid"] = it.toString()
-            homeViewModel.getHomeData(homeMap).observe(requireActivity()) { result ->
+        preferencesViewModel.getIDUser().observe(requireActivity()){ userid->
+            homeMap["userid"] = userid.toString()
+            val liveData = homeViewModel.getHomeData(homeMap)
+            liveData.observe(requireActivity()){ result ->
                 if (result != null) {
                     when (result) {
                         is Result.Loading -> {
-//                            binding.loadingList.visibility = View.VISIBLE
+                            binding.loadingList2.visibility = View.VISIBLE
                         }
                         is Result.Success -> {
-//                            binding.loadingList.visibility = View.GONE
+                            binding.loadingList2.visibility = View.GONE
                             if(result.data.data !=null){
+                                val percentage = "${result.data.data.progress} %"
                                 binding.classTitle.text=result.data.data.kelas[0].title
                                 binding.continueContent.text=result.data.data.recentModul.toString()
-                                binding.percentage.text="${result.data.data.progress} %"
+                                binding.percentage.text=percentage
                                 binding.cardViewNoClass.visibility=View.GONE
+                                binding.cardViewClass.setOnClickListener{
+                                    val intent = Intent(requireContext(), ClassDetailActivity::class.java)
+                                    startActivity(intent)
+                                }
                             }else{
+                                binding.loadingList2.visibility = View.GONE
                                 binding.cardViewNoClass.visibility=View.VISIBLE
                                 binding.cardViewClass.visibility=View.INVISIBLE
+                                binding.cardViewNoClass.setOnClickListener{
+
+                                }
                             }
-                            homeViewModel.getHomeData(homeMap).removeObservers(requireActivity())
+                            liveData.removeObservers(requireActivity())
                         }
                         is Result.Error -> {
-//                            binding.loadingList.visibility = View.GONE
+                            binding.loadingList2.visibility = View.GONE
                             ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_error_24)
                                 ?.let { (requireActivity() as MainActivity).showDialog(result.error, it) }
-                            homeViewModel.getHomeData(homeMap).removeObservers(requireActivity())
+                            liveData.removeObservers(requireActivity())
                         }
                     }
                 }
             }
-//            preferencesViewModel.getIDUser().removeObserver(this)
         }
-
+        preferencesViewModel.getNameUser().observe(requireActivity()){ username->
+            val nameHome = "Hai, ${username.substring(username.lastIndexOf(" ")+1)}"
+            binding.textView.text=nameHome
+        }
     }
 }

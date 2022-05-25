@@ -69,8 +69,6 @@ class ProfileFragment : Fragment() {
         this.profileViewModel=profileViewModel
     }
 
-
-
     private fun showDialogLogout() {
         val builder = AlertDialog.Builder(requireContext()).create()
         val bindAlert: CustomAlertLogoutBinding = CustomAlertLogoutBinding.inflate(LayoutInflater.from(requireContext()))
@@ -78,6 +76,7 @@ class ProfileFragment : Fragment() {
         bindAlert.logoutConfirm.setOnClickListener {
             builder.dismiss()
             preferencesViewModel.saveNameUser("DEFAULT_VALUE")
+            preferencesViewModel.saveIDUser(0)
             preferencesViewModel.saveTokenUser("DEFAULT_VALUE")
             val intent = Intent(requireContext(), LoginActivity::class.java)
             activity?.startActivity(intent)
@@ -91,40 +90,38 @@ class ProfileFragment : Fragment() {
 
     private fun getProfileUser(){
         val profileMap: HashMap<String, String> = HashMap()
-        preferencesViewModel.getIDUser().observe(requireActivity()) {
-            profileMap["userid"] = it.toString()
-            profileViewModel.getProfileUser(profileMap).observe(requireActivity()) { result ->
+        preferencesViewModel.getIDUser().observe(requireActivity()) { userId ->
+            profileMap["userid"] = userId.toString()
+            val liveData = profileViewModel.getProfileUser(profileMap)
+            liveData.observe(requireActivity()) { result ->
                 if (result != null) {
                     when (result) {
                         is Result.Loading -> {
-//                            binding.loadingList.visibility = View.VISIBLE
+                            binding.loadingList3.visibility = View.VISIBLE
                         }
                         is Result.Success -> {
-//                            binding.loadingList.visibility = View.GONE
-                            binding.textView3.text=result.data.data.name
-                            binding.textView4.text=result.data.data.email
-                            binding.textView5.text=result.data.data.age?.toString() ?: "Tidak ada data"
-                            binding.textView6.text=result.data.data.address ?: "Tidak ada data"
-                            binding.successCount.text="${result.data.data.finish?.toString() ?: "0"} Selesai"
-                            binding.processCount.text="${result.data.data.progress?.toString() ?: "0"} Proses"
-                            Glide.with(this).load(result.data.data.profilePicture?:this.getResources().getIdentifier("ic_profileuser_illustration", "drawable", requireActivity().getPackageName())).into(binding.classImage2)
-                            profileViewModel.getProfileUser(profileMap)
-                                .removeObservers(requireActivity())
+                            val success = "${result.data.data.finish ?: "0"} Selesai"
+                            val process = "${result.data.data.progress ?: "0"} Proses"
+                            binding.loadingList3.visibility = View.GONE
+                            binding.textView3.text=result.data.data.user.name
+                            binding.textView4.text=result.data.data.user.email
+                            binding.textView5.text= if(result.data.data.user.age != null) result.data.data.user.age.toString() else "Tidak ada data"
+                            binding.textView6.text=result.data.data.user.address ?: "Tidak ada data"
+                            binding.successCount.text=success
+                            binding.processCount.text=process
+                            Glide.with(this)
+                                .load(result.data.data.user.profilePicture)
+                                .placeholder(R.drawable.ic_profileuser_illustration)
+                                .error(R.drawable.ic_profileuser_illustration)
+                                .into(binding.classImage2)
+                            liveData.removeObservers(requireActivity())
                         }
                         is Result.Error -> {
-//                            binding.loadingList.visibility = View.GONE
-                            ContextCompat.getDrawable(
-                                requireActivity(),
-                                R.drawable.ic_baseline_error_24
-                            )
-                                ?.let {
-                                    (requireActivity() as MainActivity).showDialog(
-                                        result.error,
-                                        it
-                                    )
-                                }
-                            profileViewModel.getProfileUser(profileMap)
-                                .removeObservers(requireActivity())
+                            binding.loadingList3.visibility = View.GONE
+                            ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_error_24)?.let {
+                                (requireActivity() as MainActivity).showDialog(result.error, it)
+                            }
+                            liveData.removeObservers(requireActivity())
                         }
                     }
                 }

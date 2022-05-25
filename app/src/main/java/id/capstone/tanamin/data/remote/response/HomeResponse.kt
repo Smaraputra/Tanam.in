@@ -17,13 +17,13 @@ data class DataHome(
 	val recentModul: Int,
 
 	@field:SerializedName("kelas")
-	val kelas: List<Classes>,
+	val kelas: List<ClassesHome>,
 
 	@field:SerializedName("progress")
 	val progress: Int
 )
 
-data class Classes(
+data class ClassesHome(
 
 	@field:SerializedName("id_class")
 	val idClass: Int,

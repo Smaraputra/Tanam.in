@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
 import android.os.Environment
+import androidx.exifinterface.media.ExifInterface
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils.rotateImage
 import id.capstone.tanamin.R
 import id.capstone.tanamin.utils.Utils.FILENAME_FORMAT
 import java.io.*
@@ -68,19 +70,32 @@ fun uriToFile(selectedImg: Uri, context: Context): File {
 
 fun reduceFileImage(file: File): File {
     val bitmap = BitmapFactory.decodeFile(file.path)
+    val ei = ExifInterface(file.path)
+    val orientation: Int = ei.getAttributeInt(
+        ExifInterface.TAG_ORIENTATION,
+        ExifInterface.ORIENTATION_UNDEFINED
+    )
+
+    val rotatedBitmap: Bitmap? = when (orientation) {
+        ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bitmap, 90)
+        ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bitmap, 180)
+        ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bitmap, 270)
+        ExifInterface.ORIENTATION_NORMAL -> bitmap
+        else -> bitmap
+    }
 
     var compressQuality = 100
     var streamLength: Int
 
     do {
         val bmpStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpStream)
+        rotatedBitmap?.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpStream)
         val bmpPicByteArray = bmpStream.toByteArray()
         streamLength = bmpPicByteArray.size
         compressQuality -= 5
     } while (streamLength > 1000000)
 
-    bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
+    rotatedBitmap?.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
 
     return file
 }
