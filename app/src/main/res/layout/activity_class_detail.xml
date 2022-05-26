@@ -115,7 +115,7 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="24dp"
-                    android:text="Kelas Menanam Cabai"
+                    android:text="@string/no_data"
                     android:textColor="@color/green_soft"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -124,36 +124,41 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Kelas Menanam Cabai" />
 
-                <TextView
-                    android:id="@+id/tvDetectionItemDesc"
-                    android:layout_width="0dp"
+                <com.ms.square.android.expandabletextview.ExpandableTextView
+                    xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/expand_text_view"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:ellipsize="end"
-                    android:maxLines="3"
-                    android:text="adalah kelas yang menanam cabai untuk ditanami cabai dalam menanam cabai supaya cabai dapat menjadi cabai yang ditanam dari bibit cabai dalam menanam cabai cabai cibai Kelas ini adalah kelas yang menanam cabai untuk ditanami cabai dalam menanam cabai supaya cabai dapat menjadi cabai yang ditanam dari bibit cabai dalam menanam cabai cabai cibai"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp"
                     app:layout_constraintEnd_toEndOf="@+id/tvDetectionItemName"
                     app:layout_constraintStart_toStartOf="@+id/tvDetectionItemName"
                     app:layout_constraintTop_toBottomOf="@+id/tvDetectionItemName"
-                    tools:text="adalah kelas yang menanam cabai untuk ditanami cabai dalam menanam cabai supaya cabai dapat menjadi cabai yang ditanam dari bibit cabai dalam menanam cabai cabai cibai Kelas ini adalah kelas yang menanam cabai untuk ditanami cabai dalam menanam cabai supaya cabai dapat menjadi cabai yang ditanam dari bibit cabai dalam menanam cabai cabai cibai" />
+                    expandableTextView:maxCollapsedLines="3"
+                    expandableTextView:animDuration="200">
 
-                <TextView
-                    android:id="@+id/tvReadMore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/read_more"
-                    android:textStyle="italic"
-                    app:layout_constraintEnd_toEndOf="@+id/tvDetectionItemDesc"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDetectionItemDesc" />
+                    <TextView
+                        android:id="@id/expandable_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <ImageButton
+                        android:id="@id/expand_collapse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        android:layout_gravity="end|bottom"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/read_more_button" />
+                </com.ms.square.android.expandabletextview.ExpandableTextView>
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
                     android:background="?attr/colorOnPrimary"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDetectionItemDesc"
+                    app:layout_constraintTop_toBottomOf="@+id/expand_text_view"
                     app:tabTextAppearance="@style/TextTabLayout"
                     tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 

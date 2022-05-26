@@ -1,6 +1,7 @@
 package id.capstone.tanamin.view.classes
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,6 +9,7 @@ import com.bumptech.glide.Glide
 import id.capstone.tanamin.R
 import id.capstone.tanamin.data.local.database.Classes
 import id.capstone.tanamin.databinding.RvClassBinding
+import id.capstone.tanamin.view.classdetail.ClassDetailActivity
 
 class ClassesListAdapter(private val ctx: Context, private val classes: List<Classes>) : RecyclerView.Adapter<ClassesListAdapter.ListViewHolder>() {
 
@@ -29,11 +31,17 @@ class ClassesListAdapter(private val ctx: Context, private val classes: List<Cla
         holder.binding.percentage.text = if(data.progress.isNaN()) "${data.progress} %" else "0 %"
         holder.binding.button3.text = if(!data.progress.isNaN()) "Mulai" else "Lanjut"
         holder.itemView.setOnClickListener {
-
+            val intent = Intent(ctx, ClassDetailActivity::class.java)
+            intent.putExtra(DETAIL_CLASS, data)
+            ctx.startActivity(intent)
         }
     }
 
     class ListViewHolder(val binding: RvClassBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun getItemCount(): Int = classes.size
+
+    companion object {
+        const val DETAIL_CLASS = "detail_class"
+    }
 }

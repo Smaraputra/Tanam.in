@@ -12,7 +12,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import id.capstone.tanamin.R
 import id.capstone.tanamin.data.Result
 import id.capstone.tanamin.data.local.datastore.LoginPreferences
@@ -21,15 +23,14 @@ import id.capstone.tanamin.data.local.datastore.PreferencesViewModelFactory
 import id.capstone.tanamin.databinding.FragmentHomeBinding
 import id.capstone.tanamin.view.MainActivity
 import id.capstone.tanamin.view.ViewModelFactory
-import id.capstone.tanamin.view.classdetail.ClassDetailActivity
 import id.capstone.tanamin.view.futurefeature.FutureFeatureActivity
-
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
+    private lateinit var liveDataStore : LiveData<Int>
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
 
     override fun onCreateView(
@@ -74,8 +75,9 @@ class HomeFragment : Fragment() {
 
     private fun getHomeData(){
         val homeMap: HashMap<String, String> = HashMap()
-        preferencesViewModel.getIDUser().observe(requireActivity()){ userid->
-            homeMap["userid"] = userid.toString()
+        liveDataStore = preferencesViewModel.getIDUser()
+        liveDataStore.observe(requireActivity()) { userId ->
+            homeMap["userid"] = userId.toString()
             val liveData = homeViewModel.getHomeData(homeMap)
             liveData.observe(requireActivity()){ result ->
                 if (result != null) {
@@ -92,24 +94,22 @@ class HomeFragment : Fragment() {
                                 binding.percentage.text=percentage
                                 binding.cardViewNoClass.visibility=View.GONE
                                 binding.cardViewClass.setOnClickListener{
-                                    val intent = Intent(requireContext(), ClassDetailActivity::class.java)
-                                    startActivity(intent)
+
                                 }
                             }else{
                                 binding.loadingList2.visibility = View.GONE
                                 binding.cardViewNoClass.visibility=View.VISIBLE
                                 binding.cardViewClass.visibility=View.INVISIBLE
-                                binding.cardViewNoClass.setOnClickListener{
-
-                                }
                             }
                             liveData.removeObservers(requireActivity())
+                            liveDataStore.removeObservers(requireActivity())
                         }
                         is Result.Error -> {
                             binding.loadingList2.visibility = View.GONE
                             ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_error_24)
                                 ?.let { (requireActivity() as MainActivity).showDialog(result.error, it) }
                             liveData.removeObservers(requireActivity())
+                            liveDataStore.removeObservers(requireActivity())
                         }
                     }
                 }

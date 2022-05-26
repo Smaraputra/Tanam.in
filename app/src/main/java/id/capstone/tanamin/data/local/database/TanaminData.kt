@@ -1,9 +1,12 @@
 package id.capstone.tanamin.data.local.database
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 @Entity (tableName = "classes")
+@Parcelize
 data class Classes(
     @PrimaryKey
     val id_class: Int,
@@ -14,7 +17,7 @@ data class Classes(
     val progress: Float,
     val modul_title: String,
     val modul_id: Int
-)
+) : Parcelable
 
 @Entity (tableName = "modules")
 data class Moduls(

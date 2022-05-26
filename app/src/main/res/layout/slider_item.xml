@@ -14,6 +14,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_register_illustration"
+        app:srcCompat="@drawable/ic_background_logo"
         android:contentDescription="@string/image_slider_item"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

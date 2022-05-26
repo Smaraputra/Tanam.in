@@ -13,6 +13,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import id.capstone.tanamin.R
@@ -20,6 +21,7 @@ import id.capstone.tanamin.data.Result
 import id.capstone.tanamin.data.local.datastore.LoginPreferences
 import id.capstone.tanamin.data.local.datastore.PreferencesViewModel
 import id.capstone.tanamin.data.local.datastore.PreferencesViewModelFactory
+import id.capstone.tanamin.data.remote.response.ProfileResponse
 import id.capstone.tanamin.databinding.CustomAlertLogoutBinding
 import id.capstone.tanamin.databinding.FragmentProfileBinding
 import id.capstone.tanamin.view.MainActivity
@@ -33,6 +35,8 @@ class ProfileFragment : Fragment() {
     private lateinit var profileViewModel: ProfileViewModel
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
+    private lateinit var liveData : LiveData<Result<ProfileResponse>>
+    private lateinit var liveDataStore : LiveData<Int>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,6 +79,7 @@ class ProfileFragment : Fragment() {
         builder.setView(bindAlert.root)
         bindAlert.logoutConfirm.setOnClickListener {
             builder.dismiss()
+            liveData.removeObservers(requireActivity())
             preferencesViewModel.saveNameUser("DEFAULT_VALUE")
             preferencesViewModel.saveIDUser(0)
             preferencesViewModel.saveTokenUser("DEFAULT_VALUE")
@@ -90,9 +95,10 @@ class ProfileFragment : Fragment() {
 
     private fun getProfileUser(){
         val profileMap: HashMap<String, String> = HashMap()
-        preferencesViewModel.getIDUser().observe(requireActivity()) { userId ->
+        liveDataStore = preferencesViewModel.getIDUser()
+        liveDataStore.observe(requireActivity()) { userId ->
             profileMap["userid"] = userId.toString()
-            val liveData = profileViewModel.getProfileUser(profileMap)
+            liveData = profileViewModel.getProfileUser(profileMap)
             liveData.observe(requireActivity()) { result ->
                 if (result != null) {
                     when (result) {
@@ -115,6 +121,7 @@ class ProfileFragment : Fragment() {
                                 .error(R.drawable.ic_profileuser_illustration)
                                 .into(binding.classImage2)
                             liveData.removeObservers(requireActivity())
+                            liveDataStore.removeObservers(requireActivity())
                         }
                         is Result.Error -> {
                             binding.loadingList3.visibility = View.GONE
@@ -122,6 +129,7 @@ class ProfileFragment : Fragment() {
                                 (requireActivity() as MainActivity).showDialog(result.error, it)
                             }
                             liveData.removeObservers(requireActivity())
+                            liveDataStore.removeObservers(requireActivity())
                         }
                     }
                 }

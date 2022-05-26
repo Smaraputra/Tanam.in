@@ -121,4 +121,6 @@
 
     <string name="home_no_class">Anda belum mengikuti kelas</string>
     <string name="hint_search">Nama kelas …</string>
+    <string name="info_no_class">Silahkan ikuti salah satu kelas untuk mulai melacak kemajuan anda.</string>
+    <string name="read_more_button">Baca Selanjutnya</string>
 </resources>
