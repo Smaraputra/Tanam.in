@@ -58,6 +58,23 @@
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/circleImageView" />
 
+        <Button
+            android:id="@+id/editPhotoBtn"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="-32dp"
+            android:background="@drawable/round_button"
+            android:drawableTint="#FFFFFF"
+            android:elevation="2dp"
+            android:scaleType="center"
+            app:icon="@drawable/ic_baseline_edit_24"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="18dp"
+            app:layout_constraintEnd_toEndOf="@+id/changeImage"
+            app:layout_constraintTop_toBottomOf="@+id/changeImage"
+            app:shapeAppearance="@style/circleImageView" />
+
         <TextView
             android:id="@+id/tvFullName"
             android:layout_width="wrap_content"

@@ -7,6 +7,8 @@ import id.capstone.tanamin.data.local.database.TanaminRoomDatabase
 import id.capstone.tanamin.data.remote.response.*
 import id.capstone.tanamin.data.remote.retrofit.ServicesAPI
 import kotlinx.coroutines.*
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -22,6 +24,7 @@ class TanaminRepository(
     private val resultHome=MediatorLiveData<Result<HomeResponse>>()
     private val resultProfile=MediatorLiveData<Result<ProfileResponse>>()
     private val resultAllClasses=MediatorLiveData<Result<AllClassesResponse>>()
+    private val resultEditProfile=MediatorLiveData<Result<RegisterResponse>>()
 
     fun registerUser(registerMap: HashMap<String, String>): LiveData<Result<RegisterResponse>> {
         resultRegister.value = Result.Loading
@@ -169,5 +172,32 @@ class TanaminRepository(
 
     fun getSearchClass(word: String): LiveData<List<Classes>>{
         return tanaminRoomDatabase.tanaminDao().searchClasses(word)
+    }
+    fun editProfile(profilePictureMultipart: MultipartBody.Part, name: RequestBody, age:RequestBody, address: RequestBody, userid: RequestBody):LiveData<Result<RegisterResponse>>{
+        resultEditProfile.value = Result.Loading
+        val client = apiService.editProfile(profilePictureMultipart,name,age,address,userid)
+        client.enqueue(object : Callback<RegisterResponse> {
+            override fun onResponse(
+                call: Call<RegisterResponse>,
+                response: Response<RegisterResponse>
+            ) {
+                if (response.isSuccessful) {
+                    resultEditProfile.value = Result.Success(response.body() as RegisterResponse)
+                } else {
+                    lateinit var jsonObject: JSONObject
+                    try {
+                        jsonObject = JSONObject(response.errorBody()!!.string())
+                        resultEditProfile.value = Result.Error(jsonObject.getString("message"))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
+                resultEditProfile.value = Result.Error(t.message.toString())
+            }
+        })
+        return resultEditProfile
     }
 }

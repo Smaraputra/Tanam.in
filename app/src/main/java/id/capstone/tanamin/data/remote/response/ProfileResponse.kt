@@ -1,6 +1,8 @@
 package id.capstone.tanamin.data.remote.response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
 data class ProfileResponse(
 
@@ -23,6 +25,7 @@ data class ProfileData(
 	val user: User
 )
 
+@Parcelize
 data class User(
 
 	@field:SerializedName("password")
@@ -45,4 +48,4 @@ data class User(
 
 	@field:SerializedName("age")
 	val age: Int?
-)
+):Parcelable

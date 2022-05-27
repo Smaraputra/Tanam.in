@@ -22,6 +22,7 @@ import id.capstone.tanamin.data.local.datastore.LoginPreferences
 import id.capstone.tanamin.data.local.datastore.PreferencesViewModel
 import id.capstone.tanamin.data.local.datastore.PreferencesViewModelFactory
 import id.capstone.tanamin.data.remote.response.ProfileResponse
+import id.capstone.tanamin.data.remote.response.User
 import id.capstone.tanamin.databinding.CustomAlertLogoutBinding
 import id.capstone.tanamin.databinding.FragmentProfileBinding
 import id.capstone.tanamin.view.MainActivity
@@ -37,6 +38,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var liveData : LiveData<Result<ProfileResponse>>
     private lateinit var liveDataStore : LiveData<Int>
+    private lateinit var user:User
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,6 +59,7 @@ class ProfileFragment : Fragment() {
 
         binding.editDataButton .setOnClickListener{
             val intent = Intent(requireContext(), ProfileEditActivity::class.java)
+            intent.putExtra(PROFILE_USER_EXTRA,user)
             startActivity(intent)
         }
     }
@@ -106,6 +109,7 @@ class ProfileFragment : Fragment() {
                             binding.loadingList3.visibility = View.VISIBLE
                         }
                         is Result.Success -> {
+                            user=result.data.data.user
                             val success = "${result.data.data.finish ?: "0"} Selesai"
                             val process = "${result.data.data.progress ?: "0"} Proses"
                             binding.loadingList3.visibility = View.GONE
@@ -135,5 +139,8 @@ class ProfileFragment : Fragment() {
                 }
             }
         }
+    }
+    companion object{
+        const val PROFILE_USER_EXTRA = "profile_user"
     }
 }

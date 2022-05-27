@@ -1,7 +1,11 @@
 package id.capstone.tanamin.data.remote.retrofit
 
+import com.google.gson.JsonObject
 import id.capstone.tanamin.data.remote.response.*
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 
 interface ServicesAPI {
@@ -33,4 +37,14 @@ interface ServicesAPI {
     fun getAllClass(
         @Path("userid") userid: String
     ): Call<AllClassesResponse>
+
+    @Multipart
+    @POST("editProfile")
+    fun editProfile(
+        @Part profile_picture: MultipartBody.Part,
+        @Part name: RequestBody,
+        @Part age: RequestBody,
+        @Part address: RequestBody,
+        @Part userid: RequestBody
+    ): Call<RegisterResponse>
 }
