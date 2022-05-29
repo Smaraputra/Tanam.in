@@ -1,22 +1,28 @@
 package id.capstone.tanamin.view.classdetail
 
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.smarteist.autoimageslider.SliderView
-import id.capstone.tanamin.databinding.ActivityClassDetailBinding
-import id.capstone.tanamin.view.classmodule.ClassModuleActivity
 import id.capstone.tanamin.R
 import id.capstone.tanamin.data.local.database.Classes
+import id.capstone.tanamin.databinding.ActivityClassDetailBinding
+import id.capstone.tanamin.databinding.CustomAlertApiBinding
+import id.capstone.tanamin.view.classmodule.ClassModuleActivity
+import id.capstone.tanamin.view.forumcreate.ForumCreateActivity
 
 class ClassDetailActivity : AppCompatActivity() {
     private var _binding: ActivityClassDetailBinding?=null
     private val binding get():ActivityClassDetailBinding=_binding!!
     private lateinit var dataDetail: Classes
+    private lateinit var viewPager: ViewPager2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +30,6 @@ class ClassDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
         dataDetail = intent.getParcelableExtra<Classes>(DETAIL_CLASS) as Classes
-
         setupView()
     }
 
@@ -32,7 +37,10 @@ class ClassDetailActivity : AppCompatActivity() {
         setupPager()
         setupCarousel()
         binding.tvDetectionItemName.text=dataDetail.title
-        binding.expandTextView.text="Jeruk atau limau adalah semua tumbuhan berbunga anggota marga Citrus dari suku Rutaceae (suku jeruk-jerukan). Anggotanya berbentuk pohon dengan buah yang berdaging dengan rasa masam yang segar, meskipun banyak di antara anggotanya yang memiliki rasa manis. Rasa masam berasal dari kandungan asam sitrat yang memang menjadi terkandung pada semua anggotanya."
+        binding.expandTextView.text=dataDetail.detail
+        binding.ivBackButton.setOnClickListener {
+            onBackPressed()
+        }
         binding.btnStartLearn.setOnClickListener {
             val intent = Intent(this, ClassModuleActivity::class.java)
             startActivity(intent)
@@ -41,12 +49,36 @@ class ClassDetailActivity : AppCompatActivity() {
 
     private fun setupPager(){
         val sectionsPagerAdapter = ViewPagerAdapter(this)
-        val viewPager: ViewPager2 = binding.viewPager
+        sectionsPagerAdapter.classId = dataDetail.id_class.toString()
+        viewPager = binding.viewPager
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = binding.tabs
         TabLayoutMediator(tabs, viewPager) { tab, position ->
             tab.text = resources.getString(TAB_TITLES[position])
         }.attach()
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                if(position ==0){
+                    if(dataDetail.progress>0){
+                        binding.btnStartLearn.text = getString(R.string.continue_study)
+                    }else{
+                        binding.btnStartLearn.text = getString(R.string.class_detail_silabus_button_text)
+                    }
+                    binding.btnStartLearn.setOnClickListener{
+                        val intent = Intent(this@ClassDetailActivity, ClassModuleActivity::class.java)
+                        intent.putExtra(ID_CLASS, dataDetail.id_class)
+                        startActivity(intent)
+                    }
+                }else{
+                    binding.btnStartLearn.text = getString(R.string.new_forum)
+                    binding.btnStartLearn.setOnClickListener{
+                        val intent = Intent(this@ClassDetailActivity, ForumCreateActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+                super.onPageSelected(position)
+            }
+        })
     }
 
     private fun setupCarousel(){
@@ -57,6 +89,18 @@ class ClassDetailActivity : AppCompatActivity() {
         sliderView.startAutoCycle()
     }
 
+    fun showDialog(text: String, icon: Drawable) {
+        val builder = AlertDialog.Builder(this).create()
+        val bindAlert: CustomAlertApiBinding = CustomAlertApiBinding.inflate(LayoutInflater.from(this))
+        builder.setView(bindAlert.root)
+        bindAlert.infoDialog.text = text
+        bindAlert.imageView5.setImageDrawable(icon)
+        bindAlert.closeButton.setOnClickListener {
+            builder.dismiss()
+        }
+        builder.show()
+    }
+
     companion object {
         @StringRes
         private val TAB_TITLES = intArrayOf(
@@ -64,5 +108,6 @@ class ClassDetailActivity : AppCompatActivity() {
             R.string.class_detail_tablayouttext2
         )
         const val DETAIL_CLASS = "detail_class"
+        const val ID_CLASS = "id_class"
     }
 }

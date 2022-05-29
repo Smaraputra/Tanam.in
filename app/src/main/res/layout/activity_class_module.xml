@@ -5,14 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#117C43"
-    tools:context=".view.classmodule.ClassModuleActivity">
+    tools:context=".view.classmodule.ClassModuleActivity"
+    tools:ignore="Overdraw">
 
     <TextView
         android:id="@+id/tvFutureFeature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Kelas Menanam Cabai"
+        android:text="@string/no_data"
         android:textColor="@android:color/white"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -101,13 +102,13 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="24dp"
                     android:layout_marginEnd="24dp"
+                    android:text="@string/no_data"
                     android:textColor="@color/green_soft"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:text="Kelas Menanam Cabai"
                     tools:text="Kelas Menanam Cabai" />
 
                 <TextView
@@ -119,7 +120,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/tvDetectionItemName"
                     app:layout_constraintTop_toBottomOf="@+id/tvDetectionItemName"
-                    android:text="adalah kelas yang menanam cabai untuk ditanami cabai dalam menanam cabai supaya cabai dapat menjadi cabai yang ditanam dari bibit cabai dalam menanam cabai cabai cibai Kelas ini adalah kelas yang menanam cabai untuk ditanami cabai dalam menanam cabai supaya cabai dapat menjadi cabai yang ditanam dari bibit cabai dalam menanam cabai cabai cibai"
+                    android:text="@string/no_data"
                     tools:text="adalah kelas yang menanam cabai untuk ditanami cabai dalam menanam cabai supaya cabai dapat menjadi cabai yang ditanam dari bibit cabai dalam menanam cabai cabai cibai Kelas ini adalah kelas yang menanam cabai untuk ditanami cabai dalam menanam cabai supaya cabai dapat menjadi cabai yang ditanam dari bibit cabai dalam menanam cabai cabai cibai" />
 
                 <com.google.android.material.tabs.TabLayout

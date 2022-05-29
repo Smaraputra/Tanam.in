@@ -86,12 +86,24 @@ class ClassesFragment : Fragment() {
                         }
                         is Result.Success -> {
                             binding.loadingList4.visibility = View.GONE
+                            binding.cardViewNoClassFound.visibility = View.GONE
+                            binding.cardViewNoInternet.visibility = View.GONE
                             setupAdapter(result.data.data.jsonMemberClass)
                             liveData.removeObservers(requireActivity())
                             liveDataStore.removeObservers(requireActivity())
                         }
                         is Result.Error -> {
                             binding.loadingList4.visibility = View.GONE
+                            val liveData2 = classesViewModel.searchWord("")
+                            liveData2.observe(requireActivity()){
+                                setupAdapter(it)
+                                if(it.isEmpty()){
+                                    binding.cardViewNoInternet.visibility = View.VISIBLE
+                                }else{
+                                    binding.cardViewNoInternet.visibility = View.GONE
+                                }
+                                liveData2.removeObservers(requireActivity())
+                            }
                             ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_error_24)
                                 ?.let { (requireActivity() as MainActivity).showDialog(result.error, it) }
                             liveData.removeObservers(requireActivity())
@@ -111,9 +123,15 @@ class ClassesFragment : Fragment() {
 
         }
         override fun afterTextChanged(s: Editable) {
+            binding.cardViewNoClassFound.visibility = View.GONE
             val liveData = classesViewModel.searchWord(binding.searchView.text.toString())
             liveData.observe(requireActivity()){
                 setupAdapter(it)
+                if(it.isEmpty()){
+                    binding.cardViewNoClassFound.visibility = View.VISIBLE
+                }else{
+                    binding.cardViewNoClassFound.visibility = View.GONE
+                }
                 liveData.removeObservers(requireActivity())
             }
         }
@@ -121,8 +139,8 @@ class ClassesFragment : Fragment() {
 
     private fun setupAdapter(classes: List<Classes>){
         binding.rvClassesList.setHasFixedSize(true)
-        binding.rvClassesList.layoutManager = LinearLayoutManager(requireContext())
-        classesListAdapter = ClassesListAdapter(requireContext(), classes)
+        binding.rvClassesList.layoutManager = LinearLayoutManager(requireActivity())
+        classesListAdapter = ClassesListAdapter(requireActivity(), classes)
         binding.rvClassesList.adapter = classesListAdapter
     }
 }

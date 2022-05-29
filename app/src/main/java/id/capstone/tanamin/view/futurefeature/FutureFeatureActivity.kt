@@ -1,10 +1,8 @@
 package id.capstone.tanamin.view.futurefeature
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import id.capstone.tanamin.R
+import androidx.appcompat.app.AppCompatActivity
 import id.capstone.tanamin.databinding.ActivityFutureFeatureBinding
-import id.capstone.tanamin.databinding.ActivityLoginBinding
 
 class FutureFeatureActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFutureFeatureBinding

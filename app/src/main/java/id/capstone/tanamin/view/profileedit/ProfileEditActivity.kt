@@ -13,7 +13,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -32,7 +31,6 @@ import id.capstone.tanamin.utils.uriToFile
 import id.capstone.tanamin.view.ViewModelFactory
 import id.capstone.tanamin.view.login.LoginActivity
 import id.capstone.tanamin.view.profile.ProfileFragment
-import id.capstone.tanamin.view.register.RegisterViewModel
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody

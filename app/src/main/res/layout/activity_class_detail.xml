@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#117C43"
-    tools:context=".view.classdetail.ClassDetailActivity">
+    tools:context=".view.classdetail.ClassDetailActivity"
+    tools:ignore="Overdraw">
 
     <TextView
         android:id="@+id/tvDetectionResultTitle"
@@ -31,32 +32,44 @@
         app:layout_constraintTop_toTopOf="@+id/tvDetectionResultTitle"
         app:srcCompat="@drawable/ic_back_arrow" />
 
-    <com.smarteist.autoimageslider.SliderView
-        android:id="@+id/imageSlider"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:elevation="16dp"
-        android:src="@drawable/ic_background_logo"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/constraintLayout4"
-        app:shapeAppearanceOverlay="@style/roundedAllCornersImageView"
-        app:sliderAnimationDuration="500"
-        app:sliderAutoCycleDirection="back_and_forth"
-        app:sliderAutoCycleEnabled="true"
-        app:sliderIndicatorAnimationDuration="600"
-        app:sliderIndicatorGravity="center_horizontal|bottom"
-        app:sliderIndicatorMargin="15dp"
-        app:sliderIndicatorOrientation="horizontal"
-        app:sliderIndicatorPadding="3dp"
-        app:sliderIndicatorRadius="2dp"
-        app:sliderIndicatorSelectedColor="#009CF8"
-        app:sliderIndicatorUnselectedColor="#FFF"
-        app:sliderScrollTimeInSec="5"
-        app:sliderStartAutoCycle="true" />
+        app:layout_constraintTop_toTopOf="@+id/constraintLayout4">
+
+        <com.smarteist.autoimageslider.SliderView
+            android:id="@+id/imageSlider"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:elevation="16dp"
+            android:src="@drawable/ic_background_logo"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/roundedAllCornersImageView"
+            app:sliderAnimationDuration="500"
+            app:sliderAutoCycleDirection="back_and_forth"
+            app:sliderAutoCycleEnabled="true"
+            app:sliderIndicatorAnimationDuration="600"
+            app:sliderIndicatorGravity="center_horizontal|bottom"
+            app:sliderIndicatorMargin="15dp"
+            app:sliderIndicatorOrientation="horizontal"
+            app:sliderIndicatorPadding="3dp"
+            app:sliderIndicatorRadius="2dp"
+            app:sliderIndicatorSelectedColor="#009CF8"
+            app:sliderIndicatorUnselectedColor="#FFF"
+            app:sliderScrollTimeInSec="5"
+            app:sliderStartAutoCycle="true" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout4"
@@ -76,6 +89,8 @@
             android:layout_height="0dp"
             android:layout_marginTop="75dp"
             android:layout_marginBottom="12dp"
+            android:clipToPadding="true"
+            android:paddingTop="10dp"
             app:layout_constraintBottom_toTopOf="@+id/btnStartLearn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -113,7 +128,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
-                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="24dp"
                     android:text="@string/no_data"
                     android:textColor="@color/green_soft"
@@ -125,7 +139,6 @@
                     tools:text="Kelas Menanam Cabai" />
 
                 <com.ms.square.android.expandabletextview.ExpandableTextView
-                    xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/expand_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -134,8 +147,8 @@
                     app:layout_constraintEnd_toEndOf="@+id/tvDetectionItemName"
                     app:layout_constraintStart_toStartOf="@+id/tvDetectionItemName"
                     app:layout_constraintTop_toBottomOf="@+id/tvDetectionItemName"
-                    expandableTextView:maxCollapsedLines="3"
-                    expandableTextView:animDuration="200">
+                    app:animDuration="200"
+                    app:maxCollapsedLines="3">
 
                     <TextView
                         android:id="@id/expandable_text"
@@ -146,17 +159,21 @@
                         android:id="@id/expand_collapse"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="16dp"
-                        android:layout_gravity="end|bottom"
-                        android:background="@android:color/transparent"
-                        android:contentDescription="@string/read_more_button" />
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="4dp"
+                        android:background="@color/grey_soft"
+                        android:contentDescription="@string/read_more_button"
+                        android:padding="8dp" />
                 </com.ms.square.android.expandabletextview.ExpandableTextView>
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
                     android:background="?attr/colorOnPrimary"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/expand_text_view"
                     app:tabTextAppearance="@style/TextTabLayout"
@@ -180,14 +197,14 @@
             android:layout_height="50dp"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="12dp"
             android:background="@drawable/button_background"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:text="@string/class_detail_silabus_button_text"
             android:textAllCaps="false"
             android:textColor="?attr/colorOnPrimary"
-            app:cornerRadius="5dp"
+            app:cornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

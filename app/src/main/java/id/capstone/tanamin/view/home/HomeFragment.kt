@@ -14,15 +14,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import id.capstone.tanamin.R
 import id.capstone.tanamin.data.Result
+import id.capstone.tanamin.data.local.database.Classes
 import id.capstone.tanamin.data.local.datastore.LoginPreferences
 import id.capstone.tanamin.data.local.datastore.PreferencesViewModel
 import id.capstone.tanamin.data.local.datastore.PreferencesViewModelFactory
 import id.capstone.tanamin.databinding.FragmentHomeBinding
 import id.capstone.tanamin.view.MainActivity
 import id.capstone.tanamin.view.ViewModelFactory
+import id.capstone.tanamin.view.classdetail.ClassDetailActivity
 import id.capstone.tanamin.view.futurefeature.FutureFeatureActivity
 
 class HomeFragment : Fragment() {
@@ -88,24 +90,48 @@ class HomeFragment : Fragment() {
                         is Result.Success -> {
                             binding.loadingList2.visibility = View.GONE
                             if(result.data.data !=null){
+                                binding.cardViewClass.visibility = View.VISIBLE
+                                binding.cardViewNoClass.visibility = View.GONE
+                                binding.cardViewNoInternet.visibility = View.GONE
                                 val percentage = "${result.data.data.progress} %"
+                                Glide.with(requireActivity())
+                                    .asBitmap()
+                                    .load(result.data.data.kelas[0].picture)
+                                    .placeholder(R.drawable.ic_background_logo)
+                                    .error(R.drawable.ic_background_logo)
+                                    .into(binding.classImage)
                                 binding.classTitle.text=result.data.data.kelas[0].title
-                                binding.continueContent.text=result.data.data.recentModul.toString()
+                                binding.continueContent.text=result.data.data.modul_title
                                 binding.percentage.text=percentage
-                                binding.cardViewNoClass.visibility=View.GONE
                                 binding.cardViewClass.setOnClickListener{
-
+                                    val data = Classes(
+                                        result.data.data.kelas[0].idClass,
+                                        result.data.data.kelas[0].title,
+                                        result.data.data.kelas[0].detail,
+                                        result.data.data.kelas[0].picture,
+                                        result.data.data.kelas[0].totalModule,
+                                        result.data.data.progress,
+                                        result.data.data.modul_title,
+                                        result.data.data.recentModul,
+                                    )
+                                    val intent = Intent(requireActivity(), ClassDetailActivity::class.java)
+                                    intent.putExtra(DETAIL_CLASS, data)
+                                    startActivity(intent)
                                 }
                             }else{
                                 binding.loadingList2.visibility = View.GONE
-                                binding.cardViewNoClass.visibility=View.VISIBLE
-                                binding.cardViewClass.visibility=View.INVISIBLE
+                                binding.cardViewNoClass.visibility = View.VISIBLE
+                                binding.cardViewClass.visibility = View.INVISIBLE
+                                binding.cardViewNoInternet.visibility = View.GONE
                             }
                             liveData.removeObservers(requireActivity())
                             liveDataStore.removeObservers(requireActivity())
                         }
                         is Result.Error -> {
                             binding.loadingList2.visibility = View.GONE
+                            binding.cardViewNoInternet.visibility = View.VISIBLE
+                            binding.cardViewNoClass.visibility = View.INVISIBLE
+                            binding.cardViewClass.visibility = View.INVISIBLE
                             ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_error_24)
                                 ?.let { (requireActivity() as MainActivity).showDialog(result.error, it) }
                             liveData.removeObservers(requireActivity())
@@ -119,5 +145,9 @@ class HomeFragment : Fragment() {
             val nameHome = "Hai, ${username.substring(username.lastIndexOf(" ")+1)}"
             binding.textView.text=nameHome
         }
+    }
+
+    companion object {
+        const val DETAIL_CLASS = "detail_class"
     }
 }

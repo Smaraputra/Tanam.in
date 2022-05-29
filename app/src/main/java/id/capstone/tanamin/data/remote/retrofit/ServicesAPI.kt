@@ -1,11 +1,9 @@
 package id.capstone.tanamin.data.remote.retrofit
 
-import com.google.gson.JsonObject
 import id.capstone.tanamin.data.remote.response.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.*
 
 interface ServicesAPI {
@@ -37,6 +35,16 @@ interface ServicesAPI {
     fun getAllClass(
         @Path("userid") userid: String
     ): Call<AllClassesResponse>
+
+    @GET("module/{classId}")
+    fun getAllModule(
+        @Path("classId") classId: String
+    ): Call<ListModulesResponse>
+
+    @GET("module/{classId}/forum")
+    fun getAllForum(
+        @Path("classId") classId: String
+    ): Call<ListForumResponse>
 
     @Multipart
     @POST("editProfile")

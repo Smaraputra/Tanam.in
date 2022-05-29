@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="56dp"
     android:background="@color/green_soft"
-    tools:context=".view.profile.ProfileFragment">
+    tools:context=".view.profile.ProfileFragment"
+    tools:ignore="Overdraw">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/classImage2"

@@ -25,6 +25,8 @@ class TanaminRepository(
     private val resultProfile=MediatorLiveData<Result<ProfileResponse>>()
     private val resultAllClasses=MediatorLiveData<Result<AllClassesResponse>>()
     private val resultEditProfile=MediatorLiveData<Result<RegisterResponse>>()
+    private val resultListModule=MediatorLiveData<Result<ListModulesResponse>>()
+    private val resultListForum=MediatorLiveData<Result<ListForumResponse>>()
 
     fun registerUser(registerMap: HashMap<String, String>): LiveData<Result<RegisterResponse>> {
         resultRegister.value = Result.Loading
@@ -173,6 +175,7 @@ class TanaminRepository(
     fun getSearchClass(word: String): LiveData<List<Classes>>{
         return tanaminRoomDatabase.tanaminDao().searchClasses(word)
     }
+
     fun editProfile(profilePictureMultipart: MultipartBody.Part, name: RequestBody, age:RequestBody, address: RequestBody, userid: RequestBody):LiveData<Result<RegisterResponse>>{
         resultEditProfile.value = Result.Loading
         val client = apiService.editProfile(profilePictureMultipart,name,age,address,userid)
@@ -199,5 +202,55 @@ class TanaminRepository(
             }
         })
         return resultEditProfile
+    }
+
+    fun getAllModule(classId : String): LiveData<Result<ListModulesResponse>>{
+        resultListModule.value = Result.Loading
+        val client = apiService.getAllModule(classId)
+        client.enqueue(object : Callback<ListModulesResponse> {
+            override fun onResponse(call: Call<ListModulesResponse>, response: Response<ListModulesResponse>) {
+                if(response.isSuccessful){
+                    resultListModule.value = Result.Success(response.body() as ListModulesResponse)
+                }else{
+                    lateinit var jsonObject: JSONObject
+                    try {
+                        jsonObject = JSONObject(response.errorBody()!!.string())
+                        resultListModule.value = Result.Error(jsonObject.getString("message"))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ListModulesResponse>, t: Throwable) {
+                resultListModule.value = Result.Error(t.message.toString())
+            }
+        })
+        return resultListModule
+    }
+
+    fun getAllForum(classId : String): LiveData<Result<ListForumResponse>>{
+        resultListForum.value = Result.Loading
+        val client = apiService.getAllForum(classId)
+        client.enqueue(object : Callback<ListForumResponse> {
+            override fun onResponse(call: Call<ListForumResponse>, response: Response<ListForumResponse>) {
+                if(response.isSuccessful){
+                    resultListForum.value = Result.Success(response.body() as ListForumResponse)
+                }else{
+                    lateinit var jsonObject: JSONObject
+                    try {
+                        jsonObject = JSONObject(response.errorBody()!!.string())
+                        resultListForum.value = Result.Error(jsonObject.getString("message"))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ListForumResponse>, t: Throwable) {
+                resultListForum.value = Result.Error(t.message.toString())
+            }
+        })
+        return resultListForum
     }
 }

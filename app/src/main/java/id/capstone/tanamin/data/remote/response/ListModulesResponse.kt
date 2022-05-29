@@ -2,31 +2,34 @@ package id.capstone.tanamin.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 
-data class HomeResponse(
+data class ListModulesResponse(
 
 	@field:SerializedName("data")
-	val data: DataHome?=null,
+	val data: ListModuleData?,
 
 	@field:SerializedName("status")
 	val status: String
 )
 
-data class DataHome(
+data class ListmodulItem(
 
-	@field:SerializedName("recent_modul")
-	val recentModul: Int,
+	@field:SerializedName("title")
+	val title: String,
 
-	@field:SerializedName("modul_title")
-	val modul_title: String,
-
-	@field:SerializedName("kelas")
-	val kelas: List<ClassesHome>,
-
-	@field:SerializedName("progress")
-	val progress: Float
+	@field:SerializedName("id_moduls")
+	val idModuls: Int
 )
 
-data class ClassesHome(
+data class ListModuleData(
+
+	@field:SerializedName("detail_kelas")
+	val detailKelas: List<DetailKelasItem>,
+
+	@field:SerializedName("listmodul")
+	val listmodul: List<ListmodulItem>
+)
+
+data class DetailKelasItem(
 
 	@field:SerializedName("id_class")
 	val idClass: Int,

@@ -27,9 +27,6 @@
     <string name="class_detail_tablayouttext1">Silabus</string>
     <string name="class_detail_tablayouttext2">Forum</string>
     <string name="class_detail_silabus_button_text">Mulai Belajar</string>
-    <string name="class_detail_forum_button_text">Mulai Bertanya</string>
-
-    <string name="hello_blank_fragment">hello_blank_fragment</string>
 
     <string name="class_nav">Kelas</string>
     <string name="home_nav">Home</string>
@@ -112,15 +109,23 @@
     <string name="me_chat">Saya</string>
     <string name="enter_message">Masukkan pesan</string>
     <string name="send_chat">Kirim</string>
-    <string name="forum_icon">Ikon Forum</string>
     <string name="forum_title">Judul Pertanyaan</string>
     <string name="forum_title_hint">Judul pertanyaan Anda</string>
     <string name="forum_question">Detail Pertanyaan</string>
     <string name="forum_question_hint">Jelaskan pertanyaan Anda</string>
     <string name="forum_send">Kirim Pertanyaan</string>
-
+    <string name="new_forum">Mulai Bertanya</string>
     <string name="home_no_class">Anda belum mengikuti kelas</string>
     <string name="hint_search">Nama kelas …</string>
     <string name="info_no_class">Silahkan ikuti salah satu kelas untuk mulai melacak kemajuan anda.</string>
     <string name="read_more_button">Baca Selanjutnya</string>
+    <string name="no_connection">Anda tidak terkoneksi internet.</string>
+    <string name="info_no_internet">Silahkan sambungkan dengan internet untuk melihat akses materi terakhir anda.</string>
+    <string name="info_no_class_internet">Silahkan sambungkan dengan internet untuk melihat daftar kelas yang ada.</string>
+    <string name="info_no_module_internet">Silahkan sambungkan dengan internet untuk melihat daftar materi yang ada.</string>
+    <string name="no_class_found">Silahkan coba kata kunci lain pada kolom pencarian.</string>
+    <string name="no_class">Kelas tidak ditemukan.</string>
+    <string name="no_module">Belum ada materi.</string>
+    <string name="no_module_info">Tidak ada materi yang terkait dengan kelas ini.</string>
+    <string name="continue_study">Lanjut Belajar</string>
 </resources>

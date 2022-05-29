@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
-    android:layout_height="36dp"
-    android:layout_gravity="center"
+    android:layout_height="48dp"
     android:layout_marginStart="24dp"
     android:layout_marginTop="5dp"
     android:layout_marginEnd="24dp"
@@ -22,11 +21,12 @@
             android:id="@+id/ivSilabusLogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:contentDescription="@string/silabus_icon"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
-            card_view:srcCompat="@drawable/ic_silabus"
-            android:contentDescription="@string/silabus_icon" />
+            card_view:srcCompat="@drawable/ic_silabus" />
 
         <TextView
             android:id="@+id/tvSilabusTitle"
@@ -34,7 +34,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="12dp"
             android:gravity="center_vertical"
-            android:text="Penanaman Cabai"
+            android:text="@string/no_data"
             android:textColor="@color/green_soft"
             android:textSize="12sp"
             android:textStyle="bold"

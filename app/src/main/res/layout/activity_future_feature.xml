@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#117C43"
-    tools:context=".view.futurefeature.FutureFeatureActivity">
+    tools:context=".view.futurefeature.FutureFeatureActivity"
+    tools:ignore="Overdraw">
 
     <TextView
         android:id="@+id/tvFutureFeature"

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#117C43"
-    tools:context=".view.detectionresult.DetectionResultActivity">
+    tools:context=".view.detectionresult.DetectionResultActivity"
+    tools:ignore="Overdraw">
 
     <TextView
         android:id="@+id/tvDetectionResultTitle"
@@ -102,7 +103,7 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="24dp"
-                    android:text="Tomat"
+                    android:text="@string/no_data"
                     android:textColor="@color/green_soft"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -118,7 +119,7 @@
                     android:layout_marginTop="6dp"
                     android:ellipsize="end"
                     android:maxLines="5"
-                    android:text="Tomat (Solanum lycopersicum syn. Lycopersicum esculentum) adalah tumbuhan dari keluarga Solanaceae, tumbuhan asli Amerika Tengah dan Selatan, dari Meksiko sampai Peru. Tomat merupakan tumbuhan siklus hidup singkat, dapat tumbuh setinggi 1 sampai tidak tahu."
+                    android:text="@string/no_data"
                     app:layout_constraintEnd_toEndOf="@+id/tvDetectionItemName"
                     app:layout_constraintStart_toStartOf="@+id/tvDetectionItemName"
                     app:layout_constraintTop_toBottomOf="@+id/tvDetectionItemName"
@@ -160,7 +161,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
-                    android:text="Likopen, polifenol, naringenin, dan chlorogenic acidkarotenoid, lutein, gula, vitamin A, vitamin C, folat, dan kalium"
+                    android:text="@string/no_data"
+                    tools:text="Likopen, polifenol, naringenin, dan chlorogenic acidkarotenoid, lutein, gula, vitamin A, vitamin C, folat, dan kalium"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/tvContentKandungan"
@@ -193,7 +195,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
-                    android:text="Membantu memerangi efek radikal bebas penyebab kanker, antioksidan."
+                    android:text="@string/no_data"
+                    tools:text="Membantu memerangi efek radikal bebas penyebab kanker, antioksidan."
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/tvBenefit"
                     app:layout_constraintTop_toBottomOf="@+id/tvBenefit" />
