@@ -35,6 +35,11 @@ class SilabusFragment : Fragment() {
         getClassList()
     }
 
+    override fun onResume() {
+        super.onResume()
+        getClassList()
+    }
+
     private fun setupViewModel(){
         val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity(), "")
         val silabusViewModel: SilabusViewModel by viewModels {

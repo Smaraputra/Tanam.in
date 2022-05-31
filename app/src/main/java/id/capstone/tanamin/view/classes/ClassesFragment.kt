@@ -75,9 +75,11 @@ class ClassesFragment : Fragment() {
     }
 
     private fun getClassList(){
+        val classMap: HashMap<String, String> = HashMap()
         liveDataStore = preferencesViewModel.getIDUser()
         liveDataStore.observe(requireActivity()) { userId ->
-            val liveData = classesViewModel.getAllClass(userId.toString())
+            classMap["userid"] = userId.toString()
+            val liveData = classesViewModel.getAllClass(classMap)
             liveData.observe(requireActivity()){ result ->
                 if (result != null) {
                     when (result) {

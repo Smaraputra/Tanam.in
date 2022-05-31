@@ -121,6 +121,7 @@
     <string name="read_more_button">Baca Selanjutnya</string>
     <string name="no_connection">Anda tidak terkoneksi internet.</string>
     <string name="info_no_internet">Silahkan sambungkan dengan internet untuk melihat akses materi terakhir anda.</string>
+    <string name="info_no_forum_internet">Silahkan sambungkan dengan internet untuk melihat diskusi forum.</string>
     <string name="info_no_class_internet">Silahkan sambungkan dengan internet untuk melihat daftar kelas yang ada.</string>
     <string name="info_no_module_internet">Silahkan sambungkan dengan internet untuk melihat daftar materi yang ada.</string>
     <string name="no_class_found">Silahkan coba kata kunci lain pada kolom pencarian.</string>
@@ -128,4 +129,6 @@
     <string name="no_module">Belum ada materi.</string>
     <string name="no_module_info">Tidak ada materi yang terkait dengan kelas ini.</string>
     <string name="continue_study">Lanjut Belajar</string>
+    <string name="no_reply">Belum ada balasan.</string>
+    <string name="no_reply_info">Ayo mulai bantu menjawab pertanyaan.</string>
 </resources>

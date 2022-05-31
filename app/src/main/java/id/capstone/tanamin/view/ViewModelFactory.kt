@@ -8,6 +8,8 @@ import id.capstone.tanamin.data.di.Injection
 import id.capstone.tanamin.view.classdetail.forum.ForumViewModel
 import id.capstone.tanamin.view.classdetail.silabus.SilabusViewModel
 import id.capstone.tanamin.view.classes.ClassesViewModel
+import id.capstone.tanamin.view.forumcreate.ForumCreateViewModel
+import id.capstone.tanamin.view.forumresult.ForumResultViewModel
 import id.capstone.tanamin.view.home.HomeViewModel
 import id.capstone.tanamin.view.login.LoginViewModel
 import id.capstone.tanamin.view.profile.ProfileViewModel
@@ -42,6 +44,12 @@ class ViewModelFactory private constructor(private val tanaminRepository: Tanami
             }
             modelClass.isAssignableFrom(ForumViewModel::class.java) -> {
                 return ForumViewModel(tanaminRepository) as T
+            }
+            modelClass.isAssignableFrom(ForumCreateViewModel::class.java) -> {
+                return ForumCreateViewModel(tanaminRepository) as T
+            }
+            modelClass.isAssignableFrom(ForumResultViewModel::class.java) -> {
+                return ForumResultViewModel(tanaminRepository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

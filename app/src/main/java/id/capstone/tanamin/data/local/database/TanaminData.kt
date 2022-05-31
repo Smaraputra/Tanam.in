@@ -16,7 +16,7 @@ data class Classes(
     val total_module:Int,
     val progress: Float,
     val modul_title: String,
-    val modul_id: Int
+    val lastest_module: Int,
 ) : Parcelable
 
 @Entity (tableName = "modules")

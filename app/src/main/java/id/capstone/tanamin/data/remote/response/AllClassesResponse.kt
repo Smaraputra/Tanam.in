@@ -6,13 +6,13 @@ import id.capstone.tanamin.data.local.database.Classes
 data class AllClassesResponse(
 
 	@field:SerializedName("data")
-	val data: AllClassesData,
+	val data: ClassData,
 
 	@field:SerializedName("status")
 	val status: String
 )
 
-data class AllClassesData(
+data class ClassData(
 
 	@field:SerializedName("class")
 	val jsonMemberClass: List<Classes>

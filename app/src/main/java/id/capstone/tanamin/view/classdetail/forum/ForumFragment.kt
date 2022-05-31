@@ -35,6 +35,11 @@ class ForumFragment : Fragment() {
         getForumList()
     }
 
+    override fun onResume() {
+        super.onResume()
+        getForumList()
+    }
+
     private fun setupViewModel(){
         val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity(), "")
         val forumViewModel: ForumViewModel by viewModels {

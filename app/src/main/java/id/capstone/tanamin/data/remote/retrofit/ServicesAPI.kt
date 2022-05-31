@@ -31,10 +31,11 @@ interface ServicesAPI {
         @FieldMap hashMap: Map<String, String>
     ):Call<ProfileResponse>
 
-    @GET("class/{userid}")
+    @FormUrlEncoded
+    @POST("class")
     fun getAllClass(
-        @Path("userid") userid: String
-    ): Call<AllClassesResponse>
+        @FieldMap hashMap: Map<String, String>
+    ):Call<AllClassesResponse>
 
     @GET("module/{classId}")
     fun getAllModule(
@@ -55,4 +56,21 @@ interface ServicesAPI {
         @Part address: RequestBody,
         @Part userid: RequestBody
     ): Call<RegisterResponse>
+
+    @FormUrlEncoded
+    @POST("createForum")
+    fun createForum(
+        @FieldMap hashMap: Map<String, String>
+    ):Call<CreateForumResponse>
+
+    @GET("ForumMassage/{forumId}")
+    fun getAllMessage(
+        @Path("forumId") forumId: String
+    ): Call<AllMessageResponse>
+
+    @FormUrlEncoded
+    @POST("sendMassage")
+    fun sendMessage(
+        @FieldMap hashMap: Map<String, String>
+    ):Call<SendMessageResponse>
 }

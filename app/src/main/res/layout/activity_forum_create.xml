@@ -1,159 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:background="#117C43"
-tools:context=".view.forumcreate.ForumCreateActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#117C43"
+    tools:context=".view.forumcreate.ForumCreateActivity"
     tools:ignore="Overdraw">
 
-<TextView
-    android:id="@+id/tvFutureFeature"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="24dp"
-    android:text="@string/forum_send"
-    android:textColor="@android:color/white"
-    android:textSize="16sp"
-    android:textStyle="bold"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
-
-<ImageView
-    android:id="@+id/ivBackButton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="24dp"
-    app:layout_constraintBottom_toBottomOf="@+id/tvFutureFeature"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="@+id/tvFutureFeature"
-    app:srcCompat="@drawable/ic_back_arrow"
-    android:contentDescription="@string/back_button_action_bar" />
-
-
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/constraintLayout"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_marginTop="24dp"
-    android:background="@drawable/list_background"
-    android:elevation="15dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/tvFutureFeature">
-
-    <ProgressBar
-        android:id="@+id/loadingModule"
-        style="?android:attr/progressBarStyle"
+    <TextView
+        android:id="@+id/tvFutureFeature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/loading_background"
-        android:elevation="1dp"
-        android:padding="10dp"
-        android:visibility="gone"
+        android:layout_marginTop="24dp"
+        android:text="@string/forum_send"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivBackButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvFutureFeature"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvFutureFeature"
+        app:srcCompat="@drawable/ic_back_arrow"
+        android:contentDescription="@string/back_button_action_bar" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/list_background"
+        android:elevation="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toBottomOf="@+id/tvFutureFeature">
 
-    <ScrollView
-        android:id="@+id/scrollView2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout2"
-            android:layout_width="match_parent"
+        <ProgressBar
+            android:id="@+id/loadingModule"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="400dp"
+            android:layout_gravity="center"
+            android:background="@drawable/loading_background"
+            android:elevation="1dp"
+            android:padding="10dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/ivClassModule"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/etLayoutTitle"
+        <ScrollView
+            android:id="@+id/scrollView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="24dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="30"
+                android:minHeight="400dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/titleText">
+                app:layout_constraintTop_toTopOf="@+id/ivClassModule"
+                app:layout_constraintVertical_bias="0.0">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etTitle"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/etLayoutTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/text_input"
-                    android:hint="@string/forum_title_hint" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="24dp"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="30"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/titleText">
 
-            <TextView
-                android:id="@+id/titleText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="24dp"
-                android:layout_weight="0"
-                android:text="@string/forum_title"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/text_input"
+                        android:hint="@string/forum_title_hint" />
+                </com.google.android.material.textfield.TextInputLayout>
 
+                <TextView
+                    android:id="@+id/titleText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_weight="0"
+                    android:text="@string/forum_title"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/questionText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_weight="0"
-                android:text="@string/forum_question"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etLayoutTitle" />
+                <TextView
+                    android:id="@+id/questionText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_weight="0"
+                    android:text="@string/forum_question"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/etLayoutTitle" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/etQuestionLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="24dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="500"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/questionText">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etQuestion"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/etQuestionLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/text_input"
-                    android:gravity="top"
-                    android:hint="@string/forum_question_hint"
-                    android:minHeight="200dp"
-                    android:minLines="2" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="24dp"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="200"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/questionText">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etQuestion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/text_input"
+                        android:gravity="top"
+                        android:hint="@string/forum_question_hint"
+                        android:minHeight="200dp"
+                        android:minLines="2" />
+                </com.google.android.material.textfield.TextInputLayout>
 <!--            <EditText-->
 <!--                android:id="@+id/etTitle"-->
 <!--                android:layout_width="0dp"-->
@@ -204,28 +203,29 @@ tools:context=".view.forumcreate.ForumCreateActivity"
 <!--                app:layout_constraintHorizontal_bias="0.0"-->
 <!--                app:layout_constraintStart_toStartOf="parent"-->
 <!--                app:layout_constraintTop_toBottomOf="@+id/questionText" />-->
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
 
-    <Button
-        android:id="@+id/btnNext"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/button_background"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:text="@string/forum_send"
-        android:textAllCaps="false"
-        android:textColor="?attr/colorOnPrimary"
-        app:cornerRadius="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:alpha="1"
+            android:background="@drawable/button_background"
+            android:enabled="false"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/forum_send"
+            android:textAllCaps="false"
+            android:textColor="?attr/colorOnPrimary"
+            app:cornerRadius="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

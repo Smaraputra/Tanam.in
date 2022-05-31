@@ -9,8 +9,6 @@
         android:id="@+id/text_gchat_user_me"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
         android:text="@string/me_chat"
         android:textColor="@color/green_soft"
         android:textSize="16sp"
@@ -19,10 +17,9 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/card_gchat_message_other"
+        android:id="@+id/card_gchat_message_me"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
         app:cardBackgroundColor="#eef1f6"
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
@@ -32,13 +29,13 @@
         app:layout_constraintTop_toBottomOf="@+id/text_gchat_user_me">
 
         <LinearLayout
-            android:id="@+id/layout_gchat_container_other"
+            android:id="@+id/layout_gchat_container_me"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/text_gchat_message_other"
+                android:id="@+id/text_gchat_message_me"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"

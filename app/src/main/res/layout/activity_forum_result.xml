@@ -9,10 +9,16 @@
     tools:ignore="Overdraw">
 
     <TextView
-        android:id="@+id/tvFutureFeature2"
-        android:layout_width="wrap_content"
+        android:id="@+id/titleQuestion"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="64dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:lines="2"
+        android:maxLines="2"
         android:text="@string/no_data"
         android:textColor="@android:color/white"
         android:textSize="16sp"
@@ -27,39 +33,149 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:contentDescription="@string/back_button_action_bar"
-        app:layout_constraintBottom_toBottomOf="@+id/tvFutureFeature2"
+        app:layout_constraintBottom_toBottomOf="@+id/titleQuestion"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvFutureFeature2"
+        app:layout_constraintTop_toTopOf="@+id/titleQuestion"
         app:srcCompat="@drawable/ic_back_arrow" />
+
 
     <TextView
         android:id="@+id/forumQuestion"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
         android:ellipsize="end"
-        android:ems="12"
         android:maxLines="4"
         android:textColor="@color/grey_soft"
         android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvFutureFeature2"
+        app:layout_constraintTop_toBottomOf="@+id/titleQuestion"
         tools:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="170dp"
         android:background="@drawable/list_background"
         android:elevation="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewNoChat"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:visibility="gone"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/noChatInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/no_reply"
+                    android:textColor="@color/green_soft"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.2" />
+
+                <TextView
+                    android:id="@+id/noChatInfo2"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/no_reply_info"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/noChatInfo"
+                    app:layout_constraintVertical_bias="0.3" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewNoInternet"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:visibility="gone"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/noInternetInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/no_connection"
+                    android:textColor="@color/green_soft"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.2" />
+
+                <TextView
+                    android:id="@+id/noInternetInfo2"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/info_no_forum_internet"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/noInternetInfo"
+                    app:layout_constraintVertical_bias="0.3" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <ProgressBar
+            android:id="@+id/loadingModule2"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/loading_background"
+            android:elevation="1dp"
+            android:padding="10dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

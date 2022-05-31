@@ -89,11 +89,11 @@ class HomeFragment : Fragment() {
                         }
                         is Result.Success -> {
                             binding.loadingList2.visibility = View.GONE
-                            if(result.data.data !=null){
+                            if(result.data.data != null){
                                 binding.cardViewClass.visibility = View.VISIBLE
                                 binding.cardViewNoClass.visibility = View.GONE
                                 binding.cardViewNoInternet.visibility = View.GONE
-                                val percentage = "${result.data.data.progress} %"
+                                val percentage = "${result.data.data.kelas[0].progress} %"
                                 Glide.with(requireActivity())
                                     .asBitmap()
                                     .load(result.data.data.kelas[0].picture)
@@ -101,18 +101,18 @@ class HomeFragment : Fragment() {
                                     .error(R.drawable.ic_background_logo)
                                     .into(binding.classImage)
                                 binding.classTitle.text=result.data.data.kelas[0].title
-                                binding.continueContent.text=result.data.data.modul_title
+                                binding.continueContent.text=result.data.data.kelas[0].modul_title
                                 binding.percentage.text=percentage
                                 binding.cardViewClass.setOnClickListener{
                                     val data = Classes(
-                                        result.data.data.kelas[0].idClass,
+                                        result.data.data.kelas[0].id_class,
                                         result.data.data.kelas[0].title,
                                         result.data.data.kelas[0].detail,
                                         result.data.data.kelas[0].picture,
-                                        result.data.data.kelas[0].totalModule,
-                                        result.data.data.progress,
-                                        result.data.data.modul_title,
-                                        result.data.data.recentModul,
+                                        result.data.data.kelas[0].total_module,
+                                        result.data.data.kelas[0].progress,
+                                        result.data.data.kelas[0].modul_title,
+                                        result.data.data.kelas[0].lastest_module
                                     )
                                     val intent = Intent(requireActivity(), ClassDetailActivity::class.java)
                                     intent.putExtra(DETAIL_CLASS, data)

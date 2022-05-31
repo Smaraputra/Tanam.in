@@ -27,6 +27,9 @@ class TanaminRepository(
     private val resultEditProfile=MediatorLiveData<Result<RegisterResponse>>()
     private val resultListModule=MediatorLiveData<Result<ListModulesResponse>>()
     private val resultListForum=MediatorLiveData<Result<ListForumResponse>>()
+    private val resultCreateForum=MediatorLiveData<Result<CreateForumResponse>>()
+    private val resultGetMessage=MediatorLiveData<Result<AllMessageResponse>>()
+    private val resultSendMessage=MediatorLiveData<Result<SendMessageResponse>>()
 
     fun registerUser(registerMap: HashMap<String, String>): LiveData<Result<RegisterResponse>> {
         resultRegister.value = Result.Loading
@@ -128,9 +131,9 @@ class TanaminRepository(
         return resultProfile
     }
 
-    fun getAllClass(profileMap: String): LiveData<Result<AllClassesResponse>>{
+    fun getAllClass(classMap: HashMap<String,String>): LiveData<Result<AllClassesResponse>>{
         resultAllClasses.value = Result.Loading
-        val client = apiService.getAllClass(profileMap)
+        val client = apiService.getAllClass(classMap)
         client.enqueue(object : Callback<AllClassesResponse> {
             override fun onResponse(call: Call<AllClassesResponse>, response: Response<AllClassesResponse>) {
                 if(response.isSuccessful){
@@ -146,12 +149,12 @@ class TanaminRepository(
                                 it.total_module,
                                 it.progress,
                                 it.modul_title,
-                                it.modul_id
+                                it.lastest_module
                             )
                             classesList.add(news)
+                        }
                         tanaminRoomDatabase.tanaminDao().deleteAllClasses()
                         tanaminRoomDatabase.tanaminDao().insertClasses(classesList)
-                        }
                     }
                     resultAllClasses.value = Result.Success(response.body() as AllClassesResponse)
                 }else{
@@ -252,5 +255,80 @@ class TanaminRepository(
             }
         })
         return resultListForum
+    }
+
+    fun createForum(loginMap: HashMap<String, String>) : LiveData<Result<CreateForumResponse>> {
+        resultCreateForum.value = Result.Loading
+        val client = apiService.createForum(loginMap)
+        client.enqueue(object : Callback<CreateForumResponse> {
+            override fun onResponse(call: Call<CreateForumResponse>, response: Response<CreateForumResponse>) {
+                if(response.isSuccessful){
+                    resultCreateForum.value = Result.Success(response.body() as CreateForumResponse)
+                }else{
+                    lateinit var jsonObject: JSONObject
+                    try {
+                        jsonObject = JSONObject(response.errorBody()!!.string())
+                        resultCreateForum.value = Result.Error(jsonObject.getString("message"))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<CreateForumResponse>, t: Throwable) {
+                resultCreateForum.value = Result.Error(t.message.toString())
+            }
+        })
+        return resultCreateForum
+    }
+
+    fun getAllMessage(forumId: String) : LiveData<Result<AllMessageResponse>> {
+        resultGetMessage.value = Result.Loading
+        val client = apiService.getAllMessage(forumId)
+        client.enqueue(object : Callback<AllMessageResponse> {
+            override fun onResponse(call: Call<AllMessageResponse>, response: Response<AllMessageResponse>) {
+                if(response.isSuccessful){
+                    resultGetMessage.value = Result.Success(response.body() as AllMessageResponse)
+                }else{
+                    lateinit var jsonObject: JSONObject
+                    try {
+                        jsonObject = JSONObject(response.errorBody()!!.string())
+                        resultGetMessage.value = Result.Error(jsonObject.getString("message"))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<AllMessageResponse>, t: Throwable) {
+                resultGetMessage.value = Result.Error(t.message.toString())
+            }
+        })
+        return resultGetMessage
+    }
+
+    fun sendMessage(messageData: HashMap<String, String>) : LiveData<Result<SendMessageResponse>> {
+        resultSendMessage.value = Result.Loading
+        val client = apiService.sendMessage(messageData)
+        client.enqueue(object : Callback<SendMessageResponse> {
+            override fun onResponse(call: Call<SendMessageResponse>, response: Response<SendMessageResponse>) {
+                if(response.isSuccessful){
+                    resultSendMessage.value = Result.Success(response.body() as SendMessageResponse)
+                }else{
+                    lateinit var jsonObject: JSONObject
+                    try {
+                        jsonObject = JSONObject(response.errorBody()!!.string())
+                        resultSendMessage.value = Result.Error(jsonObject.getString("message"))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<SendMessageResponse>, t: Throwable) {
+                resultSendMessage.value = Result.Error(t.message.toString())
+            }
+        })
+        return resultSendMessage
     }
 }

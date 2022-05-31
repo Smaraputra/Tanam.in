@@ -59,7 +59,7 @@ class ClassDetailActivity : AppCompatActivity() {
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 if(position ==0){
-                    if(dataDetail.progress>0){
+                    if(!dataDetail.progress.isNaN()){
                         binding.btnStartLearn.text = getString(R.string.continue_study)
                     }else{
                         binding.btnStartLearn.text = getString(R.string.class_detail_silabus_button_text)
@@ -73,6 +73,7 @@ class ClassDetailActivity : AppCompatActivity() {
                     binding.btnStartLearn.text = getString(R.string.new_forum)
                     binding.btnStartLearn.setOnClickListener{
                         val intent = Intent(this@ClassDetailActivity, ForumCreateActivity::class.java)
+                        intent.putExtra(ID_CLASS, dataDetail.id_class)
                         startActivity(intent)
                     }
                 }

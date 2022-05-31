@@ -1,6 +1,8 @@
 package id.capstone.tanamin.data.remote.response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
 data class ListForumResponse(
 
@@ -11,7 +13,11 @@ data class ListForumResponse(
 	val status: String
 )
 
+@Parcelize
 data class ListForumItem(
+
+	@field:SerializedName("id_forum")
+	val id_forum: Int,
 
 	@field:SerializedName("question")
 	val question: String,
@@ -21,7 +27,7 @@ data class ListForumItem(
 
 	@field:SerializedName("title")
 	val title: String
-)
+) : Parcelable
 
 data class ForumData(
 

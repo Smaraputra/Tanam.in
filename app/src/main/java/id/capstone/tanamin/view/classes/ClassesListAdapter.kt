@@ -28,8 +28,8 @@ class ClassesListAdapter(private val ctx: Context, private val classes: List<Cla
             .into(holder.binding.classImage)
         holder.binding.classTitle.text = if(data.title.isNotEmpty()) data.title else holder.itemView.context.getString(R.string.no_data)
         holder.binding.continueContent.text = if(data.modul_title.isNotEmpty()) data.modul_title else holder.itemView.context.getString(R.string.no_data)
-        holder.binding.percentage.text = if(!data.progress.isNaN()) "${data.progress} %" else "0 %"
-        holder.binding.button3.text = if(data.progress<1.0) "Mulai" else "Lanjut"
+        holder.binding.percentage.text = if(!data.progress.isNaN() && data.progress>0.0) "${data.progress} %" else "0.0 %"
+        holder.binding.button3.text = if(!data.progress.isNaN() && data.progress<=0.0) "Mulai" else "Lanjut"
         holder.itemView.setOnClickListener {
             val intent = Intent(ctx, ClassDetailActivity::class.java)
             intent.putExtra(DETAIL_CLASS, data)
