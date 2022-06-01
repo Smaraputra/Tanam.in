@@ -144,10 +144,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="24dp"
                     android:layout_marginRight="24dp"
+                    app:animDuration="200"
                     app:layout_constraintEnd_toEndOf="@+id/tvDetectionItemName"
                     app:layout_constraintStart_toStartOf="@+id/tvDetectionItemName"
                     app:layout_constraintTop_toBottomOf="@+id/tvDetectionItemName"
-                    app:animDuration="200"
                     app:maxCollapsedLines="3">
 
                     <TextView
@@ -206,8 +206,19 @@
             android:textColor="?attr/colorOnPrimary"
             app:cornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnStartLearn2"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnStartLearn2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="24dp"
+            android:contentDescription="@string/class_requirement"
+            app:layout_constraintBottom_toBottomOf="@+id/btnStartLearn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnStartLearn"
+            app:srcCompat="@drawable/ic_info_requirement" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

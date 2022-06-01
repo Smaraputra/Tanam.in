@@ -131,4 +131,6 @@
     <string name="continue_study">Lanjut Belajar</string>
     <string name="no_reply">Belum ada balasan.</string>
     <string name="no_reply_info">Ayo mulai bantu menjawab pertanyaan.</string>
+    <string name="class_requirement">Prasyarat Kelas</string>
+    <string name="requirement">Prasyarat</string>
 </resources>
