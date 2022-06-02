@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import id.capstone.tanamin.R
 import id.capstone.tanamin.data.Result
 import id.capstone.tanamin.data.remote.response.ListModuleData
-import id.capstone.tanamin.data.remote.response.ListmodulItem
 import id.capstone.tanamin.databinding.FragmentSilabusBinding
 import id.capstone.tanamin.view.ViewModelFactory
 import id.capstone.tanamin.view.classdetail.ClassDetailActivity

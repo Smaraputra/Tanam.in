@@ -3,13 +3,12 @@ package id.capstone.tanamin.view.classmodule
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.datastore.core.DataStore
@@ -25,8 +24,6 @@ import id.capstone.tanamin.data.remote.response.DataDetailModule
 import id.capstone.tanamin.databinding.ActivityClassModuleBinding
 import id.capstone.tanamin.databinding.CustomAlertApiBinding
 import id.capstone.tanamin.view.ViewModelFactory
-import id.capstone.tanamin.view.classdetail.ClassDetailActivity
-import id.capstone.tanamin.view.classdetail.silabus.SilabusListAdapter
 
 class ClassModuleActivity : AppCompatActivity() {
     private var _binding: ActivityClassModuleBinding?=null
@@ -83,9 +80,10 @@ class ClassModuleActivity : AppCompatActivity() {
         }
     }
     private fun setupView(dataDetailModule: DataDetailModule){
-        binding.tvClassTitle.setText(classTitle)
-        binding.tvModuleTitle.setText(dataDetailModule.module[0].title)
-        binding.tvModuleDesc.setText(HtmlCompat.fromHtml(dataDetailModule.module[0].content, HtmlCompat.FROM_HTML_MODE_LEGACY))
+        binding.tvClassTitle.text = classTitle
+        binding.tvModuleTitle.text = dataDetailModule.module[0].title
+        binding.tvModuleDesc.text =
+            HtmlCompat.fromHtml(dataDetailModule.module[0].content, HtmlCompat.FROM_HTML_MODE_LEGACY)
         if(dataDetailModule.module[0].idModuls==1){
             binding.btnPrev.visibility=View.GONE
         }else{
@@ -109,8 +107,6 @@ class ClassModuleActivity : AppCompatActivity() {
             }else{
                 //intent to quiz activity goes here
             }
-
-
         }
     }
     private fun setupViewModel(){

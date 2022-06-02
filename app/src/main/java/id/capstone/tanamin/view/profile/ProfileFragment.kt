@@ -96,6 +96,11 @@ class ProfileFragment : Fragment() {
         builder.show()
     }
 
+    override fun onResume() {
+        super.onResume()
+        getProfileUser()
+    }
+
     private fun getProfileUser(){
         val profileMap: HashMap<String, String> = HashMap()
         liveDataStore = preferencesViewModel.getIDUser()
@@ -115,8 +120,10 @@ class ProfileFragment : Fragment() {
                             binding.loadingList3.visibility = View.GONE
                             binding.textView3.text=result.data.data.user.name
                             binding.textView4.text=result.data.data.user.email
-                            binding.textView5.text= if(result.data.data.user.age != null) result.data.data.user.age.toString() else "Tidak ada data"
-                            binding.textView6.text=result.data.data.user.address ?: "Tidak ada data"
+                            binding.textView5.text= if(result.data.data.user.age != null && result.data.data.user.age != 0)
+                                result.data.data.user.age.toString() else "Tidak ada data"
+                            binding.textView6.text=if(result.data.data.user.address != null && result.data.data.user.address != "dikosongkan")
+                                result.data.data.user.address else "Tidak ada data"
                             binding.successCount.text=success
                             binding.processCount.text=process
                             Glide.with(this)

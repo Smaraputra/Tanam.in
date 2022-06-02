@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
@@ -34,15 +33,12 @@ import id.capstone.tanamin.databinding.CustomAlertLogoutBinding
 import id.capstone.tanamin.utils.uriToFile
 import id.capstone.tanamin.view.ViewModelFactory
 import id.capstone.tanamin.view.profile.ProfileFragment
-import id.capstone.tanamin.view.register.RegisterActivity
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 class ProfileEditActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileEditBinding
@@ -85,14 +81,17 @@ class ProfileEditActivity : AppCompatActivity() {
 
     private fun setupView(){
         binding.etFullName.setText(user.name)
-        binding.etAddress.setText(user.address)
-        binding.etAge.setText(user.age.toString())
+        if(user.address != "dikosongkan"){
+            binding.etAddress.setText(user.address)
+        }
+        if(user.age != null && user.age !=0){
+            binding.etAge.setText(user.age.toString())
+        }
         Glide.with(this).load(user.profilePicture).placeholder(R.drawable.ic_profileuser_illustration)
             .error(R.drawable.ic_profileuser_illustration).into(binding.changeImage)
         binding.ivBackButton.setOnClickListener{
             onBackPressed()
         }
-
 
     }
     private fun setupViewModel(){
@@ -119,9 +118,12 @@ class ProfileEditActivity : AppCompatActivity() {
 
     private fun updateProfile(){
         val userid=user.idUser.toString().toRequestBody("text/plain".toMediaType())
-        val name=binding.etFullName.text.toString().toRequestBody("text/plain".toMediaType())
-        val age = binding.etAge.text.toString().toRequestBody("text/plain".toMediaType())
-        val address = binding.etAddress.text.toString().toRequestBody("text/plain".toMediaType())
+        val name=if(binding.etFullName.text.toString().isNotEmpty())binding.etFullName.text.toString().toRequestBody("text/plain".toMediaType())
+            else "dikosongkan".toRequestBody("text/plain".toMediaType())
+        val age = if(binding.etAge.text.toString().isNotEmpty())binding.etAge.text.toString().toRequestBody("text/plain".toMediaType())
+            else "0".toRequestBody("text/plain".toMediaType())
+        val address = if(binding.etAddress.text.toString().isNotEmpty())binding.etAddress.text.toString().toRequestBody("text/plain".toMediaType())
+            else "dikosongkan".toRequestBody("text/plain".toMediaType())
         var liveData=profileEditViewModel.editProfile(null,userid,name,age,address)
         if(profilePicture!=null){
             val requestProfilePictureFile = profilePicture?.asRequestBody("image/jpeg".toMediaTypeOrNull())
@@ -142,6 +144,7 @@ class ProfileEditActivity : AppCompatActivity() {
                         binding.loadingModule.visibility = View.GONE
                         ContextCompat.getDrawable(this, R.drawable.ic_baseline_check_circle_24)
                             ?.let { showDialog(result.data.message, it, true) }
+                        preferencesViewModel.saveNameUser(binding.etFullName.text.toString())
                         liveData.removeObservers(this)
                     }
                     is Result.Error -> {
@@ -172,7 +175,6 @@ class ProfileEditActivity : AppCompatActivity() {
                 builder.dismiss()
                 builder.setCancelable(false)
                 finish()
-                ///intent or nav controller to refresh profile fragment data goes here
             }
         }else{
             bindAlert.closeButton.setOnClickListener {
@@ -187,8 +189,8 @@ class ProfileEditActivity : AppCompatActivity() {
         val bindAlert: CustomAlertLogoutBinding = CustomAlertLogoutBinding.inflate(LayoutInflater.from(this))
         builder.setView(bindAlert.root)
         bindAlert.imageView5.visibility=View.GONE
-        bindAlert.infoDialog.setText("Perubahan profil Anda tidak akan tersimpan. Apakah Anda ingin menyimpannya ?")
-        bindAlert.logoutConfirm.text="Simpan Perubahan"
+        bindAlert.infoDialog.text = getString(R.string.confirm_edit_profile)
+        bindAlert.logoutConfirm.text=getString(R.string.change_button)
         bindAlert.logoutConfirm.setOnClickListener {
             updateProfile()
             builder.dismiss()
@@ -212,7 +214,7 @@ class ProfileEditActivity : AppCompatActivity() {
             val newName=binding.etFullName.text.toString()
             val newAge=binding.etAge.text.toString()
             val newAddress=binding.etAddress.text.toString()
-            if(!newName.equals(user.name) || !newAddress.equals(user.address) || !newAge.equals(user.age.toString()) || profilePicture!=null){
+            if(newName != user.name || newAddress != user.address || newAge != user.age.toString() || profilePicture!=null){
                 profileEditViewModel.setIsProfileEdited(true)
             }else{
                 profileEditViewModel.setIsProfileEdited(false)

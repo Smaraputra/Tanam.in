@@ -133,4 +133,6 @@
     <string name="no_reply_info">Ayo mulai bantu menjawab pertanyaan.</string>
     <string name="class_requirement">Prasyarat Kelas</string>
     <string name="requirement">Prasyarat</string>
+    <string name="confirm_edit_profile">Perubahan profil Anda tidak akan tersimpan. Apakah Anda ingin menyimpannya ?</string>
+    <string name="change_button">Simpan Perubahan</string>
 </resources>
