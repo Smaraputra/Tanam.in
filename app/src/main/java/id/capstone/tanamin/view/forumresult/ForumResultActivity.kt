@@ -3,6 +3,8 @@ package id.capstone.tanamin.view.forumresult
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.viewModels
@@ -47,6 +49,7 @@ class ForumResultActivity : AppCompatActivity() {
     }
 
     private fun setupView(){
+        binding.editGchatMessage.addTextChangedListener(textWatcher)
         binding.forumQuestion.text = dataDetail.question
         binding.titleQuestion.text = dataDetail.title
         binding.ivBackButton2.setOnClickListener{
@@ -151,6 +154,24 @@ class ForumResultActivity : AppCompatActivity() {
             builder.dismiss()
         }
         builder.show()
+    }
+
+    private val textWatcher: TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+
+        }
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            val msg = binding.editGchatMessage.text.toString()
+            binding.buttonGchatSend.isEnabled = msg.isNotEmpty()
+            if(msg.isNotEmpty()){
+                binding.buttonGchatSend.setTextColor(application.resources.getColor(R.color.green_soft,null))
+            }else{
+                binding.buttonGchatSend.setTextColor(application.resources.getColor(R.color.grey_soft,null))
+            }
+        }
+        override fun afterTextChanged(s: Editable) {
+
+        }
     }
 
     companion object {
