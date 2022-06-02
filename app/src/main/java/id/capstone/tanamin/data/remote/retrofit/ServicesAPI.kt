@@ -51,11 +51,20 @@ interface ServicesAPI {
     @POST("editProfile")
     fun editProfile(
         @Part profile_picture: MultipartBody.Part,
-        @Part name: RequestBody,
-        @Part age: RequestBody,
-        @Part address: RequestBody,
-        @Part userid: RequestBody
-    ): Call<RegisterResponse>
+        @Part("name") name: RequestBody,
+        @Part("age") age: RequestBody,
+        @Part("address") address: RequestBody,
+        @Part("userid") userid: RequestBody
+    ): Call<EditProfileResponse>
+
+    @Multipart
+    @POST("editProfile")
+    fun editProfileWithoutPhoto(
+        @Part("name") name: RequestBody,
+        @Part("age") age: RequestBody,
+        @Part("address") address: RequestBody,
+        @Part("userid") userid: RequestBody
+    ): Call<EditProfileResponse>
 
     @FormUrlEncoded
     @POST("createForum")
@@ -73,4 +82,10 @@ interface ServicesAPI {
     fun sendMessage(
         @FieldMap hashMap: Map<String, String>
     ):Call<SendMessageResponse>
+
+    @FormUrlEncoded
+    @POST("module")
+    fun getDetailModule(
+        @FieldMap hashMap: Map<String, String>
+    ):Call<DetailModuleResponse>
 }

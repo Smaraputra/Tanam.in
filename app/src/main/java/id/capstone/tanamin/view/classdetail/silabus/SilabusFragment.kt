@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import id.capstone.tanamin.R
 import id.capstone.tanamin.data.Result
+import id.capstone.tanamin.data.remote.response.ListModuleData
 import id.capstone.tanamin.data.remote.response.ListmodulItem
 import id.capstone.tanamin.databinding.FragmentSilabusBinding
 import id.capstone.tanamin.view.ViewModelFactory
@@ -61,7 +62,7 @@ class SilabusFragment : Fragment() {
                         binding.cardViewNoInternet.visibility = View.GONE
                         if(result.data.data != null){
                             binding.cardViewNoModuleFound.visibility = View.GONE
-                            setupAdapter(result.data.data.listmodul)
+                            setupAdapter(result.data.data)
                             liveData.removeObservers(requireActivity())
                         }else{
                             binding.cardViewNoModuleFound.visibility = View.VISIBLE
@@ -80,8 +81,8 @@ class SilabusFragment : Fragment() {
         }
     }
 
-    private fun setupAdapter(listModule : List<ListmodulItem>){
-        val silabusListAdapter = SilabusListAdapter(requireActivity(), listModule)
+    private fun setupAdapter(listModuleData : ListModuleData){
+        val silabusListAdapter = SilabusListAdapter(requireActivity(), listModuleData)
         binding.rvListSilabus.setHasFixedSize(true)
         binding.rvListSilabus.layoutManager = LinearLayoutManager(requireActivity())
         binding.rvListSilabus.adapter = silabusListAdapter

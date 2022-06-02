@@ -67,6 +67,8 @@ class ClassDetailActivity : AppCompatActivity() {
                     binding.btnStartLearn.setOnClickListener{
                         val intent = Intent(this@ClassDetailActivity, ClassModuleActivity::class.java)
                         intent.putExtra(ID_CLASS, dataDetail.id_class)
+                        intent.putExtra(ClassModuleActivity.ID_MODULE_EXTRA,dataDetail.lastest_module)
+                        intent.putExtra(ClassModuleActivity.CLASS_TITLE_EXTRA,dataDetail.title)
                         startActivity(intent)
                     }
                 }else{

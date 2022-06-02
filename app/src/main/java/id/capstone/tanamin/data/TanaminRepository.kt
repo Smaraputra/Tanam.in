@@ -24,12 +24,13 @@ class TanaminRepository(
     private val resultHome=MediatorLiveData<Result<HomeResponse>>()
     private val resultProfile=MediatorLiveData<Result<ProfileResponse>>()
     private val resultAllClasses=MediatorLiveData<Result<AllClassesResponse>>()
-    private val resultEditProfile=MediatorLiveData<Result<RegisterResponse>>()
+    private val resultEditProfile=MediatorLiveData<Result<EditProfileResponse>>()
     private val resultListModule=MediatorLiveData<Result<ListModulesResponse>>()
     private val resultListForum=MediatorLiveData<Result<ListForumResponse>>()
     private val resultCreateForum=MediatorLiveData<Result<CreateForumResponse>>()
     private val resultGetMessage=MediatorLiveData<Result<AllMessageResponse>>()
     private val resultSendMessage=MediatorLiveData<Result<SendMessageResponse>>()
+    private val resultDetailModule=MediatorLiveData<Result<DetailModuleResponse>>()
 
     fun registerUser(registerMap: HashMap<String, String>): LiveData<Result<RegisterResponse>> {
         resultRegister.value = Result.Loading
@@ -179,16 +180,16 @@ class TanaminRepository(
         return tanaminRoomDatabase.tanaminDao().searchClasses(word)
     }
 
-    fun editProfile(profilePictureMultipart: MultipartBody.Part, name: RequestBody, age:RequestBody, address: RequestBody, userid: RequestBody):LiveData<Result<RegisterResponse>>{
+    fun editProfile(profilePictureMultipart: MultipartBody.Part?, name: RequestBody, age:RequestBody, address: RequestBody, userid: RequestBody):LiveData<Result<EditProfileResponse>>{
         resultEditProfile.value = Result.Loading
-        val client = apiService.editProfile(profilePictureMultipart,name,age,address,userid)
-        client.enqueue(object : Callback<RegisterResponse> {
+        val client = if(profilePictureMultipart!=null) apiService.editProfile(profilePictureMultipart,name,age,address,userid) else apiService.editProfileWithoutPhoto(name,age,address,userid)
+        client.enqueue(object : Callback<EditProfileResponse> {
             override fun onResponse(
-                call: Call<RegisterResponse>,
-                response: Response<RegisterResponse>
+                call: Call<EditProfileResponse>,
+                response: Response<EditProfileResponse>
             ) {
                 if (response.isSuccessful) {
-                    resultEditProfile.value = Result.Success(response.body() as RegisterResponse)
+                    resultEditProfile.value = Result.Success(response.body() as EditProfileResponse)
                 } else {
                     lateinit var jsonObject: JSONObject
                     try {
@@ -200,12 +201,13 @@ class TanaminRepository(
                 }
             }
 
-            override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
+            override fun onFailure(call: Call<EditProfileResponse>, t: Throwable) {
                 resultEditProfile.value = Result.Error(t.message.toString())
             }
         })
         return resultEditProfile
     }
+
 
     fun getAllModule(classId : String): LiveData<Result<ListModulesResponse>>{
         resultListModule.value = Result.Loading
@@ -330,5 +332,30 @@ class TanaminRepository(
             }
         })
         return resultSendMessage
+    }
+
+    fun getDetailModule(moduleData:HashMap<String,String>):LiveData<Result<DetailModuleResponse>>{
+        resultDetailModule.value = Result.Loading
+        val client = apiService.getDetailModule(moduleData)
+        client.enqueue(object : Callback<DetailModuleResponse> {
+            override fun onResponse(call: Call<DetailModuleResponse>, response: Response<DetailModuleResponse>) {
+                if(response.isSuccessful){
+                    resultDetailModule.value = Result.Success(response.body() as DetailModuleResponse)
+                }else{
+                    lateinit var jsonObject: JSONObject
+                    try {
+                        jsonObject = JSONObject(response.errorBody()!!.string())
+                        resultDetailModule.value = Result.Error(jsonObject.getString("message"))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<DetailModuleResponse>, t: Throwable) {
+                resultDetailModule.value = Result.Error(t.message.toString())
+            }
+        })
+        return resultDetailModule
     }
 }

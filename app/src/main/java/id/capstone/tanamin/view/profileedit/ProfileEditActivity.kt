@@ -7,6 +7,9 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
@@ -27,21 +30,25 @@ import id.capstone.tanamin.data.local.datastore.PreferencesViewModelFactory
 import id.capstone.tanamin.data.remote.response.User
 import id.capstone.tanamin.databinding.ActivityProfileEditBinding
 import id.capstone.tanamin.databinding.CustomAlertApiBinding
+import id.capstone.tanamin.databinding.CustomAlertLogoutBinding
 import id.capstone.tanamin.utils.uriToFile
 import id.capstone.tanamin.view.ViewModelFactory
-import id.capstone.tanamin.view.login.LoginActivity
 import id.capstone.tanamin.view.profile.ProfileFragment
+import id.capstone.tanamin.view.register.RegisterActivity
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 class ProfileEditActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileEditBinding
     private lateinit var profileEditViewModel: ProfileEditViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
+    private lateinit var user: User
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
     private var profilePicture: File?=null
 
@@ -52,65 +59,41 @@ class ProfileEditActivity : AppCompatActivity() {
         setContentView(view)
         supportActionBar?.hide()
 
+        user=intent.getParcelableExtra<User>(ProfileFragment.PROFILE_USER_EXTRA) as User
         setupView()
         setupViewModel()
-
-        val user=intent.getParcelableExtra<User>(ProfileFragment.PROFILE_USER_EXTRA) as User
-        binding.etFullName.setText(user.name)
-        binding.etAddress.setText(user.address)
-        binding.etAge.setText(user.age.toString())
-
-        Glide.with(this).load(user.profilePicture).placeholder(R.drawable.ic_profileuser_illustration)
-            .error(R.drawable.ic_profileuser_illustration).into(binding.changeImage)
-        binding.editPhotoBtn.setOnClickListener{
-            startGallery()
-        }
-        binding.btnSave.setOnClickListener{
-            val userid=user.idUser.toString().toRequestBody("text/plain".toMediaType())
-            val name=binding.etFullName.text.toString().toRequestBody("text/plain".toMediaType())
-            val age = binding.etAge.text.toString().toRequestBody("text/plain".toMediaType())
-            val address = binding.etAddress.text.toString().toRequestBody("text/plain".toMediaType())
-            val requestProfilePictureFile = profilePicture?.asRequestBody("image/jpeg".toMediaTypeOrNull())
-            val profilePictureMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
-                    "profile_picture",
-                    profilePicture?.name,
-                    requestProfilePictureFile!!
-                )
-            val liveData = profileEditViewModel.editProfile(profilePictureMultipart,userid,name,age,address)
-            liveData.observe(this){ result ->
-                if (result != null) {
-                    when (result) {
-                        is Result.Loading -> {
-                            binding.loadingModule.visibility = View.VISIBLE
-                        }
-                        is Result.Success -> {
-                            binding.loadingModule.visibility = View.GONE
-                            ContextCompat.getDrawable(this, R.drawable.ic_baseline_check_circle_24)
-                                ?.let { showDialog(result.data.message, it, true) }
-                            liveData.removeObservers(this)
-                        }
-                        is Result.Error -> {
-                            binding.loadingModule.visibility = View.GONE
-                            ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
-                                ?.let { showDialog(result.error, it, false) }
-                            liveData.removeObservers(this)
-                        }
-                    }
-                }
-            }
-        }
+        profileEditViewModel.setIsProfileEdited(false)
+        binding.etFullName.addTextChangedListener(textWatcher)
+        binding.etAge.addTextChangedListener(textWatcher)
+        binding.etAddress.addTextChangedListener(textWatcher)
 
         profileEditViewModel.filePhoto.observe(this){
             profilePicture=it
             val fileBitmap: Bitmap = BitmapFactory.decodeFile(it.path)
-            binding.changeImage.setImageBitmap(fileBitmap)
+            Glide.with(this).load(fileBitmap).into(binding.changeImage)
+        }
+        binding.editPhotoBtn.setOnClickListener{
+            startGallery()
+        }
+        binding.btnSave.setOnClickListener{
+           updateProfile()
+        }
+        profileEditViewModel.isProfileEdited.observe(this){
+            binding.btnSave.isEnabled = it
         }
     }
 
     private fun setupView(){
+        binding.etFullName.setText(user.name)
+        binding.etAddress.setText(user.address)
+        binding.etAge.setText(user.age.toString())
+        Glide.with(this).load(user.profilePicture).placeholder(R.drawable.ic_profileuser_illustration)
+            .error(R.drawable.ic_profileuser_illustration).into(binding.changeImage)
         binding.ivBackButton.setOnClickListener{
             onBackPressed()
         }
+
+
     }
     private fun setupViewModel(){
         val pref= LoginPreferences.getInstance(dataStore)
@@ -134,6 +117,43 @@ class ProfileEditActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateProfile(){
+        val userid=user.idUser.toString().toRequestBody("text/plain".toMediaType())
+        val name=binding.etFullName.text.toString().toRequestBody("text/plain".toMediaType())
+        val age = binding.etAge.text.toString().toRequestBody("text/plain".toMediaType())
+        val address = binding.etAddress.text.toString().toRequestBody("text/plain".toMediaType())
+        var liveData=profileEditViewModel.editProfile(null,userid,name,age,address)
+        if(profilePicture!=null){
+            val requestProfilePictureFile = profilePicture?.asRequestBody("image/jpeg".toMediaTypeOrNull())
+            val profilePictureMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+                "profile_picture",
+                profilePicture?.name,
+                requestProfilePictureFile!!
+            )
+            liveData = profileEditViewModel.editProfile(profilePictureMultipart,userid,name,age,address)
+        }
+        liveData.observe(this){ result ->
+            if (result != null) {
+                when (result) {
+                    is Result.Loading -> {
+                        binding.loadingModule.visibility = View.VISIBLE
+                    }
+                    is Result.Success -> {
+                        binding.loadingModule.visibility = View.GONE
+                        ContextCompat.getDrawable(this, R.drawable.ic_baseline_check_circle_24)
+                            ?.let { showDialog(result.data.message, it, true) }
+                        liveData.removeObservers(this)
+                    }
+                    is Result.Error -> {
+                        binding.loadingModule.visibility = View.GONE
+                        ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
+                            ?.let { showDialog(result.error, it, false) }
+                        liveData.removeObservers(this)
+                    }
+                }
+            }
+        }
+    }
     private fun startGallery() {
         val intent = Intent()
         intent.action = Intent.ACTION_GET_CONTENT
@@ -151,9 +171,8 @@ class ProfileEditActivity : AppCompatActivity() {
             bindAlert.closeButton.setOnClickListener {
                 builder.dismiss()
                 builder.setCancelable(false)
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
                 finish()
+                ///intent or nav controller to refresh profile fragment data goes here
             }
         }else{
             bindAlert.closeButton.setOnClickListener {
@@ -161,5 +180,56 @@ class ProfileEditActivity : AppCompatActivity() {
             }
         }
         builder.show()
+    }
+
+    private fun showDialogLogout() {
+        val builder = AlertDialog.Builder(this).create()
+        val bindAlert: CustomAlertLogoutBinding = CustomAlertLogoutBinding.inflate(LayoutInflater.from(this))
+        builder.setView(bindAlert.root)
+        bindAlert.imageView5.visibility=View.GONE
+        bindAlert.infoDialog.setText("Perubahan profil Anda tidak akan tersimpan. Apakah Anda ingin menyimpannya ?")
+        bindAlert.logoutConfirm.text="Simpan Perubahan"
+        bindAlert.logoutConfirm.setOnClickListener {
+            updateProfile()
+            builder.dismiss()
+        }
+        bindAlert.cancelButton.setOnClickListener {
+            super.onBackPressed()
+            builder.dismiss()
+        }
+        builder.show()
+    }
+
+    private val textWatcher: TextWatcher = object : TextWatcher {
+
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+
+        }
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+        }
+        override fun afterTextChanged(s: Editable) {
+            val newName=binding.etFullName.text.toString()
+            val newAge=binding.etAge.text.toString()
+            val newAddress=binding.etAddress.text.toString()
+            if(!newName.equals(user.name) || !newAddress.equals(user.address) || !newAge.equals(user.age.toString()) || profilePicture!=null){
+                profileEditViewModel.setIsProfileEdited(true)
+            }else{
+                profileEditViewModel.setIsProfileEdited(false)
+            }
+        }
+    }
+
+    override fun onBackPressed() {
+        val liveData=profileEditViewModel.isProfileEdited
+        liveData.observe(this){
+            if(it){
+                showDialogLogout()
+            }else{
+                super.onBackPressed()
+            }
+            liveData.removeObservers(this)
+        }
+
     }
 }

@@ -9,7 +9,7 @@
     tools:ignore="Overdraw">
 
     <TextView
-        android:id="@+id/tvFutureFeature"
+        android:id="@+id/tvClassTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -26,9 +26,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tvFutureFeature"
+        app:layout_constraintBottom_toBottomOf="@+id/tvClassTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvFutureFeature"
+        app:layout_constraintTop_toTopOf="@+id/tvClassTitle"
         app:srcCompat="@drawable/ic_back_arrow"
         android:contentDescription="@string/back_button_action_bar" />
 
@@ -43,7 +43,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvFutureFeature">
+        app:layout_constraintTop_toBottomOf="@+id/tvClassTitle">
 
         <ProgressBar
             android:id="@+id/loadingModule"
@@ -96,7 +96,7 @@
                 app:layout_constraintVertical_bias="0.0">
 
                 <TextView
-                    android:id="@+id/tvDetectionItemName"
+                    android:id="@+id/tvModuleTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
@@ -112,14 +112,14 @@
                     tools:text="Kelas Menanam Cabai" />
 
                 <TextView
-                    android:id="@+id/tvDetectionItemDesc"
+                    android:id="@+id/tvModuleDesc"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    app:layout_constraintEnd_toEndOf="@+id/tvDetectionItemName"
+                    app:layout_constraintEnd_toEndOf="@+id/tvModuleTitle"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/tvDetectionItemName"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDetectionItemName"
+                    app:layout_constraintStart_toStartOf="@+id/tvModuleTitle"
+                    app:layout_constraintTop_toBottomOf="@+id/tvModuleTitle"
                     android:text="@string/no_data"
                     tools:text="adalah kelas yang menanam cabai untuk ditanami cabai dalam menanam cabai supaya cabai dapat menjadi cabai yang ditanam dari bibit cabai dalam menanam cabai cabai cibai Kelas ini adalah kelas yang menanam cabai untuk ditanami cabai dalam menanam cabai supaya cabai dapat menjadi cabai yang ditanam dari bibit cabai dalam menanam cabai cabai cibai" />
 
@@ -133,7 +133,7 @@
                     android:background="?attr/colorOnPrimary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDetectionItemDesc"
+                    app:layout_constraintTop_toBottomOf="@+id/tvModuleDesc"
                     app:tabTextAppearance="@style/TextTabLayout"
                     tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
