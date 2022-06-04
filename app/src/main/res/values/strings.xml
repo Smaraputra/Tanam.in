@@ -135,4 +135,12 @@
     <string name="requirement">Prasyarat</string>
     <string name="confirm_edit_profile">Perubahan profil Anda tidak akan tersimpan. Apakah Anda ingin menyimpannya ?</string>
     <string name="change_button">Simpan Perubahan</string>
+    <string name="quiz_title">Kuis</string>
+    <string name="time_remaining">Sisa waktu: 09.59</string>
+    <string name="number_1">1</string>
+    <string name="start_from">Mulai dari :</string>
+    <string name="info_start_quiz">Anda akan memulai kuis untuk menilai proses belajar anda. Silahkan persiapkan diri anda. Waktu yang diberikan adalah 10 menit.</string>
+    <string name="requirement_info">Prasyarat dan kriteria yang harus dipenuhi untuk lulus dari kelas. Fitur dalam pengembangan.</string>
+    <string name="congratulation_quiz">Selamat anda lulus kuis!</string>
+    <string name="not_pass_quiz">Anda belum lulus kuis.</string>
 </resources>

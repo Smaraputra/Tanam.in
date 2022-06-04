@@ -64,6 +64,11 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        getProfileUser()
+    }
+
     private fun setupViewModel(){
         val pref=LoginPreferences.getInstance(requireContext().dataStore)
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
@@ -94,11 +99,6 @@ class ProfileFragment : Fragment() {
             builder.dismiss()
         }
         builder.show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        getProfileUser()
     }
 
     private fun getProfileUser(){

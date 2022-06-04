@@ -43,6 +43,7 @@
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable/background_search_view.xml" value="0.29270833333333335" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable/button_background.xml" value="0.240625" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable/fake_button.xml" value="0.3234375" />
+        <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable/finished_background.xml" value="0.24166666666666667" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable/ic_background_logo.xml" value="0.33125" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable/ic_baseline_cameraswitch_24.xml" value="0.3234375" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.3111111111111111" />
@@ -56,6 +57,7 @@
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable/ic_circle_full_24.xml" value="0.4203125" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable/ic_home_illustration.xml" value="0.246875" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable/ic_info_requirement.xml" value="0.3046875" />
+        <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable/ic_kelas_cepat.xml" value="0.3026041666666667" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3111111111111111" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.240625" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable/ic_logo_marketplace.xml" value="0.30185185185185187" />
@@ -64,7 +66,8 @@
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable/loading_background.xml" value="0.240625" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable/login_register_background.xml" value="0.3111111111111111" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/drawable/text_input.xml" value="0.3111111111111111" />
-        <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/activity_class_detail.xml" value="0.176" />
+        <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/activity_class_detail.xml" value="0.4" />
+        <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/activity_class_finished.xml" value="0.22552083333333334" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/activity_class_module.xml" value="0.3072916666666667" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/activity_detection.xml" value="0.22871376811594202" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/activity_detection_result.xml" value="0.23489583333333333" />
@@ -75,20 +78,23 @@
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/activity_main.xml" value="0.2586050724637681" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/activity_on_boarding.xml" value="0.264" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/activity_profile_edit.xml" value="0.3072916666666667" />
+        <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/activity_quiz.xml" value="0.2" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/activity_register.xml" value="0.4" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/activity_splash_screen.xml" value="0.22708333333333333" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/custom_alert_api.xml" value="0.28854166666666664" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/custom_alert_logout.xml" value="0.28854166666666664" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/custom_alert_requirement.xml" value="0.30052083333333335" />
+        <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/custom_alert_score.xml" value="0.29635416666666664" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/fragment_classes.xml" value="0.264" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/fragment_detection.xml" value="0.264" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/fragment_forum.xml" value="0.3104166666666667" />
-        <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/fragment_home.xml" value="0.72" />
+        <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/fragment_home.xml" value="0.43649193548387094" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/fragment_profile.xml" value="0.2" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/fragment_silabus.xml" value="0.3104166666666667" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/rv_class.xml" value="0.32395833333333335" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/rv_forum_chat_me.xml" value="0.3383152173913043" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/rv_forum_chat_other.xml" value="0.3383152173913043" />
+        <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/rv_quiz.xml" value="0.4" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/viewholder_class_detail_forum.xml" value="0.2947916666666667" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/layout/viewholder_class_detail_silabus.xml" value="0.2947916666666667" />
         <entry key="..\:/Users/Smara/Desktop/Tanamin/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.31197916666666664" />

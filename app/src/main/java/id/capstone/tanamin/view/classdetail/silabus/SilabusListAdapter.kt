@@ -11,6 +11,7 @@ import id.capstone.tanamin.view.classmodule.ClassModuleActivity
 import id.capstone.tanamin.view.classmodule.ClassModuleActivity.Companion.CLASS_TITLE_EXTRA
 import id.capstone.tanamin.view.classmodule.ClassModuleActivity.Companion.ID_CLASS_EXTRA
 import id.capstone.tanamin.view.classmodule.ClassModuleActivity.Companion.ID_MODULE_EXTRA
+import id.capstone.tanamin.view.quiz.QuizActivity
 
 class SilabusListAdapter(private val ctx: Context, private val listModuleData: ListModuleData) : RecyclerView.Adapter<SilabusListAdapter.ListViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
@@ -23,7 +24,11 @@ class SilabusListAdapter(private val ctx: Context, private val listModuleData: L
         holder.binding.tvSilabusTitle.text = data.title
         holder.binding.cardView.setOnClickListener {
             if(data.idModuls==listModuleData.listmodul.size){
-                //intent to quiz activity goes here
+                val intent = Intent(ctx, QuizActivity::class.java)
+                intent.putExtra(ID_CLASS_EXTRA, listModuleData.detailKelas[0].idClass)
+                intent.putExtra(ID_MODULE_EXTRA,listModuleData.detailKelas[0].totalModule)
+                intent.putExtra(CLASS_TITLE_EXTRA,listModuleData.detailKelas[0].title)
+                ctx.startActivity(intent)
             }else{
                 val intent = Intent(ctx, ClassModuleActivity::class.java)
                 intent.putExtra(ID_MODULE_EXTRA, data.idModuls)

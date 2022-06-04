@@ -52,6 +52,11 @@ class ClassesFragment : Fragment() {
         getClassList()
     }
 
+    override fun onResume() {
+        super.onResume()
+        getClassList()
+    }
+
     private val refreshListener = SwipeRefreshLayout.OnRefreshListener {
         binding.swipeRefreshLayout.isRefreshing = false
         getClassList()

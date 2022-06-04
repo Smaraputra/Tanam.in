@@ -3,6 +3,7 @@ package id.capstone.tanamin.view.classes
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -28,7 +29,15 @@ class ClassesListAdapter(private val ctx: Context, private val classes: List<Cla
             .into(holder.binding.classImage)
         holder.binding.classTitle.text = if(data.title.isNotEmpty()) data.title else holder.itemView.context.getString(R.string.no_data)
         holder.binding.continueContent.text = if(data.modul_title.isNotEmpty()) data.modul_title else holder.itemView.context.getString(R.string.no_data)
-        holder.binding.percentage.text = if(!data.progress.isNaN() && data.progress>0.0) "${data.progress} %" else "0.0 %"
+        if(data.progress.isNaN() || data.progress>0.0){
+            val percentage = "${data.progress} %"
+            holder.binding.percentage.visibility = View.VISIBLE
+            holder.binding.percentage.text = percentage
+            holder.binding.continueTitle.text = ctx.getString(R.string.continue_title)
+        }else{
+            holder.binding.percentage.visibility = View.INVISIBLE
+            holder.binding.continueTitle.text = ctx.getString(R.string.start_from)
+        }
         holder.binding.button3.text = if(!data.progress.isNaN() && data.progress<=0.0) "Mulai" else "Lanjut"
         holder.itemView.setOnClickListener {
             val intent = Intent(ctx, ClassDetailActivity::class.java)

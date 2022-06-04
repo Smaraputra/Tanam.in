@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import id.capstone.tanamin.data.TanaminRepository
 import id.capstone.tanamin.data.di.Injection
 import id.capstone.tanamin.view.classdetail.forum.ForumViewModel
+import id.capstone.tanamin.view.quiz.QuizViewModel
 import id.capstone.tanamin.view.classdetail.silabus.SilabusViewModel
 import id.capstone.tanamin.view.classes.ClassesViewModel
 import id.capstone.tanamin.view.classmodule.ClassModuleViewModel
@@ -54,6 +55,9 @@ class ViewModelFactory private constructor(private val tanaminRepository: Tanami
             }
             modelClass.isAssignableFrom(ClassModuleViewModel::class.java)->{
                 return ClassModuleViewModel(tanaminRepository) as T
+            }
+            modelClass.isAssignableFrom(QuizViewModel::class.java)->{
+                return QuizViewModel(tanaminRepository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

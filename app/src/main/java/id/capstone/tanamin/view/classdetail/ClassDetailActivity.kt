@@ -15,6 +15,7 @@ import id.capstone.tanamin.R
 import id.capstone.tanamin.data.local.database.Classes
 import id.capstone.tanamin.databinding.ActivityClassDetailBinding
 import id.capstone.tanamin.databinding.CustomAlertApiBinding
+import id.capstone.tanamin.view.quiz.QuizActivity
 import id.capstone.tanamin.view.classmodule.ClassModuleActivity
 import id.capstone.tanamin.view.forumcreate.ForumCreateActivity
 
@@ -41,9 +42,8 @@ class ClassDetailActivity : AppCompatActivity() {
         binding.ivBackButton.setOnClickListener {
             onBackPressed()
         }
-        binding.btnStartLearn.setOnClickListener {
-            val intent = Intent(this, ClassModuleActivity::class.java)
-            startActivity(intent)
+        binding.btnStartLearn2.setOnClickListener{
+            showRequirementDialog()
         }
     }
 
@@ -65,11 +65,19 @@ class ClassDetailActivity : AppCompatActivity() {
                         binding.btnStartLearn.text = getString(R.string.class_detail_silabus_button_text)
                     }
                     binding.btnStartLearn.setOnClickListener{
-                        val intent = Intent(this@ClassDetailActivity, ClassModuleActivity::class.java)
-                        intent.putExtra(ID_CLASS, dataDetail.id_class)
-                        intent.putExtra(ClassModuleActivity.ID_MODULE_EXTRA,dataDetail.lastest_module)
-                        intent.putExtra(ClassModuleActivity.CLASS_TITLE_EXTRA,dataDetail.title)
-                        startActivity(intent)
+                        if(dataDetail.lastest_module < dataDetail.total_module){
+                            val intent = Intent(this@ClassDetailActivity, ClassModuleActivity::class.java)
+                            intent.putExtra(ID_CLASS, dataDetail.id_class)
+                            intent.putExtra(ID_MODULE_EXTRA,dataDetail.lastest_module)
+                            intent.putExtra(CLASS_TITLE_EXTRA,dataDetail.title)
+                            startActivity(intent)
+                        }else{
+                            val intent = Intent(this@ClassDetailActivity, QuizActivity::class.java)
+                            intent.putExtra(ID_CLASS, dataDetail.id_class)
+                            intent.putExtra(ID_MODULE_EXTRA,dataDetail.lastest_module)
+                            intent.putExtra(CLASS_TITLE_EXTRA,dataDetail.title)
+                            startActivity(intent)
+                        }
                     }
                 }else{
                     binding.btnStartLearn.text = getString(R.string.new_forum)
@@ -104,12 +112,24 @@ class ClassDetailActivity : AppCompatActivity() {
         builder.show()
     }
 
+    fun showRequirementDialog() {
+        val builder = AlertDialog.Builder(this).create()
+        val bindAlert: CustomAlertApiBinding = CustomAlertApiBinding.inflate(LayoutInflater.from(this))
+        builder.setView(bindAlert.root)
+        bindAlert.closeButton.setOnClickListener {
+            builder.dismiss()
+        }
+        builder.show()
+    }
+
     companion object {
         @StringRes
         private val TAB_TITLES = intArrayOf(
             R.string.class_detail_tablayouttext1,
             R.string.class_detail_tablayouttext2
         )
+        const val ID_MODULE_EXTRA="id_modul"
+        const val CLASS_TITLE_EXTRA="class_title"
         const val DETAIL_CLASS = "detail_class"
         const val ID_CLASS = "id_class"
     }

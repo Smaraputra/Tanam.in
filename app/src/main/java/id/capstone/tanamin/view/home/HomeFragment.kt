@@ -51,6 +51,11 @@ class HomeFragment : Fragment() {
         getHomeData()
     }
 
+    override fun onResume() {
+        super.onResume()
+        getHomeData()
+    }
+
     private fun setupView(){
         binding.marketplace.setOnClickListener{
             val intent = Intent(requireContext(), FutureFeatureActivity::class.java)

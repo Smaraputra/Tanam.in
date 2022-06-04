@@ -31,6 +31,8 @@ class TanaminRepository(
     private val resultGetMessage=MediatorLiveData<Result<AllMessageResponse>>()
     private val resultSendMessage=MediatorLiveData<Result<SendMessageResponse>>()
     private val resultDetailModule=MediatorLiveData<Result<DetailModuleResponse>>()
+    private val resultQuizModule=MediatorLiveData<Result<QuizResponse>>()
+    private val resultQuizAnswer=MediatorLiveData<Result<QuizAnswerResponse>>()
 
     fun registerUser(registerMap: HashMap<String, String>): LiveData<Result<RegisterResponse>> {
         resultRegister.value = Result.Loading
@@ -357,5 +359,55 @@ class TanaminRepository(
             }
         })
         return resultDetailModule
+    }
+
+    fun getQuiz(moduleData:HashMap<String,String>):LiveData<Result<QuizResponse>>{
+        resultQuizModule.value = Result.Loading
+        val client = apiService.getQuizModule(moduleData)
+        client.enqueue(object : Callback<QuizResponse> {
+            override fun onResponse(call: Call<QuizResponse>, response: Response<QuizResponse>) {
+                if(response.isSuccessful){
+                    resultQuizModule.value = Result.Success(response.body() as QuizResponse)
+                }else{
+                    lateinit var jsonObject: JSONObject
+                    try {
+                        jsonObject = JSONObject(response.errorBody()!!.string())
+                        resultQuizModule.value = Result.Error(jsonObject.getString("message"))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<QuizResponse>, t: Throwable) {
+                resultQuizModule.value = Result.Error(t.message.toString())
+            }
+        })
+        return resultQuizModule
+    }
+
+    fun sendAnswer(listAnswer: List<String>, moduleData:HashMap<String,String>):LiveData<Result<QuizAnswerResponse>>{
+        resultQuizAnswer.value = Result.Loading
+        val client = apiService.sendAnswer(listAnswer,moduleData)
+        client.enqueue(object : Callback<QuizAnswerResponse> {
+            override fun onResponse(call: Call<QuizAnswerResponse>, response: Response<QuizAnswerResponse>) {
+                if(response.isSuccessful){
+                    resultQuizAnswer.value = Result.Success(response.body() as QuizAnswerResponse)
+                }else{
+                    lateinit var jsonObject: JSONObject
+                    try {
+                        jsonObject = JSONObject(response.errorBody()!!.string())
+                        resultQuizAnswer.value = Result.Error(jsonObject.getString("message"))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<QuizAnswerResponse>, t: Throwable) {
+                resultQuizAnswer.value = Result.Error(t.message.toString())
+            }
+        })
+        return resultQuizAnswer
     }
 }

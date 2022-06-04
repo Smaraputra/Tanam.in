@@ -88,4 +88,17 @@ interface ServicesAPI {
     fun getDetailModule(
         @FieldMap hashMap: Map<String, String>
     ):Call<DetailModuleResponse>
+
+    @FormUrlEncoded
+    @POST("module")
+    fun getQuizModule(
+        @FieldMap hashMap: Map<String, String>
+    ):Call<QuizResponse>
+
+    @FormUrlEncoded
+    @POST("quizCheck")
+    fun sendAnswer(
+        @Field("answer") answer: List<String>,
+        @FieldMap hashMap: Map<String, String>
+    ):Call<QuizAnswerResponse>
 }

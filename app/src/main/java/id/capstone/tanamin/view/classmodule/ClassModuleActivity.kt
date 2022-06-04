@@ -24,6 +24,7 @@ import id.capstone.tanamin.data.remote.response.DataDetailModule
 import id.capstone.tanamin.databinding.ActivityClassModuleBinding
 import id.capstone.tanamin.databinding.CustomAlertApiBinding
 import id.capstone.tanamin.view.ViewModelFactory
+import id.capstone.tanamin.view.quiz.QuizActivity
 
 class ClassModuleActivity : AppCompatActivity() {
     private var _binding: ActivityClassModuleBinding?=null
@@ -44,9 +45,13 @@ class ClassModuleActivity : AppCompatActivity() {
         modulId=intent.getIntExtra(ID_MODULE_EXTRA,0)
         classId=intent.getIntExtra(ID_CLASS_EXTRA,0)
         classTitle= intent.getStringExtra(CLASS_TITLE_EXTRA).toString()
+        binding.ivBackButton.setOnClickListener{
+            onBackPressed()
+        }
         setupViewModel()
         getDetailModule()
     }
+
     private fun getDetailModule(){
         val moduleHashMap: HashMap<String, String> = HashMap()
         val liveDataPref=preferencesViewModel.getIDUser()
@@ -79,6 +84,7 @@ class ClassModuleActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun setupView(dataDetailModule: DataDetailModule){
         binding.tvClassTitle.text = classTitle
         binding.tvModuleTitle.text = dataDetailModule.module[0].title
@@ -105,10 +111,16 @@ class ClassModuleActivity : AppCompatActivity() {
                 finish()
                 startActivity(intent)
             }else{
-                //intent to quiz activity goes here
+                val intent = Intent(this, QuizActivity::class.java)
+                intent.putExtra(ID_CLASS_EXTRA, dataDetailModule.classId.toInt())
+                intent.putExtra(ID_MODULE_EXTRA,dataDetailModule.module[0].idModuls + 1)
+                intent.putExtra(CLASS_TITLE_EXTRA,classTitle)
+                finish()
+                startActivity(intent)
             }
         }
     }
+
     private fun setupViewModel(){
         val pref= LoginPreferences.getInstance(dataStore)
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
@@ -120,6 +132,7 @@ class ClassModuleActivity : AppCompatActivity() {
         }
         this.classModuleViewModel=classModuleViewModel
     }
+
     fun showDialog(text: String, icon: Drawable) {
         val builder = AlertDialog.Builder(this).create()
         val bindAlert: CustomAlertApiBinding = CustomAlertApiBinding.inflate(LayoutInflater.from(this))
