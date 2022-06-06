@@ -109,4 +109,15 @@ interface ServicesAPI {
         @Part("userid") userId: RequestBody,
         @Part("classid") classId: RequestBody
     ): Call<UploadProgressResponse>
+
+    @Multipart
+    @POST("predict")
+    fun detectImage(
+        @Part file: MultipartBody.Part
+    ):Call<DetectionResponse>
+
+    @GET("deteksi/{id}/informations")
+    fun getResultDetected(
+        @Path("id") id: String
+    ): Call<DetectionInformationResponse>
 }

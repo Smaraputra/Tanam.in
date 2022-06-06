@@ -20,5 +20,8 @@ data class Data(
 	val name: String,
 
 	@field:SerializedName("userid")
-	val userid: Int
+	val userid: Int,
+
+	@field:SerializedName("token")
+	val token: String
 )

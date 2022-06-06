@@ -62,7 +62,7 @@
             android:id="@+id/scrollView2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="75dp"
+            android:layout_marginTop="80dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -112,39 +112,49 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Tomat" />
 
-                <TextView
-                    android:id="@+id/tvDetectionItemDesc"
-                    android:layout_width="0dp"
+                <com.ms.square.android.expandabletextview.ExpandableTextView
+                    android:id="@+id/expand_text_view"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:ellipsize="end"
-                    android:maxLines="5"
-                    android:text="@string/no_data"
-                    app:layout_constraintEnd_toEndOf="@+id/tvDetectionItemName"
-                    app:layout_constraintStart_toStartOf="@+id/tvDetectionItemName"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="24dp"
+                    app:animDuration="200"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvDetectionItemName"
-                    tools:text="Tomat (Solanum lycopersicum syn. Lycopersicum esculentum) adalah tumbuhan dari keluarga Solanaceae, tumbuhan asli Amerika Tengah dan Selatan, dari Meksiko sampai Peru. Tomat merupakan tumbuhan siklus hidup singkat, dapat tumbuh setinggi 1 sampai tidak tahu." />
+                    app:maxCollapsedLines="4">
 
-                <TextView
-                    android:id="@+id/tvReadMore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/read_more"
-                    android:textStyle="italic"
-                    app:layout_constraintEnd_toEndOf="@+id/tvDetectionItemDesc"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDetectionItemDesc" />
+                    <TextView
+                        android:id="@id/expandable_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <ImageButton
+                        android:id="@id/expand_collapse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="4dp"
+                        android:background="@color/grey_soft"
+                        android:contentDescription="@string/read_more_button"
+                        android:padding="8dp" />
+                </com.ms.square.android.expandabletextview.ExpandableTextView>
 
                 <TextView
                     android:id="@+id/tvContentKandungan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
                     android:layout_marginTop="24dp"
                     android:text="@string/nutritional_content"
                     android:textColor="@color/green_soft"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="@+id/tvDetectionItemDesc"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDetectionItemDesc" />
+                    app:layout_constraintEnd_toStartOf="@+id/divider2"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/expand_text_view" />
 
                 <View
                     android:id="@+id/divider2"
@@ -160,13 +170,16 @@
                     android:id="@+id/tvContentKandunganDesc"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="24dp"
+                    android:ellipsize="end"
+                    android:maxLines="10"
                     android:text="@string/no_data"
-                    tools:text="Likopen, polifenol, naringenin, dan chlorogenic acidkarotenoid, lutein, gula, vitamin A, vitamin C, folat, dan kalium"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/tvContentKandungan"
-                    app:layout_constraintTop_toBottomOf="@+id/tvContentKandungan" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvContentKandungan"
+                    tools:text="Likopen, polifenol, naringenin, dan chlorogenic acidkarotenoid, lutein, gula, vitamin A, vitamin C, folat, dan kalium" />
 
                 <TextView
                     android:id="@+id/tvBenefit"
@@ -194,12 +207,15 @@
                     android:id="@+id/tvBenefitDesc"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="24dp"
+                    android:ellipsize="end"
+                    android:maxLines="10"
                     android:text="@string/no_data"
-                    tools:text="Membantu memerangi efek radikal bebas penyebab kanker, antioksidan."
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/tvBenefit"
-                    app:layout_constraintTop_toBottomOf="@+id/tvBenefit" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvBenefit"
+                    tools:text="Membantu memerangi efek radikal bebas penyebab kanker, antioksidan." />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

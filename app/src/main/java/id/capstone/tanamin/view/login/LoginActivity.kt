@@ -118,6 +118,7 @@ class LoginActivity : AppCompatActivity() {
                         binding.loadingList.visibility = View.GONE
                         result.data.data.userid.let { preferencesViewModel.saveIDUser(it) }
                         result.data.data.name.let { preferencesViewModel.saveNameUser(it) }
+                        result.data.data.token.let { preferencesViewModel.saveTokenUser(it) }
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                         finish()

@@ -17,7 +17,8 @@ import retrofit2.Response
 
 class TanaminRepository(
     private val tanaminRoomDatabase: TanaminRoomDatabase,
-    private val apiService: ServicesAPI
+    private val apiService: ServicesAPI,
+    private val detectionService: ServicesAPI,
     ) {
     private val resultLogin = MediatorLiveData<Result<LoginResponse>>()
     private val resultRegister = MediatorLiveData<Result<RegisterResponse>>()
@@ -34,6 +35,8 @@ class TanaminRepository(
     private val resultQuizModule=MediatorLiveData<Result<QuizResponse>>()
     private val resultQuizAnswer=MediatorLiveData<Result<QuizAnswerResponse>>()
     private val resultUploadProgress=MediatorLiveData<Result<UploadProgressResponse>>()
+    private val resultDetection=MediatorLiveData<Result<DetectionResponse>>()
+    private val resultDetectionResult=MediatorLiveData<Result<DetectionInformationResponse>>()
 
     fun registerUser(registerMap: HashMap<String, String>): LiveData<Result<RegisterResponse>> {
         resultRegister.value = Result.Loading
@@ -438,5 +441,55 @@ class TanaminRepository(
             }
         })
         return resultUploadProgress
+    }
+
+    fun detectImage(file: MultipartBody.Part): LiveData<Result<DetectionResponse>>{
+        resultDetection.value = Result.Loading
+        val client = detectionService.detectImage(file)
+        client.enqueue(object : Callback<DetectionResponse> {
+            override fun onResponse(call: Call<DetectionResponse>, response: Response<DetectionResponse>) {
+                if(response.isSuccessful){
+                    resultDetection.value = Result.Success(response.body() as DetectionResponse)
+                }else{
+                    lateinit var jsonObject: JSONObject
+                    try {
+                        jsonObject = JSONObject(response.errorBody()!!.string())
+                        resultDetection.value = Result.Error(jsonObject.getString("message"))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<DetectionResponse>, t: Throwable) {
+                resultDetection.value = Result.Error(t.message.toString())
+            }
+        })
+        return resultDetection
+    }
+
+    fun getResultDetected(informationId: String): LiveData<Result<DetectionInformationResponse>>{
+        resultDetectionResult.value = Result.Loading
+        val client = apiService.getResultDetected(informationId)
+        client.enqueue(object : Callback<DetectionInformationResponse> {
+            override fun onResponse(call: Call<DetectionInformationResponse>, response: Response<DetectionInformationResponse>) {
+                if(response.isSuccessful){
+                    resultDetectionResult.value = Result.Success(response.body() as DetectionInformationResponse)
+                }else{
+                    lateinit var jsonObject: JSONObject
+                    try {
+                        jsonObject = JSONObject(response.errorBody()!!.string())
+                        resultDetectionResult.value = Result.Error(jsonObject.getString("message"))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<DetectionInformationResponse>, t: Throwable) {
+                resultDetectionResult.value = Result.Error(t.message.toString())
+            }
+        })
+        return resultDetectionResult
     }
 }

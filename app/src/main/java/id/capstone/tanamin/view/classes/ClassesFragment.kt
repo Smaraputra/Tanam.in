@@ -1,12 +1,14 @@
 package id.capstone.tanamin.view.classes
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -23,8 +25,8 @@ import id.capstone.tanamin.data.local.database.Classes
 import id.capstone.tanamin.data.local.datastore.LoginPreferences
 import id.capstone.tanamin.data.local.datastore.PreferencesViewModel
 import id.capstone.tanamin.data.local.datastore.PreferencesViewModelFactory
+import id.capstone.tanamin.databinding.CustomAlertApiBinding
 import id.capstone.tanamin.databinding.FragmentClassesBinding
-import id.capstone.tanamin.view.MainActivity
 import id.capstone.tanamin.view.ViewModelFactory
 
 class ClassesFragment : Fragment() {
@@ -34,6 +36,7 @@ class ClassesFragment : Fragment() {
     private lateinit var preferencesViewModel: PreferencesViewModel
     private lateinit var classesViewModel: ClassesViewModel
     private lateinit var liveDataStore : LiveData<Int>
+    private lateinit var liveDataStoreToken : LiveData<String>
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
 
     override fun onCreateView(
@@ -47,13 +50,11 @@ class ClassesFragment : Fragment() {
 
     override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
         super.onViewCreated(itemView, savedInstanceState)
-        setupView()
         setupViewModel()
-        getClassList()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         getClassList()
     }
 
@@ -72,49 +73,56 @@ class ClassesFragment : Fragment() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity(), "")
-        val classesViewModel: ClassesViewModel by viewModels {
-            factory
-        }
-        this.classesViewModel=classesViewModel
+        liveDataStoreToken = preferencesViewModel.getTokenUser()
     }
 
     private fun getClassList(){
-        val classMap: HashMap<String, String> = HashMap()
-        liveDataStore = preferencesViewModel.getIDUser()
-        liveDataStore.observe(requireActivity()) { userId ->
-            classMap["userid"] = userId.toString()
-            val liveData = classesViewModel.getAllClass(classMap)
-            liveData.observe(requireActivity()){ result ->
-                if (result != null) {
-                    when (result) {
-                        is Result.Loading -> {
-                            binding.loadingList4.visibility = View.VISIBLE
-                        }
-                        is Result.Success -> {
-                            binding.loadingList4.visibility = View.GONE
-                            binding.cardViewNoClassFound.visibility = View.GONE
-                            binding.cardViewNoInternet.visibility = View.GONE
-                            setupAdapter(result.data.data.jsonMemberClass)
-                            liveData.removeObservers(requireActivity())
-                            liveDataStore.removeObservers(requireActivity())
-                        }
-                        is Result.Error -> {
-                            binding.loadingList4.visibility = View.GONE
-                            val liveData2 = classesViewModel.searchWord("")
-                            liveData2.observe(requireActivity()){
-                                setupAdapter(it)
-                                if(it.isEmpty()){
-                                    binding.cardViewNoInternet.visibility = View.VISIBLE
-                                }else{
-                                    binding.cardViewNoInternet.visibility = View.GONE
-                                }
-                                liveData2.removeObservers(requireActivity())
+        liveDataStoreToken.observe(this){ token ->
+            val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity(), token)
+            val classesViewModel: ClassesViewModel by viewModels {
+                factory
+            }
+            this.classesViewModel=classesViewModel
+            setupView()
+
+            val classMap: HashMap<String, String> = HashMap()
+            liveDataStore = preferencesViewModel.getIDUser()
+            liveDataStore.observe(requireActivity()) { userId ->
+                classMap["userid"] = userId.toString()
+                val liveData = classesViewModel.getAllClass(classMap)
+                liveData.observe(requireActivity()){ result ->
+                    if (result != null) {
+                        when (result) {
+                            is Result.Loading -> {
+                                binding.loadingList4.visibility = View.VISIBLE
                             }
-                            ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_error_24)
-                                ?.let { (requireActivity() as MainActivity).showDialog(result.error, it) }
-                            liveData.removeObservers(requireActivity())
-                            liveDataStore.removeObservers(requireActivity())
+                            is Result.Success -> {
+                                binding.loadingList4.visibility = View.GONE
+                                binding.cardViewNoClassFound.visibility = View.GONE
+                                binding.cardViewNoInternet.visibility = View.GONE
+                                setupAdapter(result.data.data.jsonMemberClass)
+                                liveData.removeObservers(requireActivity())
+                                liveDataStore.removeObservers(requireActivity())
+                                liveDataStoreToken.removeObservers(requireActivity())
+                            }
+                            is Result.Error -> {
+                                binding.loadingList4.visibility = View.GONE
+                                val liveData2 = classesViewModel.searchWord("")
+                                liveData2.observe(requireActivity()){
+                                    setupAdapter(it)
+                                    if(it.isEmpty()){
+                                        binding.cardViewNoInternet.visibility = View.VISIBLE
+                                    }else{
+                                        binding.cardViewNoInternet.visibility = View.GONE
+                                    }
+                                    liveData2.removeObservers(requireActivity())
+                                }
+                                ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_error_24)
+                                    ?.let {showDialog(result.error, it) }
+                                liveData.removeObservers(requireActivity())
+                                liveDataStore.removeObservers(requireActivity())
+                                liveDataStoreToken.removeObservers(requireActivity())
+                            }
                         }
                     }
                 }
@@ -149,5 +157,17 @@ class ClassesFragment : Fragment() {
         binding.rvClassesList.layoutManager = LinearLayoutManager(requireActivity())
         classesListAdapter = ClassesListAdapter(requireActivity(), classes)
         binding.rvClassesList.adapter = classesListAdapter
+    }
+
+    fun showDialog(text: String, icon: Drawable) {
+        val builder = AlertDialog.Builder(requireContext()).create()
+        val bindAlert: CustomAlertApiBinding = CustomAlertApiBinding.inflate(LayoutInflater.from(requireContext()))
+        builder.setView(bindAlert.root)
+        bindAlert.infoDialog.text = text
+        bindAlert.imageView5.setImageDrawable(icon)
+        bindAlert.closeButton.setOnClickListener {
+            builder.dismiss()
+        }
+        builder.show()
     }
 }

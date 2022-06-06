@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import id.capstone.tanamin.R
@@ -47,6 +48,8 @@ class ProfileEditActivity : AppCompatActivity() {
     private lateinit var user: User
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
     private var profilePicture: File?=null
+    private lateinit var liveDataStore : LiveData<String>
+    private var token : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,7 +102,13 @@ class ProfileEditActivity : AppCompatActivity() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        val factory: ViewModelFactory = ViewModelFactory.getInstance(this, "")
+        liveDataStore = preferencesViewModel.getTokenUser()
+        liveDataStore.observe(this){
+            if(!it.isNullOrEmpty()){
+                token = it
+            }
+        }
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(this, token)
         val profileEditViewModel: ProfileEditViewModel by viewModels {
             factory
         }
@@ -119,7 +128,7 @@ class ProfileEditActivity : AppCompatActivity() {
     private fun updateProfile(){
         val userid=user.idUser.toString().toRequestBody("text/plain".toMediaType())
         val name=if(binding.etFullName.text.toString().isNotEmpty())binding.etFullName.text.toString().toRequestBody("text/plain".toMediaType())
-            else "dikosongkan".toRequestBody("text/plain".toMediaType())
+            else user.name.toRequestBody("text/plain".toMediaType())
         val age = if(binding.etAge.text.toString().isNotEmpty())binding.etAge.text.toString().toRequestBody("text/plain".toMediaType())
             else "0".toRequestBody("text/plain".toMediaType())
         val address = if(binding.etAddress.text.toString().isNotEmpty())binding.etAddress.text.toString().toRequestBody("text/plain".toMediaType())

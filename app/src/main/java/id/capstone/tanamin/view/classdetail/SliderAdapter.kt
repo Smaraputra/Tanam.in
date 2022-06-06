@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.smarteist.autoimageslider.SliderViewAdapter
+import id.capstone.tanamin.R
 import id.capstone.tanamin.databinding.SliderItemBinding
 
 class SliderAdapter(private val context: Context, private val classImages: Array<String>) : SliderViewAdapter<SliderAdapter.SliderViewHolder>() {
@@ -17,6 +18,8 @@ class SliderAdapter(private val context: Context, private val classImages: Array
         val sliderItem: String = classImages[position]
         Glide.with(viewHolder.imageSliderItem)
             .load(sliderItem)
+            .placeholder(R.drawable.ic_background_logo)
+            .error(R.drawable.ic_background_logo)
             .fitCenter()
             .into(viewHolder.imageSliderItem)
     }

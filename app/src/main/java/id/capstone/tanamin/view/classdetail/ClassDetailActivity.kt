@@ -15,6 +15,7 @@ import id.capstone.tanamin.R
 import id.capstone.tanamin.data.local.database.Classes
 import id.capstone.tanamin.databinding.ActivityClassDetailBinding
 import id.capstone.tanamin.databinding.CustomAlertApiBinding
+import id.capstone.tanamin.databinding.CustomAlertRequirementBinding
 import id.capstone.tanamin.view.quiz.QuizActivity
 import id.capstone.tanamin.view.classmodule.ClassModuleActivity
 import id.capstone.tanamin.view.forumcreate.ForumCreateActivity
@@ -112,9 +113,9 @@ class ClassDetailActivity : AppCompatActivity() {
         builder.show()
     }
 
-    fun showRequirementDialog() {
+    private fun showRequirementDialog() {
         val builder = AlertDialog.Builder(this).create()
-        val bindAlert: CustomAlertApiBinding = CustomAlertApiBinding.inflate(LayoutInflater.from(this))
+        val bindAlert: CustomAlertRequirementBinding = CustomAlertRequirementBinding.inflate(LayoutInflater.from(this))
         builder.setView(bindAlert.root)
         bindAlert.closeButton.setOnClickListener {
             builder.dismiss()

@@ -17,6 +17,7 @@ import androidx.core.text.HtmlCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import id.capstone.tanamin.R
 import id.capstone.tanamin.data.Result
@@ -46,6 +47,7 @@ class ClassModuleActivity : AppCompatActivity() {
     private lateinit var classModuleViewModel: ClassModuleViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
+    private lateinit var liveDataStore : LiveData<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,32 +66,41 @@ class ClassModuleActivity : AppCompatActivity() {
     }
 
     private fun getDetailModule(){
-        val moduleHashMap: HashMap<String, String> = HashMap()
-        val liveDataPref=preferencesViewModel.getIDUser()
-        liveDataPref.observe(this){ userId->
-            this.userId=userId
-            moduleHashMap["classid"]=classId.toString()
-            moduleHashMap["modulid"]=modulId.toString()
-            moduleHashMap["userid"]= userId.toString()
-            val liveDataDetailModule=classModuleViewModel.getDetailModule(moduleHashMap)
-            liveDataDetailModule.observe(this){ result ->
-                if (result != null) {
-                    when (result) {
-                        is Result.Loading -> {
-                            binding.loadingModule.visibility = View.VISIBLE
-                        }
-                        is Result.Success -> {
-                            binding.loadingModule.visibility = View.GONE
-                            setupView(result.data.data)
-                            liveDataPref.removeObservers(this)
-                            liveDataDetailModule.removeObservers(this)
-                        }
-                        is Result.Error -> {
-                            binding.loadingModule.visibility = View.GONE
-                            ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
-                                ?.let { (showDialog(result.error, it,true)) }
-                            liveDataPref.removeObservers(this)
-                            liveDataDetailModule.removeObservers(this)
+        liveDataStore.observe(this){ token ->
+            val factory: ViewModelFactory = ViewModelFactory.getInstance(this, token)
+            val classModuleViewModel: ClassModuleViewModel by viewModels {
+                factory
+            }
+            this.classModuleViewModel=classModuleViewModel
+
+            val moduleHashMap: HashMap<String, String> = HashMap()
+            val liveDataPref=preferencesViewModel.getIDUser()
+            liveDataPref.observe(this){ userId->
+                moduleHashMap["classid"]=classId.toString()
+                moduleHashMap["modulid"]=modulId.toString()
+                moduleHashMap["userid"]= userId.toString()
+                val liveDataDetailModule=classModuleViewModel.getDetailModule(moduleHashMap)
+                liveDataDetailModule.observe(this){ result ->
+                    if (result != null) {
+                        when (result) {
+                            is Result.Loading -> {
+                                binding.loadingModule.visibility = View.VISIBLE
+                            }
+                            is Result.Success -> {
+                                binding.loadingModule.visibility = View.GONE
+                                setupView(result.data.data)
+                                liveDataPref.removeObservers(this)
+                                liveDataDetailModule.removeObservers(this)
+                                liveDataStore.removeObservers(this)
+                            }
+                            is Result.Error -> {
+                                binding.loadingModule.visibility = View.GONE
+                                ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
+                                    ?.let { (showDialog(result.error, it, false)) }
+                                liveDataPref.removeObservers(this)
+                                liveDataDetailModule.removeObservers(this)
+                                liveDataStore.removeObservers(this)
+                            }
                         }
                     }
                 }
@@ -130,8 +141,8 @@ class ClassModuleActivity : AppCompatActivity() {
                 startActivity(intent)
             }else{
                 val liveData=classModuleViewModel.isProgressPictureUploaded
-                liveData.observe(this){
-                    if(it){
+                liveData.observe(this){ status->
+                    if(status){
                         val intent = Intent(this, QuizActivity::class.java)
                         intent.putExtra(ID_CLASS_EXTRA, dataDetailModule.classId.toInt())
                         intent.putExtra(ID_MODULE_EXTRA,dataDetailModule.module[0].idModuls + 1)
@@ -140,7 +151,7 @@ class ClassModuleActivity : AppCompatActivity() {
                         startActivity(intent)
                     }else{
                         ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
-                            ?.let { showDialog("Anda belum mengunggah foto progress !", it,false) }
+                            ?.let { showDialog("Anda belum mengunggah foto progress !", it,status) }
                     }
                     liveData.removeObservers(this)
                 }
@@ -154,12 +165,7 @@ class ClassModuleActivity : AppCompatActivity() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        val factory: ViewModelFactory = ViewModelFactory.getInstance(this, "")
-        val classModuleViewModel: ClassModuleViewModel by viewModels {
-            factory
-        }
-        this.classModuleViewModel=classModuleViewModel
-        classModuleViewModel.setProgressPictureUploadedStatus(false)
+        liveDataStore = preferencesViewModel.getTokenUser()
     }
 
     fun showDialog(text: String, icon: Drawable,isFinishAct:Boolean) {
@@ -204,9 +210,9 @@ class ClassModuleActivity : AppCompatActivity() {
         val progressPictureMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
             "picture",
             progressPicture.name,
-            requestProgressPicture!!
+            requestProgressPicture
         )
-        var liveData = classModuleViewModel.uploadProgress(progressPictureMultipart,userIdRequest,classIdRequest)
+        val liveData = classModuleViewModel.uploadProgress(progressPictureMultipart,userIdRequest,classIdRequest)
         liveData.observe(this){ result ->
             if (result != null) {
                 when (result) {

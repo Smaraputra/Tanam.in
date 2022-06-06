@@ -20,13 +20,23 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
 import id.capstone.tanamin.R
+import id.capstone.tanamin.data.Result
+import id.capstone.tanamin.data.remote.response.DetectionResponse
 import id.capstone.tanamin.databinding.CustomAlertApiBinding
-import id.capstone.tanamin.databinding.CustomAlertLogoutBinding
+import id.capstone.tanamin.databinding.CustomAlertDetectionBinding
 import id.capstone.tanamin.databinding.FragmentDetectionBinding
 import id.capstone.tanamin.utils.createFile
+import id.capstone.tanamin.utils.reduceFileImage
 import id.capstone.tanamin.utils.rotateBitmap
+import id.capstone.tanamin.view.ViewModelFactory
 import id.capstone.tanamin.view.detectionresult.DetectionResultActivity
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -35,7 +45,9 @@ class DetectionFragment : Fragment() {
     private val binding get() = _binding!!
     private var cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private var imageCapture: ImageCapture? = null
+    private lateinit var detectionViewModel: DetectionViewModel
     private lateinit var cameraExecutor: ExecutorService
+    private lateinit var liveData : LiveData<Result<DetectionResponse>>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,6 +60,7 @@ class DetectionFragment : Fragment() {
 
     override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
         cameraExecutor = Executors.newSingleThreadExecutor()
+        setupViewModel()
         setupPermissions()
         binding.captureImage.setOnClickListener {
             takePhoto()
@@ -97,6 +110,14 @@ class DetectionFragment : Fragment() {
                 REQUEST_CODE_PERMISSIONS
             )
         }
+    }
+
+    private fun setupViewModel(){
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireContext(), "")
+        val detectionViewModel: DetectionViewModel by viewModels {
+            factory
+        }
+        this.detectionViewModel=detectionViewModel
     }
 
     private fun startCamera() {
@@ -154,10 +175,57 @@ class DetectionFragment : Fragment() {
                         BitmapFactory.decodeFile(photoFile.path),
                         cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA
                     )
-                    showDialogResult(result)
+                    val intent = Intent()
+                    intent.putExtra("picture", photoFile)
+                    intent.putExtra(
+                        "isBackCamera",
+                        cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA
+                    )
+                    uploadImage(photoFile,result)
                 }
             }
         )
+    }
+
+    private fun uploadImage(photoFile: File, results :Bitmap) {
+        val file = reduceFileImage(photoFile)
+        val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+        val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+            "file",
+            file.name,
+            requestImageFile
+        )
+        liveData = detectionViewModel.detectImage(imageMultipart)
+        liveData.observe(this){ result ->
+            if (result != null) {
+                when (result) {
+                    is Result.Loading -> {
+                        binding.loadingList4.visibility = View.VISIBLE
+                    }
+                    is Result.Success -> {
+                        binding.loadingList4.visibility = View.GONE
+                        if(result.data.accuracy<90){
+                            showDialogResult(result.data, results)
+                        }else{
+                            ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_error_24)
+                                ?.let { showDialogPermission(getString(R.string.no_detected), it) }
+                        }
+                        liveData.removeObservers(this)
+                    }
+                    is Result.Error -> {
+                        binding.loadingList4.visibility = View.GONE
+                        if(result.error=="timeout"){
+                            ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_error_24)
+                                ?.let { showDialogPermission(getString(R.string.no_detected), it) }
+                        }else{
+                            ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_error_24)
+                                ?.let { showDialogPermission(result.error, it) }
+                        }
+                        liveData.removeObservers(this)
+                    }
+                }
+            }
+        }
     }
 
     private fun showDialogPermission(text: String, icon: Drawable) {
@@ -173,11 +241,13 @@ class DetectionFragment : Fragment() {
         builder.show()
     }
 
-    private fun showDialogResult(icon: Bitmap) {
+    private fun showDialogResult(data: DetectionResponse, icon: Bitmap) {
         val builder = AlertDialog.Builder(requireContext()).create()
-        val bindAlert: CustomAlertLogoutBinding = CustomAlertLogoutBinding.inflate(LayoutInflater.from(requireContext()))
+        val bindAlert: CustomAlertDetectionBinding = CustomAlertDetectionBinding.inflate(LayoutInflater.from(requireContext()))
+        val accuracy = "Akurasi : " + String.format("%.2f", data.accuracy*100) +"%"
         builder.setView(bindAlert.root)
-        bindAlert.infoDialog.text = getString(R.string.no_data)
+        bindAlert.infoDialog.text = data.nama
+        bindAlert.infoDialog2.text = accuracy
         bindAlert.cancelButton.text = getString(R.string.close_button)
         bindAlert.logoutConfirm.text = getString(R.string.see_detail)
         bindAlert.imageView5.setImageBitmap(icon)
@@ -186,6 +256,7 @@ class DetectionFragment : Fragment() {
         }
         bindAlert.logoutConfirm.setOnClickListener {
             val intent = Intent(requireContext(), DetectionResultActivity::class.java)
+            intent.putExtra(INFO_ID, data.id)
             startActivity(intent)
             builder.dismiss()
         }
@@ -195,5 +266,6 @@ class DetectionFragment : Fragment() {
     companion object {
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
         private const val REQUEST_CODE_PERMISSIONS = 10
+        const val INFO_ID = "info_id"
     }
 }

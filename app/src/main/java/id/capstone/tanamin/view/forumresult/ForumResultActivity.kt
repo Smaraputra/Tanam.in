@@ -31,11 +31,12 @@ import id.capstone.tanamin.view.ViewModelFactory
 class ForumResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivityForumResultBinding
     private lateinit var liveDataStore : LiveData<Int>
-    private var userId: Int = 0
     private lateinit var forumResultViewModel: ForumResultViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
     private lateinit var dataDetail: ListForumItem
+    private lateinit var liveDataStoreToken : LiveData<String>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityForumResultBinding.inflate(layoutInflater)
@@ -62,74 +63,47 @@ class ForumResultActivity : AppCompatActivity() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        val factory: ViewModelFactory = ViewModelFactory.getInstance(this, "")
-        val forumResultViewModel: ForumResultViewModel by viewModels {
-            factory
-        }
-        this.forumResultViewModel=forumResultViewModel
+        liveDataStoreToken = preferencesViewModel.getTokenUser()
         liveDataStore = preferencesViewModel.getIDUser()
-        liveDataStore.observe(this) { userId ->
-            this.userId = userId
-        }
         binding.buttonGchatSend.setOnClickListener{
             sendMessage()
         }
     }
 
     private fun sendMessage(){
-        val messageData: HashMap<String, String> = HashMap()
-        messageData["idforum"] = dataDetail.id_forum.toString()
-        messageData["userid"] = userId.toString()
-        messageData["massage"] = binding.editGchatMessage.text.toString()
-        val liveData = forumResultViewModel.sendMessage(messageData)
-        liveData.observe(this) { result ->
-            if (result != null) {
-                when (result) {
-                    is Result.Loading -> {
-                        binding.loadingModule2.visibility = View.VISIBLE
-                    }
-                    is Result.Success -> {
-                        binding.loadingModule2.visibility = View.GONE
-                        liveData.removeObservers(this)
-                        getMessage()
-                    }
-                    is Result.Error -> {
-                        binding.loadingModule2.visibility = View.GONE
-                        ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
-                            ?.let { showDialog(result.error, it) }
-                        liveData.removeObservers(this)
-                    }
-                }
+        liveDataStoreToken.observe(this){ token ->
+            val factory: ViewModelFactory = ViewModelFactory.getInstance(this, token)
+            val forumResultViewModel: ForumResultViewModel by viewModels {
+                factory
             }
-        }
-    }
-
-    private fun getMessage(){
-        val liveData = forumResultViewModel.getAllMessage(dataDetail.id_forum.toString())
-        liveData.observe(this) { result ->
-            if (result != null) {
-                when (result) {
-                    is Result.Loading -> {
-                        binding.loadingModule2.visibility = View.VISIBLE
-                    }
-                    is Result.Success -> {
-                        binding.loadingModule2.visibility = View.GONE
-                        binding.cardViewNoInternet.visibility = View.GONE
-                        binding.cardViewNoChat.visibility = View.GONE
-                        setupAdapter(result.data.data)
-                        liveData.removeObservers(this)
-                    }
-                    is Result.Error -> {
-                        binding.loadingModule2.visibility = View.GONE
-                        binding.cardViewNoChat.visibility = View.GONE
-                        binding.cardViewNoInternet.visibility = View.GONE
-                        if(result.error=="maaf forum yang anda cari tidak ditemukan"){
-                            binding.cardViewNoChat.visibility = View.VISIBLE
-                        }else{
-                            binding.cardViewNoInternet.visibility = View.VISIBLE
-                            ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
-                                ?.let { showDialog(result.error, it) }
-                            liveData.removeObservers(this)
+            this.forumResultViewModel=forumResultViewModel
+            liveDataStore.observe(this) { userId ->
+                val messageData: HashMap<String, String> = HashMap()
+                messageData["idforum"] = dataDetail.id_forum.toString()
+                messageData["userid"] = userId.toString()
+                messageData["massage"] = binding.editGchatMessage.text.toString()
+                val liveData = forumResultViewModel.sendMessage(messageData)
+                liveData.observe(this) { result ->
+                    if (result != null) {
+                        when (result) {
+                            is Result.Loading -> {
+                                binding.loadingModule2.visibility = View.VISIBLE
+                            }
+                            is Result.Success -> {
+                                binding.loadingModule2.visibility = View.GONE
+                                liveData.removeObservers(this)
+                                liveDataStore.removeObservers(this)
+                                liveDataStoreToken.removeObservers(this)
+                                getMessage()
+                            }
+                            is Result.Error -> {
+                                binding.loadingModule2.visibility = View.GONE
+                                ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
+                                    ?.let { showDialog(result.error, it) }
+                                liveData.removeObservers(this)
+                                liveDataStore.removeObservers(this)
+                                liveDataStoreToken.removeObservers(this)
+                            }
                         }
                     }
                 }
@@ -137,7 +111,55 @@ class ForumResultActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupAdapter(listModule : List<DataItem>){
+    private fun getMessage(){
+        liveDataStoreToken.observe(this){ token ->
+            val factory: ViewModelFactory = ViewModelFactory.getInstance(this, token)
+            val forumResultViewModel: ForumResultViewModel by viewModels {
+                factory
+            }
+            this.forumResultViewModel=forumResultViewModel
+
+            liveDataStore.observe(this) { userId ->
+                val liveData = forumResultViewModel.getAllMessage(dataDetail.id_forum.toString())
+                liveData.observe(this) { result ->
+                    if (result != null) {
+                        when (result) {
+                            is Result.Loading -> {
+                                binding.loadingModule2.visibility = View.VISIBLE
+                            }
+                            is Result.Success -> {
+                                binding.loadingModule2.visibility = View.GONE
+                                binding.cardViewNoInternet.visibility = View.GONE
+                                binding.cardViewNoChat.visibility = View.GONE
+                                setupAdapter(result.data.data,userId)
+                                liveData.removeObservers(this)
+                                liveDataStore.removeObservers(this)
+                                liveDataStoreToken.removeObservers(this)
+                            }
+                            is Result.Error -> {
+                                binding.loadingModule2.visibility = View.GONE
+                                binding.cardViewNoChat.visibility = View.GONE
+                                binding.cardViewNoInternet.visibility = View.GONE
+                                if(result.error=="maaf forum yang anda cari tidak ditemukan"){
+                                    binding.cardViewNoChat.visibility = View.VISIBLE
+                                }else{
+                                    binding.cardViewNoInternet.visibility = View.VISIBLE
+                                    ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
+                                        ?.let { showDialog(result.error, it) }
+                                }
+                                liveData.removeObservers(this)
+                                liveDataStore.removeObservers(this)
+                                liveDataStoreToken.removeObservers(this)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun setupAdapter(listModule : List<DataItem>, userId: Int){
         val forumListAdapter = ForumResultAdapter(listModule, userId)
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.layoutManager = LinearLayoutManager(this)

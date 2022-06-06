@@ -143,4 +143,5 @@
     <string name="requirement_info">Prasyarat dan kriteria yang harus dipenuhi untuk lulus dari kelas. Fitur dalam pengembangan.</string>
     <string name="congratulation_quiz">Selamat anda lulus kuis!</string>
     <string name="not_pass_quiz">Anda belum lulus kuis.</string>
+    <string name="no_detected">Tidak dapat mendeteksi. Silahkan ulangi lagi.</string>
 </resources>

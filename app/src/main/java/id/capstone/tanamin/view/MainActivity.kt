@@ -48,16 +48,4 @@ class MainActivity : AppCompatActivity() {
             PreferencesViewModel::class.java
         )
     }
-
-    fun showDialog(text: String, icon: Drawable) {
-        val builder = AlertDialog.Builder(this).create()
-        val bindAlert: CustomAlertApiBinding = CustomAlertApiBinding.inflate(LayoutInflater.from(this))
-        builder.setView(bindAlert.root)
-        bindAlert.infoDialog.text = text
-        bindAlert.imageView5.setImageDrawable(icon)
-        bindAlert.closeButton.setOnClickListener {
-            builder.dismiss()
-        }
-        builder.show()
-    }
 }

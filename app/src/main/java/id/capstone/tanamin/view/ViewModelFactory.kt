@@ -10,6 +10,8 @@ import id.capstone.tanamin.view.quiz.QuizViewModel
 import id.capstone.tanamin.view.classdetail.silabus.SilabusViewModel
 import id.capstone.tanamin.view.classes.ClassesViewModel
 import id.capstone.tanamin.view.classmodule.ClassModuleViewModel
+import id.capstone.tanamin.view.detection.DetectionViewModel
+import id.capstone.tanamin.view.detectionresult.DetectionResultViewModel
 import id.capstone.tanamin.view.forumcreate.ForumCreateViewModel
 import id.capstone.tanamin.view.forumresult.ForumResultViewModel
 import id.capstone.tanamin.view.home.HomeViewModel
@@ -58,6 +60,12 @@ class ViewModelFactory private constructor(private val tanaminRepository: Tanami
             }
             modelClass.isAssignableFrom(QuizViewModel::class.java)->{
                 return QuizViewModel(tanaminRepository) as T
+            }
+            modelClass.isAssignableFrom(DetectionViewModel::class.java)->{
+                return DetectionViewModel(tanaminRepository) as T
+            }
+            modelClass.isAssignableFrom(DetectionResultViewModel::class.java)->{
+                return DetectionResultViewModel(tanaminRepository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

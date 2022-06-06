@@ -34,6 +34,8 @@ class ForumCreateActivity : AppCompatActivity() {
     private var classID: Int = 0
     private var title = ""
     private var question = ""
+    private lateinit var liveDataStoreToken : LiveData<String>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityForumCreateBinding.inflate(layoutInflater)
@@ -61,41 +63,47 @@ class ForumCreateActivity : AppCompatActivity() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        val factory: ViewModelFactory = ViewModelFactory.getInstance(this, "")
-        val forumCreateViewModel: ForumCreateViewModel by viewModels {
-            factory
-        }
-        this.forumCreateViewModel=forumCreateViewModel
+        liveDataStoreToken = preferencesViewModel.getTokenUser()
     }
 
     private fun sendData(){
-        val homeMap: HashMap<String, String> = HashMap()
-        liveDataStore = preferencesViewModel.getIDUser()
-        liveDataStore.observe(this) { userId ->
-            homeMap["userid"] = userId.toString()
-            homeMap["classid"] = classID.toString()
-            homeMap["title"] = title
-            homeMap["question"] = question
-            val liveData = forumCreateViewModel.createForum(homeMap)
-            liveData.observe(this){ result ->
-                if (result != null) {
-                    when (result) {
-                        is Result.Loading -> {
-                            binding.loadingModule.visibility = View.VISIBLE
-                        }
-                        is Result.Success -> {
-                            binding.loadingModule.visibility = View.GONE
-                            ContextCompat.getDrawable(this, R.drawable.ic_baseline_check_circle_24)
-                                ?.let { showDialog(result.data.message, it, true) }
-                            liveData.removeObservers(this)
-                            liveDataStore.removeObservers(this)
-                        }
-                        is Result.Error -> {
-                            binding.loadingModule.visibility = View.GONE
-                            ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
-                                ?.let { showDialog(result.error, it, false) }
-                            liveData.removeObservers(this)
-                            liveDataStore.removeObservers(this)
+        liveDataStoreToken.observe(this){
+            val factory: ViewModelFactory = ViewModelFactory.getInstance(this, it)
+            val forumCreateViewModel: ForumCreateViewModel by viewModels {
+                factory
+            }
+            this.forumCreateViewModel=forumCreateViewModel
+
+            val homeMap: HashMap<String, String> = HashMap()
+            liveDataStore = preferencesViewModel.getIDUser()
+            liveDataStore.observe(this) { userId ->
+                homeMap["userid"] = userId.toString()
+                homeMap["classid"] = classID.toString()
+                homeMap["title"] = title
+                homeMap["question"] = question
+                val liveData = forumCreateViewModel.createForum(homeMap)
+                liveData.observe(this){ result ->
+                    if (result != null) {
+                        when (result) {
+                            is Result.Loading -> {
+                                binding.loadingModule.visibility = View.VISIBLE
+                            }
+                            is Result.Success -> {
+                                binding.loadingModule.visibility = View.GONE
+                                ContextCompat.getDrawable(this, R.drawable.ic_baseline_check_circle_24)
+                                    ?.let { showDialog(result.data.message, it, true) }
+                                liveData.removeObservers(this)
+                                liveDataStore.removeObservers(this)
+                                liveDataStoreToken.removeObservers(this)
+                            }
+                            is Result.Error -> {
+                                binding.loadingModule.visibility = View.GONE
+                                ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
+                                    ?.let { showDialog(result.error, it, false) }
+                                liveData.removeObservers(this)
+                                liveDataStore.removeObservers(this)
+                                liveDataStoreToken.removeObservers(this)
+                            }
                         }
                     }
                 }

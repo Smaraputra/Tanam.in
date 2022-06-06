@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import id.capstone.tanamin.R
@@ -34,13 +35,15 @@ class QuizActivity : AppCompatActivity() {
     private var modulId: Int = 0
     private var quizId: Int = 0
     private var classId: Int = 0
+    private var statusQuiz: Boolean = false
     private var classTitle: String=""
     private lateinit var quizQuestionAdapter: QuizQuestionAdapter
     private lateinit var quizViewModel: QuizViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
     private lateinit var answerQuiz: MutableList<String>
-
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
+    private lateinit var liveDataStore : LiveData<String>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityQuizBinding.inflate(layoutInflater)
@@ -55,6 +58,13 @@ class QuizActivity : AppCompatActivity() {
         setupViewModel()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if(statusQuiz){
+            sendAnswer()
+        }
+    }
+
     private fun setupView(){
         binding.ivBackButton.setOnClickListener{
             onBackPressed()
@@ -67,13 +77,11 @@ class QuizActivity : AppCompatActivity() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        val factory: ViewModelFactory = ViewModelFactory.getInstance(this, "")
-        val quizViewModel: QuizViewModel by viewModels {
-            factory
-        }
-        this.quizViewModel=quizViewModel
+        liveDataStore = preferencesViewModel.getTokenUser()
+
         binding.button5.setOnClickListener{
             getQuiz()
+            statusQuiz = false
             binding.textView8.visibility = View.GONE
             binding.button5.visibility = View.GONE
             binding.button5.isClickable = false
@@ -87,33 +95,43 @@ class QuizActivity : AppCompatActivity() {
     }
 
     private fun getQuiz(){
-        val moduleHashMap: HashMap<String, String> = HashMap()
-        val liveDataPref=preferencesViewModel.getIDUser()
-        liveDataPref.observe(this){ userId->
-            moduleHashMap["classid"]=classId.toString()
-            moduleHashMap["modulid"]=modulId.toString()
-            moduleHashMap["userid"]=userId.toString()
-            val liveDataDetailModule=quizViewModel.getQuiz(moduleHashMap)
-            liveDataDetailModule.observe(this){ result ->
-                if (result != null) {
-                    when (result) {
-                        is Result.Loading -> {
-                            binding.loadingModule.visibility = View.VISIBLE
-                        }
-                        is Result.Success -> {
-                            binding.loadingModule.visibility = View.GONE
-                            setupAdapter(result.data.data.module)
-                            quizId = result.data.data.quizid
-                            timerStart()
-                            liveDataPref.removeObservers(this)
-                            liveDataDetailModule.removeObservers(this)
-                        }
-                        is Result.Error -> {
-                            binding.loadingModule.visibility = View.GONE
-                            ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
-                                ?.let { (showDialog(result.error, it)) }
-                            liveDataPref.removeObservers(this)
-                            liveDataDetailModule.removeObservers(this)
+        liveDataStore.observe(this){ token ->
+            val factory: ViewModelFactory = ViewModelFactory.getInstance(this, token)
+            val quizViewModel: QuizViewModel by viewModels {
+                factory
+            }
+            this.quizViewModel=quizViewModel
+
+            val moduleHashMap: HashMap<String, String> = HashMap()
+            val liveDataPref=preferencesViewModel.getIDUser()
+            liveDataPref.observe(this){ userId->
+                moduleHashMap["classid"]=classId.toString()
+                moduleHashMap["modulid"]=modulId.toString()
+                moduleHashMap["userid"]=userId.toString()
+                val liveDataDetailModule=quizViewModel.getQuiz(moduleHashMap)
+                liveDataDetailModule.observe(this){ result ->
+                    if (result != null) {
+                        when (result) {
+                            is Result.Loading -> {
+                                binding.loadingModule.visibility = View.VISIBLE
+                            }
+                            is Result.Success -> {
+                                binding.loadingModule.visibility = View.GONE
+                                setupAdapter(result.data.data.module)
+                                quizId = result.data.data.quizid
+                                timerStart()
+                                liveDataPref.removeObservers(this)
+                                liveDataDetailModule.removeObservers(this)
+                                liveDataStore.removeObservers(this)
+                            }
+                            is Result.Error -> {
+                                binding.loadingModule.visibility = View.GONE
+                                ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
+                                    ?.let { (showDialog(result.error, it)) }
+                                liveDataPref.removeObservers(this)
+                                liveDataDetailModule.removeObservers(this)
+                                liveDataStore.removeObservers(this)
+                            }
                         }
                     }
                 }
@@ -137,38 +155,47 @@ class QuizActivity : AppCompatActivity() {
     }
 
     private fun sendAnswer(){
-        val moduleHashMap: HashMap<String, String> = HashMap()
-        val liveDataPref=preferencesViewModel.getIDUser()
-        liveDataPref.observe(this){ userId->
-            moduleHashMap["quizid"]=quizId.toString()
-            moduleHashMap["userid"]=userId.toString()
-            moduleHashMap["classid"]=classId.toString()
-            moduleHashMap["moduleid"]=modulId.toString()
-            val liveDataDetailModule=quizViewModel.sendAnswer(answerQuiz,moduleHashMap)
-            liveDataDetailModule.observe(this){ result ->
-                if (result != null) {
-                    when (result) {
-                        is Result.Loading -> {
-                            binding.loadingModule.visibility = View.VISIBLE
-                        }
-                        is Result.Success -> {
-                            binding.loadingModule.visibility = View.GONE
-                            liveDataPref.removeObservers(this)
-                            liveDataDetailModule.removeObservers(this)
-                            if(result.data.data.score<60){
-                                ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
-                                    ?.let { (showDialogScore(result.data.data.score.toString(), it, false)) }
-                            }else{
-                                ContextCompat.getDrawable(this, R.drawable.ic_baseline_check_circle_24)
-                                    ?.let { (showDialogScore(result.data.data.score.toString(), it, true)) }
+        liveDataStore.observe(this){ token ->
+            val factory: ViewModelFactory = ViewModelFactory.getInstance(this, token)
+            val quizViewModel: QuizViewModel by viewModels {
+                factory
+            }
+            this.quizViewModel=quizViewModel
+            val moduleHashMap: HashMap<String, String> = HashMap()
+            val liveDataPref=preferencesViewModel.getIDUser()
+            liveDataPref.observe(this){ userId->
+                moduleHashMap["quizid"]=quizId.toString()
+                moduleHashMap["userid"]=userId.toString()
+                moduleHashMap["classid"]=classId.toString()
+                moduleHashMap["moduleid"]=modulId.toString()
+                val liveDataDetailModule=quizViewModel.sendAnswer(answerQuiz,moduleHashMap)
+                liveDataDetailModule.observe(this){ result ->
+                    if (result != null) {
+                        when (result) {
+                            is Result.Loading -> {
+                                binding.loadingModule.visibility = View.VISIBLE
                             }
-                        }
-                        is Result.Error -> {
-                            binding.loadingModule.visibility = View.GONE
-                            ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
-                                ?.let { (showDialog(result.error, it)) }
-                            liveDataPref.removeObservers(this)
-                            liveDataDetailModule.removeObservers(this)
+                            is Result.Success -> {
+                                binding.loadingModule.visibility = View.GONE
+                                if(result.data.data.score<60){
+                                    ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
+                                        ?.let { (showDialogScore(result.data.data.score.toString(), it, false)) }
+                                }else{
+                                    ContextCompat.getDrawable(this, R.drawable.ic_baseline_check_circle_24)
+                                        ?.let { (showDialogScore(result.data.data.score.toString(), it, true)) }
+                                }
+                                liveDataPref.removeObservers(this)
+                                liveDataDetailModule.removeObservers(this)
+                                liveDataStore.removeObservers(this)
+                            }
+                            is Result.Error -> {
+                                binding.loadingModule.visibility = View.GONE
+                                ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
+                                    ?.let { (showDialog(result.error, it)) }
+                                liveDataPref.removeObservers(this)
+                                liveDataDetailModule.removeObservers(this)
+                                liveDataStore.removeObservers(this)
+                            }
                         }
                     }
                 }
