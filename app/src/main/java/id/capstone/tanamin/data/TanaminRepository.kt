@@ -33,6 +33,7 @@ class TanaminRepository(
     private val resultDetailModule=MediatorLiveData<Result<DetailModuleResponse>>()
     private val resultQuizModule=MediatorLiveData<Result<QuizResponse>>()
     private val resultQuizAnswer=MediatorLiveData<Result<QuizAnswerResponse>>()
+    private val resultUploadProgress=MediatorLiveData<Result<UploadProgressResponse>>()
 
     fun registerUser(registerMap: HashMap<String, String>): LiveData<Result<RegisterResponse>> {
         resultRegister.value = Result.Loading
@@ -409,5 +410,33 @@ class TanaminRepository(
             }
         })
         return resultQuizAnswer
+    }
+
+    fun uploadProgress(progressPictureMultipart: MultipartBody.Part, userId: RequestBody, classId: RequestBody):LiveData<Result<UploadProgressResponse>>{
+        resultUploadProgress.value = Result.Loading
+        val client = apiService.uploadProgress(progressPictureMultipart,userId,classId)
+        client.enqueue(object : Callback<UploadProgressResponse> {
+            override fun onResponse(
+                call: Call<UploadProgressResponse>,
+                response: Response<UploadProgressResponse>
+            ) {
+                if (response.isSuccessful) {
+                    resultUploadProgress.value = Result.Success(response.body() as UploadProgressResponse)
+                } else {
+                    lateinit var jsonObject: JSONObject
+                    try {
+                        jsonObject = JSONObject(response.errorBody()!!.string())
+                        resultUploadProgress.value = Result.Error(jsonObject.getString("message"))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<UploadProgressResponse>, t: Throwable) {
+                resultUploadProgress.value = Result.Error(t.message.toString())
+            }
+        })
+        return resultUploadProgress
     }
 }

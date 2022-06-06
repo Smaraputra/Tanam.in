@@ -159,14 +159,28 @@
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="24dp"
             android:background="@drawable/button_background"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
             android:text="@string/module_next_button_text"
             android:textAllCaps="false"
             android:textColor="?attr/colorOnPrimary"
             app:cornerRadius="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnUpProgress"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:backgroundTint="@color/grey_soft"
+            android:contentDescription="@string/class_requirement"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:visibility="gone"
+            app:cornerRadius="5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/btnPrev"
+            app:layout_constraintEnd_toStartOf="@+id/btnNext"
+            app:layout_constraintStart_toEndOf="@+id/btnPrev"
+            app:layout_constraintTop_toTopOf="@+id/btnPrev"
+            app:srcCompat="@drawable/ic_baseline_insert_photo_24" />
 
         <Button
             android:id="@+id/btnPrev"

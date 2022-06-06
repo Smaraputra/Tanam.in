@@ -101,4 +101,12 @@ interface ServicesAPI {
         @Field("answer") answer: List<String>,
         @FieldMap hashMap: Map<String, String>
     ):Call<QuizAnswerResponse>
+
+    @Multipart
+    @POST("classProgress")
+    fun uploadProgress(
+        @Part picture: MultipartBody.Part,
+        @Part("userid") userId: RequestBody,
+        @Part("classid") classId: RequestBody
+    ): Call<UploadProgressResponse>
 }

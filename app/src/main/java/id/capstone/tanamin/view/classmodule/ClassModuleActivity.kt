@@ -3,9 +3,12 @@ package id.capstone.tanamin.view.classmodule
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -23,12 +26,20 @@ import id.capstone.tanamin.data.local.datastore.PreferencesViewModelFactory
 import id.capstone.tanamin.data.remote.response.DataDetailModule
 import id.capstone.tanamin.databinding.ActivityClassModuleBinding
 import id.capstone.tanamin.databinding.CustomAlertApiBinding
+import id.capstone.tanamin.utils.uriToFile
 import id.capstone.tanamin.view.ViewModelFactory
 import id.capstone.tanamin.view.quiz.QuizActivity
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 
 class ClassModuleActivity : AppCompatActivity() {
     private var _binding: ActivityClassModuleBinding?=null
     private val binding get():ActivityClassModuleBinding =_binding!!
+    private var userId:Int=0
     private var modulId: Int = 0
     private var classId:Int=0
     private var classTitle: String=""
@@ -56,6 +67,7 @@ class ClassModuleActivity : AppCompatActivity() {
         val moduleHashMap: HashMap<String, String> = HashMap()
         val liveDataPref=preferencesViewModel.getIDUser()
         liveDataPref.observe(this){ userId->
+            this.userId=userId
             moduleHashMap["classid"]=classId.toString()
             moduleHashMap["modulid"]=modulId.toString()
             moduleHashMap["userid"]= userId.toString()
@@ -75,7 +87,7 @@ class ClassModuleActivity : AppCompatActivity() {
                         is Result.Error -> {
                             binding.loadingModule.visibility = View.GONE
                             ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
-                                ?.let { (showDialog(result.error, it)) }
+                                ?.let { (showDialog(result.error, it,true)) }
                             liveDataPref.removeObservers(this)
                             liveDataDetailModule.removeObservers(this)
                         }
@@ -102,6 +114,12 @@ class ClassModuleActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+        if(dataDetailModule.module[0].idModuls+1==dataDetailModule.maxId) {
+            binding.btnUpProgress.visibility=View.VISIBLE
+            binding.btnUpProgress.setOnClickListener {
+                startGallery()
+            }
+        }
         binding.btnNext.setOnClickListener {
             if(dataDetailModule.module[0].idModuls+1!=dataDetailModule.maxId){
                 val intent = Intent(this, ClassModuleActivity::class.java)
@@ -111,12 +129,22 @@ class ClassModuleActivity : AppCompatActivity() {
                 finish()
                 startActivity(intent)
             }else{
-                val intent = Intent(this, QuizActivity::class.java)
-                intent.putExtra(ID_CLASS_EXTRA, dataDetailModule.classId.toInt())
-                intent.putExtra(ID_MODULE_EXTRA,dataDetailModule.module[0].idModuls + 1)
-                intent.putExtra(CLASS_TITLE_EXTRA,classTitle)
-                finish()
-                startActivity(intent)
+                val liveData=classModuleViewModel.isProgressPictureUploaded
+                liveData.observe(this){
+                    if(it){
+                        val intent = Intent(this, QuizActivity::class.java)
+                        intent.putExtra(ID_CLASS_EXTRA, dataDetailModule.classId.toInt())
+                        intent.putExtra(ID_MODULE_EXTRA,dataDetailModule.module[0].idModuls + 1)
+                        intent.putExtra(CLASS_TITLE_EXTRA,classTitle)
+                        finish()
+                        startActivity(intent)
+                    }else{
+                        ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
+                            ?.let { showDialog("Anda belum mengunggah foto progress !", it,false) }
+                    }
+                    liveData.removeObservers(this)
+                }
+
             }
         }
     }
@@ -131,9 +159,10 @@ class ClassModuleActivity : AppCompatActivity() {
             factory
         }
         this.classModuleViewModel=classModuleViewModel
+        classModuleViewModel.setProgressPictureUploadedStatus(false)
     }
 
-    fun showDialog(text: String, icon: Drawable) {
+    fun showDialog(text: String, icon: Drawable,isFinishAct:Boolean) {
         val builder = AlertDialog.Builder(this).create()
         val bindAlert: CustomAlertApiBinding = CustomAlertApiBinding.inflate(LayoutInflater.from(this))
         builder.setView(bindAlert.root)
@@ -141,9 +170,65 @@ class ClassModuleActivity : AppCompatActivity() {
         bindAlert.imageView5.setImageDrawable(icon)
         bindAlert.closeButton.setOnClickListener {
             builder.dismiss()
-            finish()
+            if(isFinishAct){
+                finish()
+            }
         }
         builder.show()
+    }
+
+    private fun startGallery() {
+        val intent = Intent()
+        intent.action = Intent.ACTION_GET_CONTENT
+        intent.type = "image/*"
+        val chooser = Intent.createChooser(intent, "Pilih Foto Profil")
+        launcherIntentGallery.launch(chooser)
+    }
+
+
+    private val launcherIntentGallery = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val selectedImg: Uri = result.data?.data as Uri
+            val selectedFile = uriToFile(selectedImg, this)
+            uploadProgress(selectedFile)
+        }
+    }
+
+    private fun uploadProgress(progressPicture: File){
+        Log.d("testo",userId.toString())
+        val userIdRequest=userId.toString().toRequestBody("text/plain".toMediaType())
+        val classIdRequest=classId.toString().toRequestBody("text/plain".toMediaType())
+        val requestProgressPicture = progressPicture.asRequestBody("image/jpeg".toMediaTypeOrNull())
+        val progressPictureMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+            "picture",
+            progressPicture.name,
+            requestProgressPicture!!
+        )
+        var liveData = classModuleViewModel.uploadProgress(progressPictureMultipart,userIdRequest,classIdRequest)
+        liveData.observe(this){ result ->
+            if (result != null) {
+                when (result) {
+                    is Result.Loading -> {
+                        binding.loadingModule.visibility = View.VISIBLE
+                    }
+                    is Result.Success -> {
+                        binding.loadingModule.visibility = View.GONE
+                        ContextCompat.getDrawable(this, R.drawable.ic_baseline_check_circle_24)
+                            ?.let { showDialog(result.data.message, it,false) }
+                        classModuleViewModel.setProgressPictureUploadedStatus(true)
+                        liveData.removeObservers(this)
+                    }
+                    is Result.Error -> {
+                        binding.loadingModule.visibility = View.GONE
+                        ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
+                            ?.let { showDialog(result.error, it,false) }
+                        liveData.removeObservers(this)
+                    }
+                }
+            }
+        }
     }
     companion object{
         const val ID_MODULE_EXTRA="id_modul"
