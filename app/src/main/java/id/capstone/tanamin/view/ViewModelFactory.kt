@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider
 import id.capstone.tanamin.data.TanaminRepository
 import id.capstone.tanamin.data.di.Injection
 import id.capstone.tanamin.view.classdetail.forum.ForumViewModel
-import id.capstone.tanamin.view.quiz.QuizViewModel
 import id.capstone.tanamin.view.classdetail.silabus.SilabusViewModel
 import id.capstone.tanamin.view.classes.ClassesViewModel
 import id.capstone.tanamin.view.classmodule.ClassModuleViewModel
@@ -15,22 +14,15 @@ import id.capstone.tanamin.view.detectionresult.DetectionResultViewModel
 import id.capstone.tanamin.view.forumcreate.ForumCreateViewModel
 import id.capstone.tanamin.view.forumresult.ForumResultViewModel
 import id.capstone.tanamin.view.home.HomeViewModel
-import id.capstone.tanamin.view.login.LoginViewModel
 import id.capstone.tanamin.view.profile.ProfileViewModel
 import id.capstone.tanamin.view.profileedit.ProfileEditViewModel
-import id.capstone.tanamin.view.register.RegisterViewModel
+import id.capstone.tanamin.view.quiz.QuizViewModel
 
 class ViewModelFactory private constructor(private val tanaminRepository: TanaminRepository) :
     ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         when {
-            modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
-                return LoginViewModel(tanaminRepository) as T
-            }
-            modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
-                return RegisterViewModel(tanaminRepository) as T
-            }
             modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
                 return HomeViewModel(tanaminRepository) as T
             }

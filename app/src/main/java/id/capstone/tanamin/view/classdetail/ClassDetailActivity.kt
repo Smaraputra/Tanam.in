@@ -41,7 +41,7 @@ class ClassDetailActivity : AppCompatActivity() {
         binding.tvDetectionItemName.text=dataDetail.title
         binding.expandTextView.text=dataDetail.detail
         binding.ivBackButton.setOnClickListener {
-            onBackPressed()
+            finish()
         }
         binding.btnStartLearn2.setOnClickListener{
             showRequirementDialog()

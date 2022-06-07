@@ -30,6 +30,7 @@ class ForumCreateActivity : AppCompatActivity() {
     private lateinit var forumCreateViewModel: ForumCreateViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
     private lateinit var liveDataStore : LiveData<Int>
+    private lateinit var liveDataToken : LiveData<String>
     private lateinit var statusViewModel : LiveData<Boolean>
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
     private var classID: Int = 0
@@ -63,13 +64,15 @@ class ForumCreateActivity : AppCompatActivity() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        preferencesViewModel.getTokenUser().observe(this){ token ->
+        liveDataToken=preferencesViewModel.getTokenUser()
+        liveDataToken.observe(this){ token ->
             val factory: ViewModelFactory = ViewModelFactory.getInstance(this, token)
             val forumCreateViewModel: ForumCreateViewModel by viewModels {
                 factory
             }
             this.forumCreateViewModel=forumCreateViewModel
             preferencesViewModel.saveViewModelStatus(true)
+            liveDataToken.removeObservers(this)
         }
     }
 
@@ -112,8 +115,8 @@ class ForumCreateActivity : AppCompatActivity() {
                         }
                     }
                 }
+                statusViewModel.removeObservers(this)
             }
-            statusViewModel.removeObservers(this)
         }
     }
 

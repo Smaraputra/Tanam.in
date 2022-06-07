@@ -5,16 +5,19 @@ import com.google.gson.annotations.SerializedName
 data class DetectionInformationResponse(
 
 	@field:SerializedName("data")
-	val data: DetectedData,
+	val data: DetectionData,
 
 	@field:SerializedName("status")
 	val status: String
 )
 
-data class DetectedData(
+data class DetectionData(
 
 	@field:SerializedName("manfaat")
 	val manfaat: String,
+
+	@field:SerializedName("description")
+	val description: String,
 
 	@field:SerializedName("judul")
 	val judul: String,

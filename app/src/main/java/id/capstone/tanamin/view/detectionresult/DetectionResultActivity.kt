@@ -1,6 +1,8 @@
 package id.capstone.tanamin.view.detectionresult
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,6 +31,8 @@ class DetectionResultActivity : AppCompatActivity() {
     private lateinit var detectionResultViewModel: DetectionResultViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
     private lateinit var statusViewModel : LiveData<Boolean>
+    private lateinit var liveDataToken : LiveData<String>
+    private var photo : Bitmap? = null
     private var informationId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +41,12 @@ class DetectionResultActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
         supportActionBar?.hide()
-        informationId = intent.getIntExtra(INFO_ID,0)
+        informationId = intent.getIntExtra(INFO_ID,0)+1
+        val byteArray = intent.getByteArrayExtra(BITMAP_DETECTION)
+        if (byteArray != null) {
+            photo = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+            binding.ivDetectionImage.setImageBitmap(photo)
+        }
         setupView()
         setupViewModel()
         getInformation()
@@ -54,13 +63,15 @@ class DetectionResultActivity : AppCompatActivity() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        preferencesViewModel.getTokenUser().observe(this){ token ->
+        liveDataToken=preferencesViewModel.getTokenUser()
+        liveDataToken.observe(this){ token ->
             val factory: ViewModelFactory = ViewModelFactory.getInstance(this, token)
             val detectionResultViewModel: DetectionResultViewModel by viewModels {
                 factory
             }
             this.detectionResultViewModel=detectionResultViewModel
             preferencesViewModel.saveViewModelStatus(true)
+            liveDataToken.removeObservers(this)
         }
     }
 
@@ -77,7 +88,8 @@ class DetectionResultActivity : AppCompatActivity() {
                             }
                             is Result.Success -> {
                                 binding.loadingModule.visibility = View.GONE
-                                binding.expandTextView.text = result.data.data.judul
+                                binding.tvDetectionItemName.text = result.data.data.judul
+                                binding.expandTextView.text = result.data.data.description
                                 binding.tvContentKandunganDesc.text = result.data.data.kandungan
                                 binding.tvBenefitDesc.text = result.data.data.manfaat
                                 liveData.removeObservers(this)
@@ -91,8 +103,8 @@ class DetectionResultActivity : AppCompatActivity() {
                         }
                     }
                 }
+                statusViewModel.removeObservers(this)
             }
-            statusViewModel.removeObservers(this)
         }
     }
 
@@ -110,5 +122,6 @@ class DetectionResultActivity : AppCompatActivity() {
 
     companion object {
         const val INFO_ID = "info_id"
+        const val BITMAP_DETECTION = "bitmap_detection"
     }
 }

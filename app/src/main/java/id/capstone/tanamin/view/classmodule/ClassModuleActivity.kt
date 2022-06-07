@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,10 +16,8 @@ import androidx.core.text.HtmlCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
-import com.bumptech.glide.Glide
 import id.capstone.tanamin.R
 import id.capstone.tanamin.data.Result
 import id.capstone.tanamin.data.local.datastore.LoginPreferences
@@ -31,10 +28,9 @@ import id.capstone.tanamin.databinding.ActivityClassModuleBinding
 import id.capstone.tanamin.databinding.CustomAlertApiBinding
 import id.capstone.tanamin.utils.uriToFile
 import id.capstone.tanamin.view.ViewModelFactory
-import id.capstone.tanamin.view.classdetail.ClassDetailActivity
-import id.capstone.tanamin.view.home.HomeFragment
-import id.capstone.tanamin.view.home.HomeViewModel
 import id.capstone.tanamin.view.quiz.QuizActivity
+import koleton.api.hideSkeleton
+import koleton.api.loadSkeleton
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -52,6 +48,7 @@ class ClassModuleActivity : AppCompatActivity() {
     private lateinit var classModuleViewModel: ClassModuleViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
     private lateinit var statusViewModel : LiveData<Boolean>
+    private lateinit var liveDataToken : LiveData<String>
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,12 +56,15 @@ class ClassModuleActivity : AppCompatActivity() {
         _binding= ActivityClassModuleBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-
+        binding.tvModuleDesc.loadSkeleton()
+        binding.tvModuleTitle.loadSkeleton()
+        binding.ivClassModule.loadSkeleton()
+        binding.tvClassTitle.loadSkeleton()
         modulId=intent.getIntExtra(ID_MODULE_EXTRA,0)
         classId=intent.getIntExtra(ID_CLASS_EXTRA,0)
         classTitle= intent.getStringExtra(CLASS_TITLE_EXTRA).toString()
         binding.ivBackButton.setOnClickListener{
-            onBackPressed()
+            finish()
         }
         setupViewModel()
         getDetailModule()
@@ -75,9 +75,8 @@ class ClassModuleActivity : AppCompatActivity() {
         binding.tvModuleTitle.text = dataDetailModule.module[0].title
         binding.tvModuleDesc.text =
             HtmlCompat.fromHtml(dataDetailModule.module[0].content, HtmlCompat.FROM_HTML_MODE_LEGACY)
-        if(dataDetailModule.module[0].idModuls==1){
-            binding.btnPrev.visibility=View.GONE
-        }else{
+        if(dataDetailModule.module[0].idModuls!=1){
+            binding.btnPrev.visibility=View.VISIBLE
             binding.btnPrev.setOnClickListener {
                 val intent = Intent(this, ClassModuleActivity::class.java)
                 intent.putExtra(ID_CLASS_EXTRA, dataDetailModule.classId.toInt())
@@ -87,6 +86,7 @@ class ClassModuleActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+
         if(dataDetailModule.module[0].idModuls+1==dataDetailModule.maxId) {
             binding.btnUpProgress.visibility=View.VISIBLE
             binding.btnUpProgress.setOnClickListener {
@@ -126,7 +126,8 @@ class ClassModuleActivity : AppCompatActivity() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        preferencesViewModel.getTokenUser().observe(this){ token ->
+        liveDataToken=preferencesViewModel.getTokenUser()
+        liveDataToken.observe(this){ token ->
             val factory: ViewModelFactory = ViewModelFactory.getInstance(this, token)
             val classModuleViewModel: ClassModuleViewModel by viewModels {
                 factory
@@ -134,6 +135,7 @@ class ClassModuleActivity : AppCompatActivity() {
             this.classModuleViewModel=classModuleViewModel
             preferencesViewModel.saveViewModelStatus(true)
             classModuleViewModel.setProgressPictureUploadedStatus(false)
+            liveDataToken.removeObservers(this)
         }
     }
 
@@ -144,6 +146,7 @@ class ClassModuleActivity : AppCompatActivity() {
                 val moduleHashMap: HashMap<String, String> = HashMap()
                 val liveDataPref=preferencesViewModel.getIDUser()
                 liveDataPref.observe(this){ userId->
+                    this.userId=userId
                     moduleHashMap["classid"]=classId.toString()
                     moduleHashMap["modulid"]=modulId.toString()
                     moduleHashMap["userid"]= userId.toString()
@@ -159,6 +162,10 @@ class ClassModuleActivity : AppCompatActivity() {
                                     setupView(result.data.data)
                                     liveDataPref.removeObservers(this)
                                     liveDataDetailModule.removeObservers(this)
+                                    binding.tvModuleDesc.hideSkeleton()
+                                    binding.tvModuleTitle.hideSkeleton()
+                                    binding.ivClassModule.hideSkeleton()
+                                    binding.tvClassTitle.hideSkeleton()
                                 }
                                 is Result.Error -> {
                                     binding.loadingModule.visibility = View.GONE
@@ -166,13 +173,17 @@ class ClassModuleActivity : AppCompatActivity() {
                                         ?.let { (showDialog(result.error, it, false)) }
                                     liveDataPref.removeObservers(this)
                                     liveDataDetailModule.removeObservers(this)
+                                    binding.tvModuleDesc.hideSkeleton()
+                                    binding.tvModuleTitle.hideSkeleton()
+                                    binding.ivClassModule.hideSkeleton()
+                                    binding.tvClassTitle.hideSkeleton()
                                 }
                             }
                         }
                     }
                 }
+                statusViewModel.removeObservers(this)
             }
-            statusViewModel.removeObservers(this)
         }
     }
 
@@ -199,7 +210,6 @@ class ClassModuleActivity : AppCompatActivity() {
         launcherIntentGallery.launch(chooser)
     }
 
-
     private val launcherIntentGallery = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -211,7 +221,6 @@ class ClassModuleActivity : AppCompatActivity() {
     }
 
     private fun uploadProgress(progressPicture: File){
-        Log.d("testo",userId.toString())
         val userIdRequest=userId.toString().toRequestBody("text/plain".toMediaType())
         val classIdRequest=classId.toString().toRequestBody("text/plain".toMediaType())
         val requestProgressPicture = progressPicture.asRequestBody("image/jpeg".toMediaTypeOrNull())

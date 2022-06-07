@@ -23,7 +23,8 @@ import id.capstone.tanamin.data.remote.response.ListForumItem
 import id.capstone.tanamin.databinding.FragmentForumBinding
 import id.capstone.tanamin.view.ViewModelFactory
 import id.capstone.tanamin.view.classdetail.ClassDetailActivity
-import id.capstone.tanamin.view.classdetail.silabus.SilabusViewModel
+import koleton.api.hideSkeleton
+import koleton.api.loadSkeleton
 
 class ForumFragment : Fragment() {
     private var _binding: FragmentForumBinding? = null
@@ -32,7 +33,7 @@ class ForumFragment : Fragment() {
     private lateinit var forumViewModel: ForumViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
     private lateinit var statusViewModel : LiveData<Boolean>
-    private var token : String = ""
+    private lateinit var liveDataToken : LiveData<String>
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
 
     override fun onCreateView(
@@ -45,9 +46,9 @@ class ForumFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        classID = arguments?.getString(ARG_CLASS)!!
+        binding.rvListForum.loadSkeleton()
+        classID = arguments?.getString(ARG_CLASS).toString()
         setupViewModel()
-        getForumList()
     }
 
     override fun onResume() {
@@ -60,13 +61,15 @@ class ForumFragment : Fragment() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        preferencesViewModel.getTokenUser().observe(requireActivity()){ token ->
+        liveDataToken= preferencesViewModel.getTokenUser()
+        liveDataToken.observe(requireActivity()){ token ->
             val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity(), token)
             val forumViewModel: ForumViewModel by viewModels {
                 factory
             }
             this.forumViewModel=forumViewModel
             preferencesViewModel.saveViewModelStatus(true)
+            liveDataToken.removeObservers(requireActivity())
         }
     }
 
@@ -90,14 +93,14 @@ class ForumFragment : Fragment() {
                                 } else {
                                     binding.cardViewNoModuleFound.visibility = View.VISIBLE
                                 }
+                                binding.rvListForum.hideSkeleton()
                                 liveData.removeObservers(requireActivity())
                             }
                             is Result.Error -> {
                                 binding.loadingForum.visibility = View.GONE
                                 binding.cardViewNoModuleFound.visibility = View.GONE
                                 binding.cardViewNoInternet.visibility = View.VISIBLE
-                                ContextCompat.getDrawable(
-                                    requireActivity(),
+                                ContextCompat.getDrawable(requireActivity(),
                                     R.drawable.ic_baseline_error_24
                                 )
                                     ?.let {
@@ -106,13 +109,14 @@ class ForumFragment : Fragment() {
                                             it
                                         )
                                     }
+                                binding.rvListForum.hideSkeleton()
                                 liveData.removeObservers(requireActivity())
                             }
                         }
                     }
                 }
+                statusViewModel.removeObservers(requireActivity())
             }
-            statusViewModel.removeObservers(requireActivity())
         }
     }
 

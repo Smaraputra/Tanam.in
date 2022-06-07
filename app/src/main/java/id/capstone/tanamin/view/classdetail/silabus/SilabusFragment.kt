@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -24,16 +23,17 @@ import id.capstone.tanamin.data.remote.response.ListModuleData
 import id.capstone.tanamin.databinding.FragmentSilabusBinding
 import id.capstone.tanamin.view.ViewModelFactory
 import id.capstone.tanamin.view.classdetail.ClassDetailActivity
-import id.capstone.tanamin.view.classmodule.ClassModuleViewModel
+import koleton.api.hideSkeleton
+import koleton.api.loadSkeleton
 
 class SilabusFragment : Fragment() {
     private var _binding: FragmentSilabusBinding? = null
     private val binding get() = _binding!!
     private var classID : String = ""
     private lateinit var silabusViewModel: SilabusViewModel
-    private lateinit var liveDataStore : LiveData<String>
     private lateinit var preferencesViewModel: PreferencesViewModel
     private lateinit var statusViewModel : LiveData<Boolean>
+    private lateinit var liveDataToken : LiveData<String>
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
 
     override fun onCreateView(
@@ -46,9 +46,9 @@ class SilabusFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        classID = arguments?.getString(ARG_CLASS)!!
+        binding.rvListSilabus.loadSkeleton()
+        classID = arguments?.getString(ARG_CLASS).toString()
         setupViewModel()
-        getClassList()
     }
 
     override fun onResume() {
@@ -61,13 +61,15 @@ class SilabusFragment : Fragment() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        preferencesViewModel.getTokenUser().observe(requireActivity()){ token ->
+        liveDataToken= preferencesViewModel.getTokenUser()
+        liveDataToken.observe(requireActivity()){ token ->
             val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity(), token)
             val silabusViewModel: SilabusViewModel by viewModels {
                 factory
             }
             this.silabusViewModel=silabusViewModel
             preferencesViewModel.saveViewModelStatus(true)
+            liveDataToken.removeObservers(requireActivity())
         }
     }
 
@@ -91,6 +93,7 @@ class SilabusFragment : Fragment() {
                                 } else {
                                     binding.cardViewNoModuleFound.visibility = View.VISIBLE
                                 }
+                                binding.rvListSilabus.hideSkeleton()
                                 liveData.removeObservers(requireActivity())
                             }
                             is Result.Error -> {
@@ -107,13 +110,14 @@ class SilabusFragment : Fragment() {
                                             it
                                         )
                                     }
+                                binding.rvListSilabus.hideSkeleton()
                                 liveData.removeObservers(requireActivity())
                             }
                         }
                     }
                 }
+                statusViewModel.removeObservers(requireActivity())
             }
-            statusViewModel.removeObservers(requireActivity())
         }
     }
 

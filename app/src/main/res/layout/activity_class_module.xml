@@ -75,15 +75,32 @@
             app:shapeAppearanceOverlay="@style/roundedAllCornersImageView"
             android:src="@drawable/ic_background_logo"/>
 
+        <TextView
+            android:id="@+id/tvModuleTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/no_data"
+            android:textColor="@color/green_soft"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivClassModule"
+            tools:text="Kelas Menanam Cabai" />
+
         <ScrollView
             android:id="@+id/scrollView2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginBottom="24dp"
             app:layout_constraintBottom_toTopOf="@+id/btnNext"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivClassModule">
+            app:layout_constraintTop_toBottomOf="@+id/tvModuleTitle">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout2"
@@ -96,31 +113,13 @@
                 app:layout_constraintVertical_bias="0.0">
 
                 <TextView
-                    android:id="@+id/tvModuleTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="24dp"
-                    android:text="@string/no_data"
-                    android:textColor="@color/green_soft"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Kelas Menanam Cabai" />
-
-                <TextView
                     android:id="@+id/tvModuleDesc"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    app:layout_constraintEnd_toEndOf="@+id/tvModuleTitle"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/tvModuleTitle"
-                    app:layout_constraintTop_toBottomOf="@+id/tvModuleTitle"
                     android:text="@string/no_data"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="adalah kelas yang menanam cabai untuk ditanami cabai dalam menanam cabai supaya cabai dapat menjadi cabai yang ditanam dari bibit cabai dalam menanam cabai cabai cibai Kelas ini adalah kelas yang menanam cabai untuk ditanami cabai dalam menanam cabai supaya cabai dapat menjadi cabai yang ditanam dari bibit cabai dalam menanam cabai cabai cibai" />
 
                 <com.google.android.material.tabs.TabLayout
@@ -194,6 +193,7 @@
             android:text="@string/module_prev_button_text"
             android:textAllCaps="false"
             android:textColor="@color/green_soft"
+            android:visibility="invisible"
             app:cornerRadius="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

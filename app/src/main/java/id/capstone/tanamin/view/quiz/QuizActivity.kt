@@ -29,6 +29,8 @@ import id.capstone.tanamin.databinding.CustomAlertApiBinding
 import id.capstone.tanamin.databinding.CustomAlertScoreBinding
 import id.capstone.tanamin.view.ViewModelFactory
 import id.capstone.tanamin.view.classfinished.ClassFinishedActivity
+import koleton.api.hideSkeleton
+import koleton.api.loadSkeleton
 
 class QuizActivity : AppCompatActivity() {
     private lateinit var binding: ActivityQuizBinding
@@ -40,6 +42,7 @@ class QuizActivity : AppCompatActivity() {
     private lateinit var quizQuestionAdapter: QuizQuestionAdapter
     private lateinit var quizViewModel: QuizViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
+    private lateinit var liveDataToken : LiveData<String>
     private lateinit var answerQuiz: MutableList<String>
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
     private lateinit var statusViewModel : LiveData<Boolean>
@@ -50,6 +53,7 @@ class QuizActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
         supportActionBar?.hide()
+        binding.rvQuizQuestion.loadSkeleton()
         modulId=intent.getIntExtra(ID_MODULE_EXTRA,0)
         classId=intent.getIntExtra(ID_CLASS_EXTRA,0)
         classTitle= intent.getStringExtra(CLASS_TITLE_EXTRA).toString()
@@ -67,7 +71,7 @@ class QuizActivity : AppCompatActivity() {
 
     private fun setupView(){
         binding.ivBackButton.setOnClickListener{
-            onBackPressed()
+            finish()
         }
         binding.tvClassTitle.text=classTitle
     }
@@ -77,13 +81,16 @@ class QuizActivity : AppCompatActivity() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        preferencesViewModel.getTokenUser().observe(this){ token ->
+
+        liveDataToken= preferencesViewModel.getTokenUser()
+        liveDataToken.observe(this){ token ->
             val factory: ViewModelFactory = ViewModelFactory.getInstance(this, token)
             val quizViewModel: QuizViewModel by viewModels {
                 factory
             }
             this.quizViewModel=quizViewModel
             preferencesViewModel.saveViewModelStatus(true)
+            liveDataToken.removeObservers(this)
         }
 
         binding.button5.setOnClickListener{
@@ -125,6 +132,7 @@ class QuizActivity : AppCompatActivity() {
                                     timerStart()
                                     liveDataPref.removeObservers(this)
                                     liveDataDetailModule.removeObservers(this)
+                                    binding.rvQuizQuestion.hideSkeleton()
                                 }
                                 is Result.Error -> {
                                     binding.loadingModule.visibility = View.GONE
@@ -132,13 +140,14 @@ class QuizActivity : AppCompatActivity() {
                                         ?.let { (showDialog(result.error, it)) }
                                     liveDataPref.removeObservers(this)
                                     liveDataDetailModule.removeObservers(this)
+                                    binding.rvQuizQuestion.hideSkeleton()
                                 }
                             }
                         }
                     }
                 }
+                statusViewModel.removeObservers(this)
             }
-            statusViewModel.removeObservers(this)
         }
     }
 

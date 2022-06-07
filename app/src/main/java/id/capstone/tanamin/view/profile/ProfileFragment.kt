@@ -30,6 +30,8 @@ import id.capstone.tanamin.databinding.FragmentProfileBinding
 import id.capstone.tanamin.view.ViewModelFactory
 import id.capstone.tanamin.view.login.LoginActivity
 import id.capstone.tanamin.view.profileedit.ProfileEditActivity
+import koleton.api.hideSkeleton
+import koleton.api.loadSkeleton
 
 class ProfileFragment : Fragment() {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
@@ -39,6 +41,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var liveData : LiveData<Result<ProfileResponse>>
     private lateinit var liveDataStore : LiveData<Int>
+    private lateinit var liveDataToken : LiveData<String>
     private lateinit var statusViewModel : LiveData<Boolean>
     private var user:User? = null
 
@@ -53,6 +56,7 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
         super.onViewCreated(itemView, savedInstanceState)
+        hideSkeleton()
         setupViewModel()
         binding.logoutButton.setOnClickListener{
             showDialogLogout()
@@ -69,13 +73,15 @@ class ProfileFragment : Fragment() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        preferencesViewModel.getTokenUser().observe(this){ token ->
+        liveDataToken=preferencesViewModel.getTokenUser()
+        liveDataToken.observe(this){ token ->
             val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity(), token)
             val profileViewModel: ProfileViewModel by viewModels {
                 factory
             }
             this.profileViewModel=profileViewModel
             preferencesViewModel.saveViewModelStatus(true)
+            liveDataToken.removeObservers(this)
         }
     }
 
@@ -85,7 +91,6 @@ class ProfileFragment : Fragment() {
         builder.setView(bindAlert.root)
         bindAlert.logoutConfirm.setOnClickListener {
             builder.dismiss()
-            liveData.removeObservers(requireActivity())
             preferencesViewModel.saveNameUser("DEFAULT_VALUE")
             preferencesViewModel.saveIDUser(0)
             preferencesViewModel.saveTokenUser("DEFAULT_VALUE")
@@ -144,6 +149,7 @@ class ProfileFragment : Fragment() {
                                         .placeholder(R.drawable.ic_profileuser_illustration)
                                         .error(R.drawable.ic_profileuser_illustration)
                                         .into(binding.classImage2)
+                                    showSkeleton()
                                     liveData.removeObservers(requireActivity())
                                     liveDataStore.removeObservers(requireActivity())
                                 }
@@ -170,6 +176,7 @@ class ProfileFragment : Fragment() {
                                         ?.let {
                                             showDialog(result.error, it)
                                         }
+                                    showSkeleton()
                                     liveData.removeObservers(requireActivity())
                                     liveDataStore.removeObservers(requireActivity())
                                 }
@@ -177,9 +184,29 @@ class ProfileFragment : Fragment() {
                         }
                     }
                 }
+                statusViewModel.removeObservers(requireActivity())
             }
-            statusViewModel.removeObservers(this)
         }
+    }
+
+    private fun hideSkeleton(){
+        binding.successCount.loadSkeleton()
+        binding.processCount.loadSkeleton()
+        binding.textView3.loadSkeleton()
+        binding.textView4.loadSkeleton()
+        binding.textView5.loadSkeleton()
+        binding.textView6.loadSkeleton()
+        binding.classImage2.loadSkeleton()
+    }
+
+    private fun showSkeleton(){
+        binding.successCount.hideSkeleton()
+        binding.processCount.hideSkeleton()
+        binding.textView3.hideSkeleton()
+        binding.textView4.hideSkeleton()
+        binding.textView5.hideSkeleton()
+        binding.textView6.hideSkeleton()
+        binding.classImage2.hideSkeleton()
     }
 
     fun showDialog(text: String, icon: Drawable) {

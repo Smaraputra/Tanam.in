@@ -30,7 +30,7 @@ class ClassesListAdapter(private val ctx: Context, private val classes: List<Cla
         holder.binding.classTitle.text = if(data.title.isNotEmpty()) data.title else holder.itemView.context.getString(R.string.no_data)
         holder.binding.continueContent.text = if(data.modul_title.isNotEmpty()) data.modul_title else holder.itemView.context.getString(R.string.no_data)
         if(data.progress.isNaN() || data.progress>0.0){
-            val percentage = "${data.progress} %"
+            val percentage = "${String.format("%.2f", data.progress)}%"
             holder.binding.percentage.visibility = View.VISIBLE
             holder.binding.percentage.text = percentage
             holder.binding.continueTitle.text = ctx.getString(R.string.continue_title)

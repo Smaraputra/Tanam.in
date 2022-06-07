@@ -27,12 +27,15 @@ import id.capstone.tanamin.data.remote.response.ListForumItem
 import id.capstone.tanamin.databinding.ActivityForumResultBinding
 import id.capstone.tanamin.databinding.CustomAlertApiBinding
 import id.capstone.tanamin.view.ViewModelFactory
+import koleton.api.hideSkeleton
+import koleton.api.loadSkeleton
 
 class ForumResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivityForumResultBinding
     private lateinit var liveDataStore : LiveData<Int>
     private lateinit var forumResultViewModel: ForumResultViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
+    private lateinit var liveDataToken : LiveData<String>
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
     private lateinit var dataDetail: ListForumItem
     private lateinit var statusViewModel : LiveData<Boolean>
@@ -44,6 +47,7 @@ class ForumResultActivity : AppCompatActivity() {
         setContentView(view)
         supportActionBar?.hide()
         dataDetail = intent.getParcelableExtra<ListForumItem>(ID_FORUM) as ListForumItem
+        binding.recyclerView.loadSkeleton()
         setupView()
         setupViewModel()
         getMessage()
@@ -63,16 +67,17 @@ class ForumResultActivity : AppCompatActivity() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        preferencesViewModel.getTokenUser().observe(this){ token ->
+        liveDataToken=preferencesViewModel.getTokenUser()
+        liveDataToken.observe(this){ token ->
             val factory: ViewModelFactory = ViewModelFactory.getInstance(this, token)
             val forumResultViewModel: ForumResultViewModel by viewModels {
                 factory
             }
             this.forumResultViewModel=forumResultViewModel
             preferencesViewModel.saveViewModelStatus(true)
-            liveDataStore = preferencesViewModel.getIDUser()
+            liveDataToken.removeObservers(this)
         }
-
+        liveDataStore = preferencesViewModel.getIDUser()
         binding.buttonGchatSend.setOnClickListener{
             sendMessage()
         }
@@ -111,8 +116,8 @@ class ForumResultActivity : AppCompatActivity() {
                         }
                     }
                 }
+                statusViewModel.removeObservers(this)
             }
-            statusViewModel.removeObservers(this)
         }
     }
 
@@ -136,6 +141,7 @@ class ForumResultActivity : AppCompatActivity() {
                                     setupAdapter(result.data.data, userId)
                                     liveData.removeObservers(this)
                                     liveDataStore.removeObservers(this)
+                                    binding.recyclerView.hideSkeleton()
                                 }
                                 is Result.Error -> {
                                     binding.loadingModule2.visibility = View.GONE
@@ -153,13 +159,14 @@ class ForumResultActivity : AppCompatActivity() {
                                     }
                                     liveData.removeObservers(this)
                                     liveDataStore.removeObservers(this)
+                                    binding.recyclerView.hideSkeleton()
                                 }
                             }
                         }
                     }
                 }
+                statusViewModel.removeObservers(this)
             }
-            statusViewModel.removeObservers(this)
         }
     }
 

@@ -4,7 +4,6 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.graphics.drawable.Drawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,14 +11,15 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import id.capstone.tanamin.R
+import id.capstone.tanamin.data.Result
 import id.capstone.tanamin.databinding.ActivityRegisterBinding
 import id.capstone.tanamin.databinding.CustomAlertApiBinding
-import id.capstone.tanamin.view.ViewModelFactory
-import id.capstone.tanamin.view.login.LoginActivity
-import id.capstone.tanamin.data.Result
 import id.capstone.tanamin.utils.encryptInput
+import id.capstone.tanamin.view.ViewModelNoTokenFactory
+import id.capstone.tanamin.view.login.LoginActivity
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -58,7 +58,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        val factory: ViewModelFactory = ViewModelFactory.getInstance(this, "")
+        val factory: ViewModelNoTokenFactory = ViewModelNoTokenFactory.getInstance(this)
         val registerViewModel: RegisterViewModel by viewModels {
             factory
         }

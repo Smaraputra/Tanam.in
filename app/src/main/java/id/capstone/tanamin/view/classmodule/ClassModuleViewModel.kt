@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import id.capstone.tanamin.data.TanaminRepository
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import java.io.File
 
 class ClassModuleViewModel(private val tanaminRepository: TanaminRepository): ViewModel(){
 

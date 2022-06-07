@@ -28,6 +28,8 @@ import id.capstone.tanamin.data.local.datastore.PreferencesViewModelFactory
 import id.capstone.tanamin.databinding.CustomAlertApiBinding
 import id.capstone.tanamin.databinding.FragmentClassesBinding
 import id.capstone.tanamin.view.ViewModelFactory
+import koleton.api.hideSkeleton
+import koleton.api.loadSkeleton
 
 class ClassesFragment : Fragment() {
     private var _binding: FragmentClassesBinding? = null
@@ -36,6 +38,7 @@ class ClassesFragment : Fragment() {
     private lateinit var preferencesViewModel: PreferencesViewModel
     private lateinit var classesViewModel: ClassesViewModel
     private lateinit var liveDataStore : LiveData<Int>
+    private lateinit var liveDataToken : LiveData<String>
     private lateinit var statusViewModel : LiveData<Boolean>
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
 
@@ -50,6 +53,7 @@ class ClassesFragment : Fragment() {
 
     override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
         super.onViewCreated(itemView, savedInstanceState)
+        binding.swipeRefreshLayout.loadSkeleton()
         setupViewModel()
     }
 
@@ -73,7 +77,8 @@ class ClassesFragment : Fragment() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        preferencesViewModel.getTokenUser().observe(this){ token ->
+        liveDataToken = preferencesViewModel.getTokenUser()
+        liveDataToken.observe(this){ token ->
             val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity(), token)
             val classesViewModel: ClassesViewModel by viewModels {
                 factory
@@ -81,6 +86,7 @@ class ClassesFragment : Fragment() {
             this.classesViewModel=classesViewModel
             preferencesViewModel.saveViewModelStatus(true)
             setupView()
+            liveDataToken.removeObservers(this)
         }
     }
 
@@ -104,6 +110,7 @@ class ClassesFragment : Fragment() {
                                     binding.cardViewNoClassFound.visibility = View.GONE
                                     binding.cardViewNoInternet.visibility = View.GONE
                                     setupAdapter(result.data.data.jsonMemberClass)
+                                    binding.swipeRefreshLayout.hideSkeleton()
                                     liveData.removeObservers(requireActivity())
                                     liveDataStore.removeObservers(requireActivity())
                                 }
@@ -121,6 +128,7 @@ class ClassesFragment : Fragment() {
                                     }
                                     ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_error_24)
                                         ?.let {showDialog(result.error, it) }
+                                    binding.swipeRefreshLayout.hideSkeleton()
                                     liveData.removeObservers(requireActivity())
                                     liveDataStore.removeObservers(requireActivity())
                                 }

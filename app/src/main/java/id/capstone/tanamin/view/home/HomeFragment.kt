@@ -27,6 +27,8 @@ import id.capstone.tanamin.databinding.FragmentHomeBinding
 import id.capstone.tanamin.view.ViewModelFactory
 import id.capstone.tanamin.view.classdetail.ClassDetailActivity
 import id.capstone.tanamin.view.futurefeature.FutureFeatureActivity
+import koleton.api.hideSkeleton
+import koleton.api.loadSkeleton
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
@@ -34,6 +36,7 @@ class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
     private lateinit var liveDataStore : LiveData<Int>
+    private lateinit var liveDataToken : LiveData<String>
     private lateinit var statusViewModel : LiveData<Boolean>
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
 
@@ -48,6 +51,8 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
         super.onViewCreated(itemView, savedInstanceState)
+        binding.textView.loadSkeleton()
+        binding.layoutCard.loadSkeleton()
         setupView()
         setupViewModel()
     }
@@ -76,13 +81,15 @@ class HomeFragment : Fragment() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        preferencesViewModel.getTokenUser().observe(this){ token ->
+        liveDataToken=preferencesViewModel.getTokenUser()
+        liveDataToken.observe(this) { token ->
             val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity(), token)
             val homeViewModel: HomeViewModel by viewModels {
                 factory
             }
-            this.homeViewModel=homeViewModel
+            this.homeViewModel = homeViewModel
             preferencesViewModel.saveViewModelStatus(true)
+            liveDataToken.removeObservers(this)
         }
     }
 
@@ -107,7 +114,7 @@ class HomeFragment : Fragment() {
                                         binding.cardViewClass.visibility = View.VISIBLE
                                         binding.cardViewNoClass.visibility = View.GONE
                                         binding.cardViewNoInternet.visibility = View.GONE
-                                        val percentage = "${result.data.data.kelas[0].progress} %"
+                                        val percentage = "${String.format("%.2f", result.data.data.kelas[0].progress)} %"
                                         Glide.with(requireActivity())
                                             .asBitmap()
                                             .load(result.data.data.kelas[0].picture)
@@ -133,6 +140,7 @@ class HomeFragment : Fragment() {
                                         binding.cardViewClass.visibility = View.INVISIBLE
                                         binding.cardViewNoInternet.visibility = View.GONE
                                     }
+                                    binding.layoutCard.hideSkeleton()
                                     liveData.removeObservers(requireActivity())
                                     liveDataStore.removeObservers(requireActivity())
                                 }
@@ -146,6 +154,7 @@ class HomeFragment : Fragment() {
                                         R.drawable.ic_baseline_error_24
                                     )
                                         ?.let { showDialog(result.error, it) }
+                                    binding.layoutCard.hideSkeleton()
                                     liveData.removeObservers(requireActivity())
                                     liveDataStore.removeObservers(requireActivity())
                                 }
@@ -153,13 +162,15 @@ class HomeFragment : Fragment() {
                         }
                     }
                 }
+                statusViewModel.removeObservers(requireActivity())
             }
-            statusViewModel.removeObservers(requireActivity())
         }
-
-        preferencesViewModel.getNameUser().observe(requireActivity()){ username->
+        val liveDataName = preferencesViewModel.getNameUser()
+        liveDataName.observe(requireActivity()){ username->
             val nameHome = "Hai, ${username.substring(username.lastIndexOf(" ")+1)}"
             binding.textView.text=nameHome
+            binding.textView.hideSkeleton()
+            liveDataName.removeObservers(requireActivity())
         }
     }
 

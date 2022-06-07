@@ -36,6 +36,7 @@ import id.capstone.tanamin.view.detectionresult.DetectionResultActivity
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -175,12 +176,6 @@ class DetectionFragment : Fragment() {
                         BitmapFactory.decodeFile(photoFile.path),
                         cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA
                     )
-                    val intent = Intent()
-                    intent.putExtra("picture", photoFile)
-                    intent.putExtra(
-                        "isBackCamera",
-                        cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA
-                    )
                     uploadImage(photoFile,result)
                 }
             }
@@ -205,7 +200,7 @@ class DetectionFragment : Fragment() {
                     is Result.Success -> {
                         binding.loadingList4.visibility = View.GONE
                         if(result.data.accuracy<90){
-                            showDialogResult(result.data, results)
+                            showDialogResult(result.data, results, results)
                         }else{
                             ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_error_24)
                                 ?.let { showDialogPermission(getString(R.string.no_detected), it) }
@@ -241,7 +236,7 @@ class DetectionFragment : Fragment() {
         builder.show()
     }
 
-    private fun showDialogResult(data: DetectionResponse, icon: Bitmap) {
+    private fun showDialogResult(data: DetectionResponse, icon: Bitmap, photo: Bitmap) {
         val builder = AlertDialog.Builder(requireContext()).create()
         val bindAlert: CustomAlertDetectionBinding = CustomAlertDetectionBinding.inflate(LayoutInflater.from(requireContext()))
         val accuracy = "Akurasi : " + String.format("%.2f", data.accuracy*100) +"%"
@@ -257,6 +252,10 @@ class DetectionFragment : Fragment() {
         bindAlert.logoutConfirm.setOnClickListener {
             val intent = Intent(requireContext(), DetectionResultActivity::class.java)
             intent.putExtra(INFO_ID, data.id)
+            val bStream = ByteArrayOutputStream()
+            photo.compress(Bitmap.CompressFormat.PNG, 50, bStream)
+            val byteArray = bStream.toByteArray()
+            intent.putExtra(BITMAP_DETECTION, byteArray)
             startActivity(intent)
             builder.dismiss()
         }
@@ -267,5 +266,6 @@ class DetectionFragment : Fragment() {
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
         private const val REQUEST_CODE_PERMISSIONS = 10
         const val INFO_ID = "info_id"
+        const val BITMAP_DETECTION = "bitmap_detection"
     }
 }

@@ -48,13 +48,11 @@
     <string name="module_prev_button_text">Sebelumnya</string>
     <string name="future_feature_text">Fitur Masa Depan</string>
     <string name="future_feature_desc">Fitur dalam masa pengembangan</string>
-    <string name="read_more">Baca Selengkapnya</string>
     <string name="nutritional_information_text">Informasi Gizi</string>
     <string name="nutritional_content">Kandungan</string>
     <string name="nutritional_benefit">Benefit</string>
     <string name="edit_profile_text">Ubah Data Diri</string>
     <string name="edit_profile_fullname">Nama Lengkap</string>
-    <string name="edit_profile_fullname_hint">Nama lengkap Anda</string>
     <string name="edit_profile_age">Umur</string>
     <string name="edit_profile_age_hint">Umur Anda</string>
     <string name="edit_profile_address">Alamat</string>
@@ -102,7 +100,6 @@
     <string name="future_feature_icon">Ikon Fitur Masa Depan</string>
 
     <string name="back_button_text">Kembali</string>
-    <string name="profil_button_text">Profil</string>
     <string name="finished_class_desc">Anda telah berhasil menyelesaikan</string>
     <string name="finished_class_illustration">Finished Class Illustration</string>
     <string name="image_slider_item">Gambar Kelas</string>

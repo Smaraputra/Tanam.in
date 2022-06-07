@@ -1,7 +1,6 @@
 package id.capstone.tanamin.data.di
 
 import android.content.Context
-import android.util.Log
 import id.capstone.tanamin.data.TanaminRepository
 import id.capstone.tanamin.data.local.database.TanaminRoomDatabase
 import id.capstone.tanamin.data.remote.retrofit.ConfigAPI

@@ -46,10 +46,10 @@ class ProfileEditActivity : AppCompatActivity() {
     private lateinit var profileEditViewModel: ProfileEditViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
     private lateinit var statusViewModel : LiveData<Boolean>
+    private lateinit var liveDataToken : LiveData<String>
     private lateinit var user: User
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
     private var profilePicture: File?=null
-    private var token : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,7 +85,7 @@ class ProfileEditActivity : AppCompatActivity() {
         Glide.with(this).load(user.profilePicture).placeholder(R.drawable.ic_profileuser_illustration)
             .error(R.drawable.ic_profileuser_illustration).into(binding.changeImage)
         binding.ivBackButton.setOnClickListener{
-            onBackPressed()
+            finish()
         }
 
     }
@@ -94,7 +94,8 @@ class ProfileEditActivity : AppCompatActivity() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        preferencesViewModel.getTokenUser().observe(this){ token ->
+        liveDataToken=preferencesViewModel.getTokenUser()
+        liveDataToken.observe(this){ token ->
             val factory: ViewModelFactory = ViewModelFactory.getInstance(this, token)
             val profileEditViewModel: ProfileEditViewModel by viewModels {
                 factory
@@ -111,6 +112,7 @@ class ProfileEditActivity : AppCompatActivity() {
                 binding.btnSave.isEnabled = it
             }
             preferencesViewModel.saveViewModelStatus(true)
+            liveDataToken.removeObservers(this)
         }
     }
 
@@ -169,8 +171,8 @@ class ProfileEditActivity : AppCompatActivity() {
                         }
                     }
                 }
+                statusViewModel.removeObservers(this)
             }
-            statusViewModel.removeObservers(this)
         }
     }
     private fun startGallery() {

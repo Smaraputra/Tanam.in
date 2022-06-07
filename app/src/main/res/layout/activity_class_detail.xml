@@ -83,18 +83,73 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvDetectionResultTitle">
 
+        <TextView
+            android:id="@+id/tvDetectionItemName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="90dp"
+            android:text="@string/no_data"
+            android:textColor="@color/green_soft"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Kelas Menanam Cabai" />
+
+        <com.ms.square.android.expandabletextview.ExpandableTextView
+            android:id="@+id/expand_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            app:animDuration="200"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDetectionItemName"
+            app:maxCollapsedLines="3">
+
+            <TextView
+                android:id="@id/expandable_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageButton
+                android:id="@id/expand_collapse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp"
+                android:background="@color/grey_soft"
+                android:contentDescription="@string/read_more_button"
+                android:padding="8dp" />
+        </com.ms.square.android.expandabletextview.ExpandableTextView>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="?attr/colorOnPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/expand_text_view"
+            app:tabTextAppearance="@style/TextTabLayout"
+            tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
+
         <ScrollView
             android:id="@+id/scrollView2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="75dp"
             android:layout_marginBottom="12dp"
             android:clipToPadding="true"
             android:paddingTop="10dp"
             app:layout_constraintBottom_toTopOf="@+id/btnStartLearn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/tabs">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout2"
@@ -103,7 +158,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/ivDetectionImage"
+                app:layout_constraintTop_toTopOf="@+id/expand_text_view"
                 app:layout_constraintVertical_bias="0.0">
 
                 <ProgressBar
@@ -117,74 +172,18 @@
                     android:elevation="17dp"
                     android:padding="10dp"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@+id/tabs"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/tvDetectionItemName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginEnd="24dp"
-                    android:text="@string/no_data"
-                    android:textColor="@color/green_soft"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Kelas Menanam Cabai" />
-
-                <com.ms.square.android.expandabletextview.ExpandableTextView
-                    android:id="@+id/expand_text_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="24dp"
-                    android:layout_marginRight="24dp"
-                    app:animDuration="200"
-                    app:layout_constraintEnd_toEndOf="@+id/tvDetectionItemName"
-                    app:layout_constraintStart_toStartOf="@+id/tvDetectionItemName"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDetectionItemName"
-                    app:maxCollapsedLines="3">
-
-                    <TextView
-                        android:id="@id/expandable_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                    <ImageButton
-                        android:id="@id/expand_collapse"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="4dp"
-                        android:background="@color/grey_soft"
-                        android:contentDescription="@string/read_more_button"
-                        android:padding="8dp" />
-                </com.ms.square.android.expandabletextview.ExpandableTextView>
-
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginEnd="24dp"
-                    android:background="?attr/colorOnPrimary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/expand_text_view"
-                    app:tabTextAppearance="@style/TextTabLayout"
-                    tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/view_pager"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tabs">
+                    app:layout_constraintTop_toTopOf="parent">
 
                 </androidx.viewpager2.widget.ViewPager2>
 

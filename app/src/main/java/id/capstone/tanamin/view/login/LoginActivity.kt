@@ -27,7 +27,7 @@ import id.capstone.tanamin.databinding.ActivityLoginBinding
 import id.capstone.tanamin.databinding.CustomAlertApiBinding
 import id.capstone.tanamin.utils.encryptInput
 import id.capstone.tanamin.view.MainActivity
-import id.capstone.tanamin.view.ViewModelFactory
+import id.capstone.tanamin.view.ViewModelNoTokenFactory
 import id.capstone.tanamin.view.register.RegisterActivity
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -70,7 +70,7 @@ class LoginActivity : AppCompatActivity() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        val factory: ViewModelFactory = ViewModelFactory.getInstance(this, "")
+        val factory: ViewModelNoTokenFactory = ViewModelNoTokenFactory.getInstance(this)
         val loginViewModel: LoginViewModel by viewModels {
             factory
         }
@@ -119,10 +119,16 @@ class LoginActivity : AppCompatActivity() {
                         result.data.data.userid.let { preferencesViewModel.saveIDUser(it) }
                         result.data.data.name.let { preferencesViewModel.saveNameUser(it) }
                         result.data.data.token.let { preferencesViewModel.saveTokenUser(it) }
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                        liveData.removeObservers(this)
+                        val liveStatusSaving = preferencesViewModel.getTokenUser()
+                        liveStatusSaving.observe(this){
+                            if(!it.isNullOrEmpty() && it!="DEFAULT_VALUE"){
+                                val intent = Intent(this, MainActivity::class.java)
+                                startActivity(intent)
+                                finish()
+                                liveStatusSaving.removeObservers(this)
+                                liveData.removeObservers(this)
+                            }
+                        }
                     }
                     is Result.Error -> {
                         binding.loadingList.visibility = View.GONE

@@ -18,7 +18,7 @@ import retrofit2.Response
 class TanaminRepository(
     private val tanaminRoomDatabase: TanaminRoomDatabase,
     private val apiService: ServicesAPI,
-    private val detectionService: ServicesAPI,
+    private val detectionService: ServicesAPI
     ) {
     private val resultLogin = MediatorLiveData<Result<LoginResponse>>()
     private val resultRegister = MediatorLiveData<Result<RegisterResponse>>()
