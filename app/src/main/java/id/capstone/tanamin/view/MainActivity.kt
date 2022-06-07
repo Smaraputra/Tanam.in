@@ -1,11 +1,8 @@
 package id.capstone.tanamin.view
 
 import android.content.Context
-import android.graphics.drawable.Drawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -19,7 +16,6 @@ import id.capstone.tanamin.data.local.datastore.LoginPreferences
 import id.capstone.tanamin.data.local.datastore.PreferencesViewModel
 import id.capstone.tanamin.data.local.datastore.PreferencesViewModelFactory
 import id.capstone.tanamin.databinding.ActivityMainBinding
-import id.capstone.tanamin.databinding.CustomAlertApiBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

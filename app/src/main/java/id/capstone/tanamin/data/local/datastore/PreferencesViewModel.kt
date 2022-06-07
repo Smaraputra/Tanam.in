@@ -17,6 +17,17 @@ class PreferencesViewModel(private val pref: LoginPreferences) : ViewModel() {
         }
     }
 
+    fun getViewModelStatus(): LiveData<Boolean> {
+        return pref.getViewModelStatus().asLiveData()
+    }
+
+    fun saveViewModelStatus(statusViewModel: Boolean) {
+        viewModelScope.launch {
+            pref.saveViewModelStatus(statusViewModel)
+        }
+    }
+
+
     fun getTokenUser(): LiveData<String> {
         return pref.getTokenUser().asLiveData()
     }
@@ -44,16 +55,6 @@ class PreferencesViewModel(private val pref: LoginPreferences) : ViewModel() {
     fun saveIDUser(id: Int) {
         viewModelScope.launch {
             pref.saveIDUser(id)
-        }
-    }
-
-    fun getCurrentModule(): LiveData<String> {
-        return pref.getCurrentModule().asLiveData()
-    }
-
-    fun saveCurrentModule(current: String) {
-        viewModelScope.launch {
-            pref.saveCurrentModule(current)
         }
     }
 }

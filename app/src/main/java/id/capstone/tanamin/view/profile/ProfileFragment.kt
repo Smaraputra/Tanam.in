@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import id.capstone.tanamin.R
 import id.capstone.tanamin.data.Result
@@ -31,7 +30,6 @@ import id.capstone.tanamin.databinding.FragmentProfileBinding
 import id.capstone.tanamin.view.ViewModelFactory
 import id.capstone.tanamin.view.login.LoginActivity
 import id.capstone.tanamin.view.profileedit.ProfileEditActivity
-import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
@@ -41,8 +39,8 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var liveData : LiveData<Result<ProfileResponse>>
     private lateinit var liveDataStore : LiveData<Int>
+    private lateinit var statusViewModel : LiveData<Boolean>
     private var user:User? = null
-    private lateinit var liveDataStoreToken : LiveData<String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,7 +53,7 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
         super.onViewCreated(itemView, savedInstanceState)
-
+        setupViewModel()
         binding.logoutButton.setOnClickListener{
             showDialogLogout()
         }
@@ -63,9 +61,6 @@ class ProfileFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        lifecycleScope.launch {
-            setupViewModel()
-        }
         getProfileUser()
     }
 
@@ -74,7 +69,14 @@ class ProfileFragment : Fragment() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        liveDataStoreToken = preferencesViewModel.getTokenUser()
+        preferencesViewModel.getTokenUser().observe(this){ token ->
+            val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity(), token)
+            val profileViewModel: ProfileViewModel by viewModels {
+                factory
+            }
+            this.profileViewModel=profileViewModel
+            preferencesViewModel.saveViewModelStatus(true)
+        }
     }
 
     private fun showDialogLogout() {
@@ -98,71 +100,85 @@ class ProfileFragment : Fragment() {
     }
 
     private fun getProfileUser(){
-        liveDataStoreToken.observe(this){
-            val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity(), it)
-            val profileViewModel: ProfileViewModel by viewModels {
-                factory
-            }
-            this.profileViewModel=profileViewModel
-            val profileMap: HashMap<String, String> = HashMap()
-            liveDataStore = preferencesViewModel.getIDUser()
-            liveDataStore.observe(requireActivity()) { userId ->
-                profileMap["userid"] = userId.toString()
-                liveData = profileViewModel.getProfileUser(profileMap)
-                liveData.observe(requireActivity()) { result ->
-                    if (result != null) {
-                        when (result) {
-                            is Result.Loading -> {
-                                binding.loadingList3.visibility = View.VISIBLE
-                            }
-                            is Result.Success -> {
-                                user=result.data.data.user
-                                if(user!=null){
-                                    binding.editDataButton .setOnClickListener{
-                                        val intent = Intent(requireContext(), ProfileEditActivity::class.java)
-                                        intent.putExtra(PROFILE_USER_EXTRA,user)
-                                        startActivity(intent)
-                                    }
+        statusViewModel = preferencesViewModel.getViewModelStatus()
+        statusViewModel.observe(this){ status ->
+            if(status) {
+                val profileMap: HashMap<String, String> = HashMap()
+                liveDataStore = preferencesViewModel.getIDUser()
+                liveDataStore.observe(requireActivity()) { userId ->
+                    profileMap["userid"] = userId.toString()
+                    liveData = profileViewModel.getProfileUser(profileMap)
+                    liveData.observe(requireActivity()) { result ->
+                        if (result != null) {
+                            when (result) {
+                                is Result.Loading -> {
+                                    binding.loadingList3.visibility = View.VISIBLE
                                 }
-                                val success = "${result.data.data.finish ?: "0"} Selesai"
-                                val process = "${result.data.data.progress ?: "0"} Proses"
-                                binding.loadingList3.visibility = View.GONE
-                                binding.textView3.text=result.data.data.user.name
-                                binding.textView4.text=result.data.data.user.email
-                                binding.textView5.text= if(result.data.data.user.age != null && result.data.data.user.age != 0)
-                                    result.data.data.user.age.toString() else "Tidak ada data"
-                                binding.textView6.text=if(result.data.data.user.address != null && result.data.data.user.address != "dikosongkan")
-                                    result.data.data.user.address else "Tidak ada data"
-                                binding.successCount.text=success
-                                binding.processCount.text=process
-                                Glide.with(this)
-                                    .load(result.data.data.user.profilePicture)
-                                    .placeholder(R.drawable.ic_profileuser_illustration)
-                                    .error(R.drawable.ic_profileuser_illustration)
-                                    .into(binding.classImage2)
-                                liveData.removeObservers(requireActivity())
-                                liveDataStore.removeObservers(requireActivity())
-                                liveDataStoreToken.removeObservers(requireActivity())
-                            }
-                            is Result.Error -> {
-                                if(user==null){
-                                    binding.editDataButton .setOnClickListener{
-                                        ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_error_24)
-                                            ?.let { showDialog(getString(R.string.no_connection), it) }
+                                is Result.Success -> {
+                                    user = result.data.data.user
+                                    if (user != null) {
+                                        binding.editDataButton.setOnClickListener {
+                                            val intent = Intent(
+                                                requireContext(),
+                                                ProfileEditActivity::class.java
+                                            )
+                                            intent.putExtra(PROFILE_USER_EXTRA, user)
+                                            startActivity(intent)
+                                        }
                                     }
+                                    val success = "${result.data.data.finish ?: "0"} Selesai"
+                                    val process = "${result.data.data.progress ?: "0"} Proses"
+                                    binding.loadingList3.visibility = View.GONE
+                                    binding.textView3.text = result.data.data.user.name
+                                    binding.textView4.text = result.data.data.user.email
+                                    binding.textView5.text =
+                                        if (result.data.data.user.age != null && result.data.data.user.age != 0)
+                                            result.data.data.user.age.toString() else "Tidak ada data"
+                                    binding.textView6.text =
+                                        if (result.data.data.user.address != null && result.data.data.user.address != "dikosongkan")
+                                            result.data.data.user.address else "Tidak ada data"
+                                    binding.successCount.text = success
+                                    binding.processCount.text = process
+                                    Glide.with(this)
+                                        .load(result.data.data.user.profilePicture)
+                                        .placeholder(R.drawable.ic_profileuser_illustration)
+                                        .error(R.drawable.ic_profileuser_illustration)
+                                        .into(binding.classImage2)
+                                    liveData.removeObservers(requireActivity())
+                                    liveDataStore.removeObservers(requireActivity())
                                 }
-                                binding.loadingList3.visibility = View.GONE
-                                ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_error_24)
-                                    ?.let { showDialog(result.error, it)
+                                is Result.Error -> {
+                                    if (user == null) {
+                                        binding.editDataButton.setOnClickListener {
+                                            ContextCompat.getDrawable(
+                                                requireActivity(),
+                                                R.drawable.ic_baseline_error_24
+                                            )
+                                                ?.let {
+                                                    showDialog(
+                                                        getString(R.string.no_connection),
+                                                        it
+                                                    )
+                                                }
+                                        }
                                     }
-                                liveData.removeObservers(requireActivity())
-                                liveDataStore.removeObservers(requireActivity())
-                                liveDataStoreToken.removeObservers(requireActivity())
+                                    binding.loadingList3.visibility = View.GONE
+                                    ContextCompat.getDrawable(
+                                        requireActivity(),
+                                        R.drawable.ic_baseline_error_24
+                                    )
+                                        ?.let {
+                                            showDialog(result.error, it)
+                                        }
+                                    liveData.removeObservers(requireActivity())
+                                    liveDataStore.removeObservers(requireActivity())
+                                }
                             }
                         }
                     }
                 }
             }
+            statusViewModel.removeObservers(this)
         }
     }
 
