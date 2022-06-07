@@ -28,7 +28,7 @@ class DetectionResultActivity : AppCompatActivity() {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
     private lateinit var detectionResultViewModel: DetectionResultViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
-    private lateinit var liveDataStore : LiveData<String>
+    private lateinit var statusViewModel : LiveData<Boolean>
     private var informationId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,42 +54,45 @@ class DetectionResultActivity : AppCompatActivity() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        liveDataStore = preferencesViewModel.getTokenUser()
-    }
-
-    private fun getInformation(){
-        liveDataStore.observe(this){
-            val factory: ViewModelFactory = ViewModelFactory.getInstance(this, it)
+        preferencesViewModel.getTokenUser().observe(this){ token ->
+            val factory: ViewModelFactory = ViewModelFactory.getInstance(this, token)
             val detectionResultViewModel: DetectionResultViewModel by viewModels {
                 factory
             }
             this.detectionResultViewModel=detectionResultViewModel
+            preferencesViewModel.saveViewModelStatus(true)
+        }
+    }
 
-            val liveData = detectionResultViewModel.getResultDetected(informationId.toString())
-            liveData.observe(this){ result ->
-                if (result != null) {
-                    when (result) {
-                        is Result.Loading -> {
-                            binding.loadingModule.visibility = View.VISIBLE
-                        }
-                        is Result.Success -> {
-                            binding.loadingModule.visibility = View.GONE
-                            binding.expandTextView.text = result.data.data.judul
-                            binding.tvContentKandunganDesc.text = result.data.data.kandungan
-                            binding.tvBenefitDesc.text = result.data.data.manfaat
-                            liveData.removeObservers(this)
-                            liveDataStore.removeObservers(this)
-                        }
-                        is Result.Error -> {
-                            binding.loadingModule.visibility = View.GONE
-                            ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
-                                ?.let {showDialog(result.error, it) }
-                            liveData.removeObservers(this)
-                            liveDataStore.removeObservers(this)
+    private fun getInformation(){
+        statusViewModel = preferencesViewModel.getViewModelStatus()
+        statusViewModel.observe(this){ status ->
+            if(status) {
+                val liveData = detectionResultViewModel.getResultDetected(informationId.toString())
+                liveData.observe(this) { result ->
+                    if (result != null) {
+                        when (result) {
+                            is Result.Loading -> {
+                                binding.loadingModule.visibility = View.VISIBLE
+                            }
+                            is Result.Success -> {
+                                binding.loadingModule.visibility = View.GONE
+                                binding.expandTextView.text = result.data.data.judul
+                                binding.tvContentKandunganDesc.text = result.data.data.kandungan
+                                binding.tvBenefitDesc.text = result.data.data.manfaat
+                                liveData.removeObservers(this)
+                            }
+                            is Result.Error -> {
+                                binding.loadingModule.visibility = View.GONE
+                                ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
+                                    ?.let { showDialog(result.error, it) }
+                                liveData.removeObservers(this)
+                            }
                         }
                     }
                 }
             }
+            statusViewModel.removeObservers(this)
         }
     }
 

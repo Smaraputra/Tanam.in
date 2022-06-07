@@ -45,10 +45,10 @@ class ProfileEditActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileEditBinding
     private lateinit var profileEditViewModel: ProfileEditViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
+    private lateinit var statusViewModel : LiveData<Boolean>
     private lateinit var user: User
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
     private var profilePicture: File?=null
-    private lateinit var liveDataStore : LiveData<String>
     private var token : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,24 +61,16 @@ class ProfileEditActivity : AppCompatActivity() {
         user=intent.getParcelableExtra<User>(ProfileFragment.PROFILE_USER_EXTRA) as User
         setupView()
         setupViewModel()
-        profileEditViewModel.setIsProfileEdited(false)
+
         binding.etFullName.addTextChangedListener(textWatcher)
         binding.etAge.addTextChangedListener(textWatcher)
         binding.etAddress.addTextChangedListener(textWatcher)
 
-        profileEditViewModel.filePhoto.observe(this){
-            profilePicture=it
-            val fileBitmap: Bitmap = BitmapFactory.decodeFile(it.path)
-            Glide.with(this).load(fileBitmap).into(binding.changeImage)
-        }
         binding.editPhotoBtn.setOnClickListener{
             startGallery()
         }
         binding.btnSave.setOnClickListener{
            updateProfile()
-        }
-        profileEditViewModel.isProfileEdited.observe(this){
-            binding.btnSave.isEnabled = it
         }
     }
 
@@ -102,17 +94,24 @@ class ProfileEditActivity : AppCompatActivity() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        liveDataStore = preferencesViewModel.getTokenUser()
-        liveDataStore.observe(this){
-            if(!it.isNullOrEmpty()){
-                token = it
+        preferencesViewModel.getTokenUser().observe(this){ token ->
+            val factory: ViewModelFactory = ViewModelFactory.getInstance(this, token)
+            val profileEditViewModel: ProfileEditViewModel by viewModels {
+                factory
             }
+            this.profileEditViewModel=profileEditViewModel
+            profileEditViewModel.setIsProfileEdited(false)
+            profileEditViewModel.filePhoto.observe(this){
+                profilePicture=it
+                val fileBitmap: Bitmap = BitmapFactory.decodeFile(it.path)
+                Glide.with(this).load(fileBitmap).into(binding.changeImage)
+                profileEditViewModel.setIsProfileEdited(true)
+            }
+            profileEditViewModel.isProfileEdited.observe(this){
+                binding.btnSave.isEnabled = it
+            }
+            preferencesViewModel.saveViewModelStatus(true)
         }
-        val factory: ViewModelFactory = ViewModelFactory.getInstance(this, token)
-        val profileEditViewModel: ProfileEditViewModel by viewModels {
-            factory
-        }
-        this.profileEditViewModel=profileEditViewModel
     }
 
     private val launcherIntentGallery = registerForActivityResult(
@@ -126,44 +125,52 @@ class ProfileEditActivity : AppCompatActivity() {
     }
 
     private fun updateProfile(){
-        val userid=user.idUser.toString().toRequestBody("text/plain".toMediaType())
-        val name=if(binding.etFullName.text.toString().isNotEmpty())binding.etFullName.text.toString().toRequestBody("text/plain".toMediaType())
-            else user.name.toRequestBody("text/plain".toMediaType())
-        val age = if(binding.etAge.text.toString().isNotEmpty())binding.etAge.text.toString().toRequestBody("text/plain".toMediaType())
-            else "0".toRequestBody("text/plain".toMediaType())
-        val address = if(binding.etAddress.text.toString().isNotEmpty())binding.etAddress.text.toString().toRequestBody("text/plain".toMediaType())
-            else "dikosongkan".toRequestBody("text/plain".toMediaType())
-        var liveData=profileEditViewModel.editProfile(null,userid,name,age,address)
-        if(profilePicture!=null){
-            val requestProfilePictureFile = profilePicture?.asRequestBody("image/jpeg".toMediaTypeOrNull())
-            val profilePictureMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
-                "profile_picture",
-                profilePicture?.name,
-                requestProfilePictureFile!!
-            )
-            liveData = profileEditViewModel.editProfile(profilePictureMultipart,userid,name,age,address)
-        }
-        liveData.observe(this){ result ->
-            if (result != null) {
-                when (result) {
-                    is Result.Loading -> {
-                        binding.loadingModule.visibility = View.VISIBLE
-                    }
-                    is Result.Success -> {
-                        binding.loadingModule.visibility = View.GONE
-                        ContextCompat.getDrawable(this, R.drawable.ic_baseline_check_circle_24)
-                            ?.let { showDialog(result.data.message, it, true) }
-                        preferencesViewModel.saveNameUser(binding.etFullName.text.toString())
-                        liveData.removeObservers(this)
-                    }
-                    is Result.Error -> {
-                        binding.loadingModule.visibility = View.GONE
-                        ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
-                            ?.let { showDialog(result.error, it, false) }
-                        liveData.removeObservers(this)
+        statusViewModel = preferencesViewModel.getViewModelStatus()
+        statusViewModel.observe(this) { status ->
+            if (status) {
+                val userid=user.idUser.toString().toRequestBody("text/plain".toMediaType())
+                val name=if(binding.etFullName.text.toString().isNotEmpty())binding.etFullName.text.toString().toRequestBody("text/plain".toMediaType())
+                else user.name.toRequestBody("text/plain".toMediaType())
+                val age = if(binding.etAge.text.toString().isNotEmpty())binding.etAge.text.toString().toRequestBody("text/plain".toMediaType())
+                else "0".toRequestBody("text/plain".toMediaType())
+                val address = if(binding.etAddress.text.toString().isNotEmpty())binding.etAddress.text.toString().toRequestBody("text/plain".toMediaType())
+                else "dikosongkan".toRequestBody("text/plain".toMediaType())
+
+                var liveData=profileEditViewModel.editProfile(null,userid,name,age,address)
+                if(profilePicture!=null){
+                    val requestProfilePictureFile = profilePicture?.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                    val profilePictureMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+                        "profile_picture",
+                        profilePicture?.name,
+                        requestProfilePictureFile!!
+                    )
+                    liveData = profileEditViewModel.editProfile(profilePictureMultipart,userid,name,age,address)
+                }
+
+                liveData.observe(this){ result ->
+                    if (result != null) {
+                        when (result) {
+                            is Result.Loading -> {
+                                binding.loadingModule.visibility = View.VISIBLE
+                            }
+                            is Result.Success -> {
+                                binding.loadingModule.visibility = View.GONE
+                                ContextCompat.getDrawable(this, R.drawable.ic_baseline_check_circle_24)
+                                    ?.let { showDialog(result.data.message, it, true) }
+                                preferencesViewModel.saveNameUser(binding.etFullName.text.toString())
+                                liveData.removeObservers(this)
+                            }
+                            is Result.Error -> {
+                                binding.loadingModule.visibility = View.GONE
+                                ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
+                                    ?.let { showDialog(result.error, it, false) }
+                                liveData.removeObservers(this)
+                            }
+                        }
                     }
                 }
             }
+            statusViewModel.removeObservers(this)
         }
     }
     private fun startGallery() {

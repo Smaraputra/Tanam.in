@@ -23,14 +23,15 @@ import id.capstone.tanamin.data.remote.response.ListForumItem
 import id.capstone.tanamin.databinding.FragmentForumBinding
 import id.capstone.tanamin.view.ViewModelFactory
 import id.capstone.tanamin.view.classdetail.ClassDetailActivity
+import id.capstone.tanamin.view.classdetail.silabus.SilabusViewModel
 
 class ForumFragment : Fragment() {
     private var _binding: FragmentForumBinding? = null
     private val binding get() = _binding!!
     private var classID : String = ""
     private lateinit var forumViewModel: ForumViewModel
-    private lateinit var liveDataStore : LiveData<String>
     private lateinit var preferencesViewModel: PreferencesViewModel
+    private lateinit var statusViewModel : LiveData<Boolean>
     private var token : String = ""
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
 
@@ -59,48 +60,59 @@ class ForumFragment : Fragment() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        liveDataStore = preferencesViewModel.getTokenUser()
-    }
-
-    private fun getForumList(){
-        liveDataStore.observe(this){
+        preferencesViewModel.getTokenUser().observe(requireActivity()){ token ->
             val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity(), token)
             val forumViewModel: ForumViewModel by viewModels {
                 factory
             }
             this.forumViewModel=forumViewModel
+            preferencesViewModel.saveViewModelStatus(true)
+        }
+    }
 
-            val liveData = forumViewModel.getAllForum(classID)
-            liveData.observe(requireActivity()){ result ->
-                if (result != null) {
-                    when (result) {
-                        is Result.Loading -> {
-                            binding.loadingForum.visibility = View.VISIBLE
-                        }
-                        is Result.Success -> {
-                            binding.loadingForum.visibility = View.GONE
-                            binding.cardViewNoInternet.visibility = View.GONE
-                            if(result.data.data != null){
-                                binding.cardViewNoModuleFound.visibility = View.GONE
-                                setupAdapter(result.data.data.listforum)
-                            }else{
-                                binding.cardViewNoModuleFound.visibility = View.VISIBLE
+    private fun getForumList(){
+        statusViewModel = preferencesViewModel.getViewModelStatus()
+        statusViewModel.observe(requireActivity()) { status ->
+            if (status) {
+                val liveData = forumViewModel.getAllForum(classID)
+                liveData.observe(requireActivity()) { result ->
+                    if (result != null) {
+                        when (result) {
+                            is Result.Loading -> {
+                                binding.loadingForum.visibility = View.VISIBLE
                             }
-                            liveData.removeObservers(requireActivity())
-                            liveDataStore.removeObservers(requireActivity())
-                        }
-                        is Result.Error -> {
-                            binding.loadingForum.visibility = View.GONE
-                            binding.cardViewNoModuleFound.visibility = View.GONE
-                            binding.cardViewNoInternet.visibility = View.VISIBLE
-                            ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_error_24)
-                                ?.let { (requireActivity() as ClassDetailActivity).showDialog(result.error, it) }
-                            liveData.removeObservers(requireActivity())
-                            liveDataStore.removeObservers(requireActivity())
+                            is Result.Success -> {
+                                binding.loadingForum.visibility = View.GONE
+                                binding.cardViewNoInternet.visibility = View.GONE
+                                if (result.data.data != null) {
+                                    binding.cardViewNoModuleFound.visibility = View.GONE
+                                    setupAdapter(result.data.data.listforum)
+                                } else {
+                                    binding.cardViewNoModuleFound.visibility = View.VISIBLE
+                                }
+                                liveData.removeObservers(requireActivity())
+                            }
+                            is Result.Error -> {
+                                binding.loadingForum.visibility = View.GONE
+                                binding.cardViewNoModuleFound.visibility = View.GONE
+                                binding.cardViewNoInternet.visibility = View.VISIBLE
+                                ContextCompat.getDrawable(
+                                    requireActivity(),
+                                    R.drawable.ic_baseline_error_24
+                                )
+                                    ?.let {
+                                        (requireActivity() as ClassDetailActivity).showDialog(
+                                            result.error,
+                                            it
+                                        )
+                                    }
+                                liveData.removeObservers(requireActivity())
+                            }
                         }
                     }
                 }
             }
+            statusViewModel.removeObservers(requireActivity())
         }
     }
 

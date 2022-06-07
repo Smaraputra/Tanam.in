@@ -129,6 +129,7 @@ class ClassesFragment : Fragment() {
                     }
                 }
             }
+            statusViewModel.removeObservers(requireActivity())
         }
     }
 

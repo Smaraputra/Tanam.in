@@ -17,8 +17,10 @@ import androidx.core.text.HtmlCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import id.capstone.tanamin.R
 import id.capstone.tanamin.data.Result
 import id.capstone.tanamin.data.local.datastore.LoginPreferences
@@ -29,6 +31,9 @@ import id.capstone.tanamin.databinding.ActivityClassModuleBinding
 import id.capstone.tanamin.databinding.CustomAlertApiBinding
 import id.capstone.tanamin.utils.uriToFile
 import id.capstone.tanamin.view.ViewModelFactory
+import id.capstone.tanamin.view.classdetail.ClassDetailActivity
+import id.capstone.tanamin.view.home.HomeFragment
+import id.capstone.tanamin.view.home.HomeViewModel
 import id.capstone.tanamin.view.quiz.QuizActivity
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -46,8 +51,8 @@ class ClassModuleActivity : AppCompatActivity() {
     private var classTitle: String=""
     private lateinit var classModuleViewModel: ClassModuleViewModel
     private lateinit var preferencesViewModel: PreferencesViewModel
+    private lateinit var statusViewModel : LiveData<Boolean>
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "userSession")
-    private lateinit var liveDataStore : LiveData<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,49 +68,6 @@ class ClassModuleActivity : AppCompatActivity() {
         }
         setupViewModel()
         getDetailModule()
-    }
-
-    private fun getDetailModule(){
-        liveDataStore.observe(this){ token ->
-            val factory: ViewModelFactory = ViewModelFactory.getInstance(this, token)
-            val classModuleViewModel: ClassModuleViewModel by viewModels {
-                factory
-            }
-            this.classModuleViewModel=classModuleViewModel
-
-            val moduleHashMap: HashMap<String, String> = HashMap()
-            val liveDataPref=preferencesViewModel.getIDUser()
-            liveDataPref.observe(this){ userId->
-                moduleHashMap["classid"]=classId.toString()
-                moduleHashMap["modulid"]=modulId.toString()
-                moduleHashMap["userid"]= userId.toString()
-                val liveDataDetailModule=classModuleViewModel.getDetailModule(moduleHashMap)
-                liveDataDetailModule.observe(this){ result ->
-                    if (result != null) {
-                        when (result) {
-                            is Result.Loading -> {
-                                binding.loadingModule.visibility = View.VISIBLE
-                            }
-                            is Result.Success -> {
-                                binding.loadingModule.visibility = View.GONE
-                                setupView(result.data.data)
-                                liveDataPref.removeObservers(this)
-                                liveDataDetailModule.removeObservers(this)
-                                liveDataStore.removeObservers(this)
-                            }
-                            is Result.Error -> {
-                                binding.loadingModule.visibility = View.GONE
-                                ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
-                                    ?.let { (showDialog(result.error, it, false)) }
-                                liveDataPref.removeObservers(this)
-                                liveDataDetailModule.removeObservers(this)
-                                liveDataStore.removeObservers(this)
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private fun setupView(dataDetailModule: DataDetailModule){
@@ -155,7 +117,6 @@ class ClassModuleActivity : AppCompatActivity() {
                     }
                     liveData.removeObservers(this)
                 }
-
             }
         }
     }
@@ -165,7 +126,54 @@ class ClassModuleActivity : AppCompatActivity() {
         preferencesViewModel = ViewModelProvider(this, PreferencesViewModelFactory(pref)).get(
             PreferencesViewModel::class.java
         )
-        liveDataStore = preferencesViewModel.getTokenUser()
+        preferencesViewModel.getTokenUser().observe(this){ token ->
+            val factory: ViewModelFactory = ViewModelFactory.getInstance(this, token)
+            val classModuleViewModel: ClassModuleViewModel by viewModels {
+                factory
+            }
+            this.classModuleViewModel=classModuleViewModel
+            preferencesViewModel.saveViewModelStatus(true)
+            classModuleViewModel.setProgressPictureUploadedStatus(false)
+        }
+    }
+
+    private fun getDetailModule(){
+        statusViewModel = preferencesViewModel.getViewModelStatus()
+        statusViewModel.observe(this){ status ->
+            if(status) {
+                val moduleHashMap: HashMap<String, String> = HashMap()
+                val liveDataPref=preferencesViewModel.getIDUser()
+                liveDataPref.observe(this){ userId->
+                    moduleHashMap["classid"]=classId.toString()
+                    moduleHashMap["modulid"]=modulId.toString()
+                    moduleHashMap["userid"]= userId.toString()
+                    val liveDataDetailModule=classModuleViewModel.getDetailModule(moduleHashMap)
+                    liveDataDetailModule.observe(this){ result ->
+                        if (result != null) {
+                            when (result) {
+                                is Result.Loading -> {
+                                    binding.loadingModule.visibility = View.VISIBLE
+                                }
+                                is Result.Success -> {
+                                    binding.loadingModule.visibility = View.GONE
+                                    setupView(result.data.data)
+                                    liveDataPref.removeObservers(this)
+                                    liveDataDetailModule.removeObservers(this)
+                                }
+                                is Result.Error -> {
+                                    binding.loadingModule.visibility = View.GONE
+                                    ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
+                                        ?.let { (showDialog(result.error, it, false)) }
+                                    liveDataPref.removeObservers(this)
+                                    liveDataDetailModule.removeObservers(this)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            statusViewModel.removeObservers(this)
+        }
     }
 
     fun showDialog(text: String, icon: Drawable,isFinishAct:Boolean) {

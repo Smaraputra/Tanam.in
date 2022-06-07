@@ -60,7 +60,7 @@ class ClassDetailActivity : AppCompatActivity() {
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 if(position ==0){
-                    if(!dataDetail.progress.isNaN()){
+                    if(dataDetail.progress.compareTo(0.0)!=0){
                         binding.btnStartLearn.text = getString(R.string.continue_study)
                     }else{
                         binding.btnStartLearn.text = getString(R.string.class_detail_silabus_button_text)

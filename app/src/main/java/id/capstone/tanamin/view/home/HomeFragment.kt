@@ -154,6 +154,7 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
+            statusViewModel.removeObservers(requireActivity())
         }
 
         preferencesViewModel.getNameUser().observe(requireActivity()){ username->
