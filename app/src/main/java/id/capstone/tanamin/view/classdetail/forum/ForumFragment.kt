@@ -51,8 +51,8 @@ class ForumFragment : Fragment() {
         setupViewModel()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         getForumList()
     }
 
@@ -85,18 +85,21 @@ class ForumFragment : Fragment() {
                                 binding.loadingForum.visibility = View.VISIBLE
                             }
                             is Result.Success -> {
+                                binding.rvListForum.visibility = View.VISIBLE
                                 binding.loadingForum.visibility = View.GONE
                                 binding.cardViewNoInternet.visibility = View.GONE
                                 if (result.data.data != null) {
                                     binding.cardViewNoModuleFound.visibility = View.GONE
                                     setupAdapter(result.data.data.listforum)
                                 } else {
+                                    binding.rvListForum.visibility = View.INVISIBLE
                                     binding.cardViewNoModuleFound.visibility = View.VISIBLE
                                 }
                                 binding.rvListForum.hideSkeleton()
                                 liveData.removeObservers(requireActivity())
                             }
                             is Result.Error -> {
+                                binding.rvListForum.visibility = View.INVISIBLE
                                 binding.loadingForum.visibility = View.GONE
                                 binding.cardViewNoModuleFound.visibility = View.GONE
                                 binding.cardViewNoInternet.visibility = View.VISIBLE

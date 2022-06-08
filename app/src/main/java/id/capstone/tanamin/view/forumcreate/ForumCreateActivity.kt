@@ -52,7 +52,7 @@ class ForumCreateActivity : AppCompatActivity() {
         binding.etTitle.addTextChangedListener(textWatcher)
         binding.etQuestion.addTextChangedListener(textWatcher)
         binding.ivBackButton.setOnClickListener{
-            onBackPressed()
+            finish()
         }
         binding.btnNext.setOnClickListener{
             sendData()

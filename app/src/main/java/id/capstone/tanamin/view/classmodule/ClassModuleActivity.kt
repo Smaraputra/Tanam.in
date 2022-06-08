@@ -18,6 +18,8 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import id.capstone.tanamin.BuildConfig
 import id.capstone.tanamin.R
 import id.capstone.tanamin.data.Result
 import id.capstone.tanamin.data.local.datastore.LoginPreferences
@@ -160,6 +162,12 @@ class ClassModuleActivity : AppCompatActivity() {
                                 is Result.Success -> {
                                     binding.loadingModule.visibility = View.GONE
                                     setupView(result.data.data)
+                                    Glide.with(this)
+                                        .asBitmap()
+                                        .load(BuildConfig.BASE_URL_IMAGE + result.data.data.module[0].picture)
+                                        .placeholder(R.drawable.ic_background_logo)
+                                        .error(R.drawable.ic_background_logo)
+                                        .into(binding.ivClassModule)
                                     liveDataPref.removeObservers(this)
                                     liveDataDetailModule.removeObservers(this)
                                     binding.tvModuleDesc.hideSkeleton()

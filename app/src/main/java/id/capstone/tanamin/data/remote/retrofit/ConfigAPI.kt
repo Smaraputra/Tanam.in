@@ -58,12 +58,12 @@ class ConfigAPI {
                         requestBuilder.header("key", token)
                         chain.proceed(requestBuilder.build())
                     }
-                    .callTimeout(15, TimeUnit.SECONDS)
+                    .callTimeout(30, TimeUnit.SECONDS)
                     .build()
             }else{
                 OkHttpClient.Builder()
                     .addInterceptor(loggingInterceptor)
-                    .callTimeout(15, TimeUnit.SECONDS)
+                    .callTimeout(30, TimeUnit.SECONDS)
                     .build()
             }
 

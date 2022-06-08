@@ -6,7 +6,7 @@ import id.capstone.tanamin.data.local.database.Classes
 import id.capstone.tanamin.data.local.database.TanaminRoomDatabase
 import id.capstone.tanamin.data.remote.response.*
 import id.capstone.tanamin.data.remote.retrofit.ServicesAPI
-import kotlinx.coroutines.*
+import kotlinx.coroutines.runBlocking
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.json.JSONException
@@ -451,13 +451,7 @@ class TanaminRepository(
                 if(response.isSuccessful){
                     resultDetection.value = Result.Success(response.body() as DetectionResponse)
                 }else{
-                    lateinit var jsonObject: JSONObject
-                    try {
-                        jsonObject = JSONObject(response.errorBody()!!.string())
-                        resultDetection.value = Result.Error(jsonObject.getString("message"))
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                    }
+                    resultDetection.value = Result.Error("Tidak dapat mendeteksi. Silahkan ulangi lagi.")
                 }
             }
 

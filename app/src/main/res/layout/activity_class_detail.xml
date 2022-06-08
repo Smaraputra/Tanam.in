@@ -46,7 +46,7 @@
 
         <com.smarteist.autoimageslider.SliderView
             android:id="@+id/imageSlider"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="150dp"
             android:elevation="16dp"
             android:src="@drawable/ic_background_logo"

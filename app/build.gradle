@@ -15,8 +15,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "BASE_URL_TANAMIN", '"http://10.0.2.2:3000/"')
-        buildConfigField("String", "BASE_URL_IMAGE_PROGRESS", '"https://storage.googleapis.com/tanamin/progress/"')
+        buildConfigField("String", "BASE_URL_TANAMIN", '"https://tanamin-351905.as.r.appspot.com/"')
+        buildConfigField("String", "BASE_URL_IMAGE", '"https://storage.googleapis.com/tanamin/gambar/"')
         buildConfigField("String", "BASE_URL_IMAGE_PROFILE", '"https://storage.googleapis.com/tanamin/profile/"')
         buildConfigField("String", "BASE_URL_DETECTION_TANAMIN", '"https://asia-southeast1-tanamin-351905.cloudfunctions.net/"')
     }

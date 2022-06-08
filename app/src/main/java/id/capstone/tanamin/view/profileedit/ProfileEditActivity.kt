@@ -22,6 +22,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import id.capstone.tanamin.BuildConfig.BASE_URL_IMAGE_PROFILE
 import id.capstone.tanamin.R
 import id.capstone.tanamin.data.Result
 import id.capstone.tanamin.data.local.datastore.LoginPreferences
@@ -82,7 +83,7 @@ class ProfileEditActivity : AppCompatActivity() {
         if(user.age != null && user.age !=0){
             binding.etAge.setText(user.age.toString())
         }
-        Glide.with(this).load(user.profilePicture).placeholder(R.drawable.ic_profileuser_illustration)
+        Glide.with(this).load(BASE_URL_IMAGE_PROFILE + user.profilePicture).placeholder(R.drawable.ic_profileuser_illustration)
             .error(R.drawable.ic_profileuser_illustration).into(binding.changeImage)
         binding.ivBackButton.setOnClickListener{
             finish()

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import id.capstone.tanamin.BuildConfig.BASE_URL_IMAGE
 import id.capstone.tanamin.R
 import id.capstone.tanamin.data.local.database.Classes
 import id.capstone.tanamin.databinding.RvClassBinding
@@ -23,7 +24,7 @@ class ClassesListAdapter(private val ctx: Context, private val classes: List<Cla
         val data = classes[position]
         Glide.with(ctx)
             .asBitmap()
-            .load(data.picture)
+            .load(BASE_URL_IMAGE + data.picture)
             .placeholder(R.drawable.ic_background_logo)
             .error(R.drawable.ic_background_logo)
             .into(holder.binding.classImage)

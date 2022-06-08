@@ -62,6 +62,10 @@ class ClassesFragment : Fragment() {
         getClassList()
     }
 
+    private fun isAttachedToActivity(): Boolean {
+        return isAdded && activity != null
+    }
+
     private val refreshListener = SwipeRefreshLayout.OnRefreshListener {
         binding.swipeRefreshLayout.isRefreshing = false
         getClassList()
@@ -92,52 +96,57 @@ class ClassesFragment : Fragment() {
 
     private fun getClassList(){
         statusViewModel = preferencesViewModel.getViewModelStatus()
-        statusViewModel.observe(this){ status->
-            if(status){
+        statusViewModel.observe(this) { status ->
+            if (status) {
                 val classMap: HashMap<String, String> = HashMap()
                 liveDataStore = preferencesViewModel.getIDUser()
                 liveDataStore.observe(requireActivity()) { userId ->
-                    classMap["userid"] = userId.toString()
-                    val liveData = classesViewModel.getAllClass(classMap)
-                    liveData.observe(requireActivity()){ result ->
-                        if (result != null) {
-                            when (result) {
-                                is Result.Loading -> {
-                                    binding.loadingList4.visibility = View.VISIBLE
-                                }
-                                is Result.Success -> {
-                                    binding.loadingList4.visibility = View.GONE
-                                    binding.cardViewNoClassFound.visibility = View.GONE
-                                    binding.cardViewNoInternet.visibility = View.GONE
-                                    setupAdapter(result.data.data.jsonMemberClass)
-                                    binding.swipeRefreshLayout.hideSkeleton()
-                                    liveData.removeObservers(requireActivity())
-                                    liveDataStore.removeObservers(requireActivity())
-                                }
-                                is Result.Error -> {
-                                    binding.loadingList4.visibility = View.GONE
-                                    val liveData2 = classesViewModel.searchWord("")
-                                    liveData2.observe(requireActivity()){
-                                        setupAdapter(it)
-                                        if(it.isEmpty()){
-                                            binding.cardViewNoInternet.visibility = View.VISIBLE
-                                        }else{
-                                            binding.cardViewNoInternet.visibility = View.GONE
-                                        }
-                                        liveData2.removeObservers(requireActivity())
+                    if (isAttachedToActivity()) {
+                        classMap["userid"] = userId.toString()
+                        val liveData = classesViewModel.getAllClass(classMap)
+                        liveData.observe(requireActivity()) { result ->
+                            if (result != null) {
+                                when (result) {
+                                    is Result.Loading -> {
+                                        binding.loadingList4.visibility = View.VISIBLE
                                     }
-                                    ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_error_24)
-                                        ?.let {showDialog(result.error, it) }
-                                    binding.swipeRefreshLayout.hideSkeleton()
-                                    liveData.removeObservers(requireActivity())
-                                    liveDataStore.removeObservers(requireActivity())
+                                    is Result.Success -> {
+                                        binding.loadingList4.visibility = View.GONE
+                                        binding.cardViewNoClassFound.visibility = View.GONE
+                                        binding.cardViewNoInternet.visibility = View.GONE
+                                        setupAdapter(result.data.data.jsonMemberClass)
+                                        binding.swipeRefreshLayout.hideSkeleton()
+                                        liveData.removeObservers(requireActivity())
+                                        liveDataStore.removeObservers(requireActivity())
+                                    }
+                                    is Result.Error -> {
+                                        binding.loadingList4.visibility = View.GONE
+                                        val liveData2 = classesViewModel.searchWord("")
+                                        liveData2.observe(requireActivity()) {
+                                            setupAdapter(it)
+                                            if (it.isEmpty()) {
+                                                binding.cardViewNoInternet.visibility = View.VISIBLE
+                                            } else {
+                                                binding.cardViewNoInternet.visibility = View.GONE
+                                            }
+                                            liveData2.removeObservers(requireActivity())
+                                        }
+                                        ContextCompat.getDrawable(
+                                            requireActivity(),
+                                            R.drawable.ic_baseline_error_24
+                                        )
+                                            ?.let { showDialog(result.error, it) }
+                                        binding.swipeRefreshLayout.hideSkeleton()
+                                        liveData.removeObservers(requireActivity())
+                                        liveDataStore.removeObservers(requireActivity())
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                statusViewModel.removeObservers(requireActivity())
             }
-            statusViewModel.removeObservers(requireActivity())
         }
     }
 

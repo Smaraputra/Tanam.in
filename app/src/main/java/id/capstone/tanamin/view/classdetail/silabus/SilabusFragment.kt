@@ -51,8 +51,8 @@ class SilabusFragment : Fragment() {
         setupViewModel()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         getClassList()
     }
 
@@ -85,18 +85,21 @@ class SilabusFragment : Fragment() {
                                 binding.loadingForum.visibility = View.VISIBLE
                             }
                             is Result.Success -> {
+                                binding.rvListSilabus.visibility = View.VISIBLE
                                 binding.loadingForum.visibility = View.GONE
                                 binding.cardViewNoInternet.visibility = View.GONE
                                 if (result.data.data != null) {
                                     binding.cardViewNoModuleFound.visibility = View.GONE
                                     setupAdapter(result.data.data)
                                 } else {
+                                    binding.rvListSilabus.visibility = View.INVISIBLE
                                     binding.cardViewNoModuleFound.visibility = View.VISIBLE
                                 }
                                 binding.rvListSilabus.hideSkeleton()
                                 liveData.removeObservers(requireActivity())
                             }
                             is Result.Error -> {
+                                binding.rvListSilabus.visibility = View.INVISIBLE
                                 binding.loadingForum.visibility = View.GONE
                                 binding.cardViewNoModuleFound.visibility = View.GONE
                                 binding.cardViewNoInternet.visibility = View.VISIBLE

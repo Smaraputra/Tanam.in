@@ -55,10 +55,10 @@ class ForumResultActivity : AppCompatActivity() {
 
     private fun setupView(){
         binding.editGchatMessage.addTextChangedListener(textWatcher)
-        binding.forumQuestion.text = dataDetail.question
+        binding.expandTextView.text = dataDetail.question
         binding.titleQuestion.text = dataDetail.title
         binding.ivBackButton2.setOnClickListener{
-            onBackPressed()
+            finish()
         }
     }
 
@@ -175,6 +175,7 @@ class ForumResultActivity : AppCompatActivity() {
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = forumListAdapter
+        binding.recyclerView.smoothScrollToPosition(listModule.size-1)
     }
 
     fun showDialog(text: String, icon: Drawable) {

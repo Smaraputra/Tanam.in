@@ -125,6 +125,7 @@
     <string name="no_class">Kelas tidak ditemukan.</string>
     <string name="no_module">Belum ada materi.</string>
     <string name="no_module_info">Tidak ada materi yang terkait dengan kelas ini.</string>
+    <string name="no_forum_info">Tidak ada forum yang terkait dengan kelas ini.</string>
     <string name="continue_study">Lanjut Belajar</string>
     <string name="no_reply">Belum ada balasan.</string>
     <string name="no_reply_info">Ayo mulai bantu menjawab pertanyaan.</string>

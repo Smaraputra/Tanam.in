@@ -17,6 +17,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import id.capstone.tanamin.BuildConfig.BASE_URL_IMAGE
 import id.capstone.tanamin.R
 import id.capstone.tanamin.data.Result
 import id.capstone.tanamin.data.local.datastore.LoginPreferences
@@ -62,6 +63,10 @@ class HomeFragment : Fragment() {
         getHomeData()
     }
 
+    private fun isAttachedToActivity(): Boolean {
+        return isAdded && activity != null
+    }
+
     private fun setupView(){
         binding.marketplace.setOnClickListener{
             val intent = Intent(requireContext(), FutureFeatureActivity::class.java)
@@ -100,63 +105,65 @@ class HomeFragment : Fragment() {
                 val homeMap: HashMap<String, String> = HashMap()
                 liveDataStore = preferencesViewModel.getIDUser()
                 liveDataStore.observe(requireActivity()) { userId ->
-                    homeMap["userid"] = userId.toString()
-                    val liveData = homeViewModel.getHomeData(homeMap)
-                    liveData.observe(requireActivity()) { result ->
-                        if (result != null) {
-                            when (result) {
-                                is Result.Loading -> {
-                                    binding.loadingList2.visibility = View.VISIBLE
-                                }
-                                is Result.Success -> {
-                                    binding.loadingList2.visibility = View.GONE
-                                    if (result.data.data != null) {
-                                        binding.cardViewClass.visibility = View.VISIBLE
-                                        binding.cardViewNoClass.visibility = View.GONE
-                                        binding.cardViewNoInternet.visibility = View.GONE
-                                        val percentage = "${String.format("%.2f", result.data.data.kelas[0].progress)} %"
-                                        Glide.with(requireActivity())
-                                            .asBitmap()
-                                            .load(result.data.data.kelas[0].picture)
-                                            .placeholder(R.drawable.ic_background_logo)
-                                            .error(R.drawable.ic_background_logo)
-                                            .into(binding.classImage)
-                                        binding.classTitle.text = result.data.data.kelas[0].title
-                                        binding.continueContent.text =
-                                            result.data.data.kelas[0].modul_title
-                                        binding.percentage.text = percentage
-                                        binding.cardViewClass.setOnClickListener {
-                                            val data = result.data.data.kelas[0]
-                                            val intent = Intent(
-                                                requireActivity(),
-                                                ClassDetailActivity::class.java
-                                            )
-                                            intent.putExtra(DETAIL_CLASS, data)
-                                            startActivity(intent)
-                                        }
-                                    } else {
-                                        binding.loadingList2.visibility = View.GONE
-                                        binding.cardViewNoClass.visibility = View.VISIBLE
-                                        binding.cardViewClass.visibility = View.INVISIBLE
-                                        binding.cardViewNoInternet.visibility = View.GONE
+                    if (isAttachedToActivity()) {
+                        homeMap["userid"] = userId.toString()
+                        val liveData = homeViewModel.getHomeData(homeMap)
+                        liveData.observe(requireActivity()) { result ->
+                            if (result != null) {
+                                when (result) {
+                                    is Result.Loading -> {
+                                        binding.loadingList2.visibility = View.VISIBLE
                                     }
-                                    binding.layoutCard.hideSkeleton()
-                                    liveData.removeObservers(requireActivity())
-                                    liveDataStore.removeObservers(requireActivity())
-                                }
-                                is Result.Error -> {
-                                    binding.loadingList2.visibility = View.GONE
-                                    binding.cardViewNoInternet.visibility = View.VISIBLE
-                                    binding.cardViewNoClass.visibility = View.INVISIBLE
-                                    binding.cardViewClass.visibility = View.INVISIBLE
-                                    ContextCompat.getDrawable(
-                                        requireActivity(),
-                                        R.drawable.ic_baseline_error_24
-                                    )
-                                        ?.let { showDialog(result.error, it) }
-                                    binding.layoutCard.hideSkeleton()
-                                    liveData.removeObservers(requireActivity())
-                                    liveDataStore.removeObservers(requireActivity())
+                                    is Result.Success -> {
+                                        binding.loadingList2.visibility = View.GONE
+                                        if (result.data.data != null) {
+                                            binding.cardViewClass.visibility = View.VISIBLE
+                                            binding.cardViewNoClass.visibility = View.GONE
+                                            binding.cardViewNoInternet.visibility = View.GONE
+                                            val percentage = "${String.format("%.2f", result.data.data.kelas[0].progress)} %"
+                                            Glide.with(requireActivity())
+                                                .asBitmap()
+                                                .load(BASE_URL_IMAGE + result.data.data.kelas[0].picture)
+                                                .placeholder(R.drawable.ic_background_logo)
+                                                .error(R.drawable.ic_background_logo)
+                                                .into(binding.classImage)
+                                            binding.classTitle.text = result.data.data.kelas[0].title
+                                            binding.continueContent.text =
+                                                result.data.data.kelas[0].modul_title
+                                            binding.percentage.text = percentage
+                                            binding.cardViewClass.setOnClickListener {
+                                                val data = result.data.data.kelas[0]
+                                                val intent = Intent(
+                                                    requireActivity(),
+                                                    ClassDetailActivity::class.java
+                                                )
+                                                intent.putExtra(DETAIL_CLASS, data)
+                                                startActivity(intent)
+                                            }
+                                        } else {
+                                            binding.loadingList2.visibility = View.GONE
+                                            binding.cardViewNoClass.visibility = View.VISIBLE
+                                            binding.cardViewClass.visibility = View.INVISIBLE
+                                            binding.cardViewNoInternet.visibility = View.GONE
+                                        }
+                                        binding.layoutCard.hideSkeleton()
+                                        liveData.removeObservers(requireActivity())
+                                        liveDataStore.removeObservers(requireActivity())
+                                    }
+                                    is Result.Error -> {
+                                        binding.loadingList2.visibility = View.GONE
+                                        binding.cardViewNoInternet.visibility = View.VISIBLE
+                                        binding.cardViewNoClass.visibility = View.INVISIBLE
+                                        binding.cardViewClass.visibility = View.INVISIBLE
+                                        ContextCompat.getDrawable(
+                                            requireActivity(),
+                                            R.drawable.ic_baseline_error_24
+                                        )
+                                            ?.let { showDialog(result.error, it) }
+                                        binding.layoutCard.hideSkeleton()
+                                        liveData.removeObservers(requireActivity())
+                                        liveDataStore.removeObservers(requireActivity())
+                                    }
                                 }
                             }
                         }
@@ -175,8 +182,8 @@ class HomeFragment : Fragment() {
     }
 
     fun showDialog(text: String, icon: Drawable) {
-        val builder = AlertDialog.Builder(requireContext()).create()
-        val bindAlert: CustomAlertApiBinding = CustomAlertApiBinding.inflate(LayoutInflater.from(requireContext()))
+        val builder = AlertDialog.Builder(requireActivity()).create()
+        val bindAlert: CustomAlertApiBinding = CustomAlertApiBinding.inflate(LayoutInflater.from(requireActivity()))
         builder.setView(bindAlert.root)
         bindAlert.infoDialog.text = text
         bindAlert.imageView5.setImageDrawable(icon)

@@ -73,6 +73,10 @@ class DetectionFragment : Fragment() {
         }
     }
 
+    private fun isAttachedToActivity(): Boolean {
+        return isAdded && activity != null
+    }
+
     override fun onResume() {
         super.onResume()
         startCamera()
@@ -154,32 +158,35 @@ class DetectionFragment : Fragment() {
     }
 
     private fun takePhoto() {
-        val imageCapture = imageCapture ?: return
+        if(isAttachedToActivity()){
+            binding.loadingList4.visibility = View.VISIBLE
+            val imageCapture = imageCapture ?: return
 
-        val photoFile = createFile(requireActivity().application)
+            val photoFile = createFile(requireActivity().application)
 
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
-        imageCapture.takePicture(
-            outputOptions,
-            ContextCompat.getMainExecutor(requireContext()),
-            object : ImageCapture.OnImageSavedCallback {
-                override fun onError(exc: ImageCaptureException) {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.failed_capture),
-                        Toast.LENGTH_SHORT
-                    ).show()
+            val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+            imageCapture.takePicture(
+                outputOptions,
+                ContextCompat.getMainExecutor(requireContext()),
+                object : ImageCapture.OnImageSavedCallback {
+                    override fun onError(exc: ImageCaptureException) {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.failed_capture),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                        val result = rotateBitmap(
+                            BitmapFactory.decodeFile(photoFile.path),
+                            cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA
+                        )
+                        uploadImage(photoFile,result)
+                    }
                 }
-
-                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    val result = rotateBitmap(
-                        BitmapFactory.decodeFile(photoFile.path),
-                        cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA
-                    )
-                    uploadImage(photoFile,result)
-                }
-            }
-        )
+            )
+        }
     }
 
     private fun uploadImage(photoFile: File, results :Bitmap) {
@@ -191,32 +198,38 @@ class DetectionFragment : Fragment() {
             requestImageFile
         )
         liveData = detectionViewModel.detectImage(imageMultipart)
-        liveData.observe(this){ result ->
-            if (result != null) {
-                when (result) {
-                    is Result.Loading -> {
-                        binding.loadingList4.visibility = View.VISIBLE
-                    }
-                    is Result.Success -> {
-                        binding.loadingList4.visibility = View.GONE
-                        if(result.data.accuracy<90){
-                            showDialogResult(result.data, results, results)
-                        }else{
-                            ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_error_24)
-                                ?.let { showDialogPermission(getString(R.string.no_detected), it) }
+        if(isAttachedToActivity()){
+            liveData.observe(requireActivity()){ result ->
+                if (result != null) {
+                    when (result) {
+                        is Result.Loading -> {
+                            binding.loadingList4.visibility = View.VISIBLE
                         }
-                        liveData.removeObservers(this)
-                    }
-                    is Result.Error -> {
-                        binding.loadingList4.visibility = View.GONE
-                        if(result.error=="timeout"){
-                            ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_error_24)
-                                ?.let { showDialogPermission(getString(R.string.no_detected), it) }
-                        }else{
-                            ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_error_24)
-                                ?.let { showDialogPermission(result.error, it) }
+                        is Result.Success -> {
+                            if(isAttachedToActivity()){
+                                binding.loadingList4.visibility = View.GONE
+                                if(result.data.accuracy<90){
+                                    showDialogResult(result.data, results, results)
+                                }else{
+                                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_error_24)
+                                        ?.let { showDialogPermission(getString(R.string.no_detected), it) }
+                                }
+                                liveData.removeObservers(requireActivity())
+                            }
                         }
-                        liveData.removeObservers(this)
+                        is Result.Error -> {
+                            if(isAttachedToActivity()){
+                                binding.loadingList4.visibility = View.GONE
+                                if(result.error=="timeout"){
+                                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_error_24)
+                                        ?.let { showDialogPermission(getString(R.string.no_detected), it) }
+                                }else{
+                                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_error_24)
+                                        ?.let { showDialogPermission(result.error, it) }
+                                }
+                                liveData.removeObservers(requireActivity())
+                            }
+                        }
                     }
                 }
             }
@@ -224,42 +237,54 @@ class DetectionFragment : Fragment() {
     }
 
     private fun showDialogPermission(text: String, icon: Drawable) {
-        val builder = AlertDialog.Builder(requireContext()).create()
-        val bindAlert: CustomAlertApiBinding = CustomAlertApiBinding.inflate(LayoutInflater.from(requireContext()))
-        builder.setView(bindAlert.root)
-        bindAlert.infoDialog.text = text
-        bindAlert.closeButton.text = getString(R.string.close_button)
-        bindAlert.imageView5.setImageDrawable(icon)
-        bindAlert.closeButton.setOnClickListener {
-            builder.dismiss()
+        if(isAttachedToActivity()){
+            val builder = AlertDialog.Builder(requireActivity()).create()
+            val bindAlert: CustomAlertApiBinding = CustomAlertApiBinding.inflate(LayoutInflater.from(requireActivity()))
+            builder.setView(bindAlert.root)
+            bindAlert.infoDialog.text = text
+            bindAlert.closeButton.text = getString(R.string.close_button)
+            bindAlert.imageView5.setImageDrawable(icon)
+            bindAlert.closeButton.setOnClickListener {
+                builder.dismiss()
+            }
+            builder.show()
         }
-        builder.show()
     }
 
     private fun showDialogResult(data: DetectionResponse, icon: Bitmap, photo: Bitmap) {
-        val builder = AlertDialog.Builder(requireContext()).create()
-        val bindAlert: CustomAlertDetectionBinding = CustomAlertDetectionBinding.inflate(LayoutInflater.from(requireContext()))
-        val accuracy = "Akurasi : " + String.format("%.2f", data.accuracy*100) +"%"
-        builder.setView(bindAlert.root)
-        bindAlert.infoDialog.text = data.nama
-        bindAlert.infoDialog2.text = accuracy
-        bindAlert.cancelButton.text = getString(R.string.close_button)
-        bindAlert.logoutConfirm.text = getString(R.string.see_detail)
-        bindAlert.imageView5.setImageBitmap(icon)
-        bindAlert.cancelButton.setOnClickListener {
-            builder.dismiss()
+        if(isAttachedToActivity()){
+            val builder = AlertDialog.Builder(requireActivity()).create()
+            val bindAlert: CustomAlertDetectionBinding = CustomAlertDetectionBinding.inflate(LayoutInflater.from(requireActivity()))
+            val accuracy = "Akurasi : " + String.format("%.2f", data.accuracy*100) +"%"
+            builder.setView(bindAlert.root)
+            bindAlert.infoDialog.text = data.nama
+            bindAlert.infoDialog2.text = accuracy
+            bindAlert.cancelButton.text = getString(R.string.close_button)
+            bindAlert.logoutConfirm.text = getString(R.string.see_detail)
+            bindAlert.imageView5.setImageBitmap(icon)
+
+            bindAlert.cancelButton.setOnClickListener {
+                builder.dismiss()
+            }
+            bindAlert.logoutConfirm.setOnClickListener {
+                val intent = Intent(requireActivity(), DetectionResultActivity::class.java)
+                intent.putExtra(INFO_ID, data.id)
+                var compressQuality = 100
+                var streamLength: Int
+                var bmpPicByteArray: ByteArray
+                do {
+                    val bmpStream = ByteArrayOutputStream()
+                    photo.compress(Bitmap.CompressFormat.JPEG, 100, bmpStream)
+                    bmpPicByteArray = bmpStream.toByteArray()
+                    streamLength = bmpPicByteArray.size
+                    compressQuality -= 5
+                } while (streamLength > 1000000)
+                intent.putExtra(BITMAP_DETECTION, bmpPicByteArray)
+                startActivity(intent)
+                builder.dismiss()
+            }
+            builder.show()
         }
-        bindAlert.logoutConfirm.setOnClickListener {
-            val intent = Intent(requireContext(), DetectionResultActivity::class.java)
-            intent.putExtra(INFO_ID, data.id)
-            val bStream = ByteArrayOutputStream()
-            photo.compress(Bitmap.CompressFormat.PNG, 50, bStream)
-            val byteArray = bStream.toByteArray()
-            intent.putExtra(BITMAP_DETECTION, byteArray)
-            startActivity(intent)
-            builder.dismiss()
-        }
-        builder.show()
     }
 
     companion object {

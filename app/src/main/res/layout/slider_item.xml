@@ -9,12 +9,12 @@
         android:id="@+id/sliderItemImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/image_slider_item"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_background_logo"
-        android:contentDescription="@string/image_slider_item"
-        app:shapeAppearanceOverlay="@style/roundedAllCornersImageView" />
+        app:shapeAppearanceOverlay="@style/roundedAllCornersImageView"
+        app:srcCompat="@drawable/ic_background_logo" />
 </androidx.constraintlayout.widget.ConstraintLayout>

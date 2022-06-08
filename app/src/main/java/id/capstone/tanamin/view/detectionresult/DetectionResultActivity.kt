@@ -16,6 +16,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import id.capstone.tanamin.R
 import id.capstone.tanamin.data.Result
 import id.capstone.tanamin.data.local.datastore.LoginPreferences
@@ -43,9 +44,11 @@ class DetectionResultActivity : AppCompatActivity() {
         supportActionBar?.hide()
         informationId = intent.getIntExtra(INFO_ID,0)+1
         val byteArray = intent.getByteArrayExtra(BITMAP_DETECTION)
-        if (byteArray != null) {
-            photo = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-            binding.ivDetectionImage.setImageBitmap(photo)
+        lifecycleScope.run {
+            if (byteArray != null) {
+                photo = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+                binding.ivDetectionImage.setImageBitmap(photo)
+            }
         }
         setupView()
         setupViewModel()
@@ -54,7 +57,7 @@ class DetectionResultActivity : AppCompatActivity() {
 
     private fun setupView(){
         binding.ivBackButton.setOnClickListener{
-            onBackPressed()
+            finish()
         }
     }
 
