@@ -47,5 +47,8 @@ data class DataDetailModule(
 	val classId: String,
 
 	@field:SerializedName("maxid")
-	val maxId:Int
+	val maxId:Int,
+
+	@field:SerializedName("picture")
+	val progressStatus:String?
 )

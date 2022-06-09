@@ -5,6 +5,8 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
@@ -73,10 +75,10 @@ class ClassModuleActivity : AppCompatActivity() {
     }
 
     private fun setupView(dataDetailModule: DataDetailModule){
+        classModuleViewModel.setProgressPictureUploadedStatus(dataDetailModule.progressStatus!=null)
         binding.tvClassTitle.text = classTitle
         binding.tvModuleTitle.text = dataDetailModule.module[0].title
-        binding.tvModuleDesc.text =
-            HtmlCompat.fromHtml(dataDetailModule.module[0].content, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        binding.tvModuleDesc.setText(HtmlCompat.fromHtml(dataDetailModule.module[0].content, HtmlCompat.FROM_HTML_MODE_LEGACY))
         if(dataDetailModule.module[0].idModuls!=1){
             binding.btnPrev.visibility=View.VISIBLE
             binding.btnPrev.setOnClickListener {
@@ -106,7 +108,7 @@ class ClassModuleActivity : AppCompatActivity() {
             }else{
                 val liveData=classModuleViewModel.isProgressPictureUploaded
                 liveData.observe(this){ status->
-                    if(status){
+                    if(status || dataDetailModule.progressStatus!=null){
                         val intent = Intent(this, QuizActivity::class.java)
                         intent.putExtra(ID_CLASS_EXTRA, dataDetailModule.classId.toInt())
                         intent.putExtra(ID_MODULE_EXTRA,dataDetailModule.module[0].idModuls + 1)
@@ -115,7 +117,7 @@ class ClassModuleActivity : AppCompatActivity() {
                         startActivity(intent)
                     }else{
                         ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
-                            ?.let { showDialog("Anda belum mengunggah foto progress !", it,status) }
+                            ?.let { showDialog("Anda belum mengunggah foto progress !", it,false) }
                     }
                     liveData.removeObservers(this)
                 }
@@ -136,7 +138,6 @@ class ClassModuleActivity : AppCompatActivity() {
             }
             this.classModuleViewModel=classModuleViewModel
             preferencesViewModel.saveViewModelStatus(true)
-            classModuleViewModel.setProgressPictureUploadedStatus(false)
             liveDataToken.removeObservers(this)
         }
     }
@@ -261,6 +262,7 @@ class ClassModuleActivity : AppCompatActivity() {
             }
         }
     }
+
     companion object{
         const val ID_MODULE_EXTRA="id_modul"
         const val ID_CLASS_EXTRA="id_class"

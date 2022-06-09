@@ -122,32 +122,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="adalah kelas yang menanam cabai untuk ditanami cabai dalam menanam cabai supaya cabai dapat menjadi cabai yang ditanam dari bibit cabai dalam menanam cabai cabai cibai Kelas ini adalah kelas yang menanam cabai untuk ditanami cabai dalam menanam cabai supaya cabai dapat menjadi cabai yang ditanam dari bibit cabai dalam menanam cabai cabai cibai" />
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="18dp"
-                    android:layout_marginEnd="24dp"
-                    android:background="?attr/colorOnPrimary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvModuleDesc"
-                    app:tabTextAppearance="@style/TextTabLayout"
-                    tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
-
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/view_pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginEnd="24dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tabs">
-
-                </androidx.viewpager2.widget.ViewPager2>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
