@@ -25,6 +25,9 @@ import id.capstone.tanamin.data.local.datastore.PreferencesViewModelFactory
 import id.capstone.tanamin.databinding.ActivityDetectionResultBinding
 import id.capstone.tanamin.databinding.CustomAlertApiBinding
 import id.capstone.tanamin.view.ViewModelFactory
+import koleton.api.hideSkeleton
+import koleton.api.loadSkeleton
+import kotlinx.coroutines.launch
 
 class DetectionResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetectionResultBinding
@@ -43,16 +46,27 @@ class DetectionResultActivity : AppCompatActivity() {
         setContentView(view)
         supportActionBar?.hide()
         informationId = intent.getIntExtra(INFO_ID,0)+1
+        binding.ivDetectionImage.loadSkeleton()
+        binding.tvDetectionItemName.loadSkeleton()
+        binding.tvContentKandunganDesc.loadSkeleton()
+        binding.expandTextView.loadSkeleton()
+        binding.tvBenefitDesc.loadSkeleton()
         val byteArray = intent.getByteArrayExtra(BITMAP_DETECTION)
-        lifecycleScope.run {
-            if (byteArray != null) {
+        if (byteArray != null) {
+            lifecycleScope.launch {
                 photo = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
                 binding.ivDetectionImage.setImageBitmap(photo)
+                binding.ivDetectionImage.hideSkeleton()
             }
         }
         setupView()
         setupViewModel()
         getInformation()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 
     private fun setupView(){
@@ -96,12 +110,21 @@ class DetectionResultActivity : AppCompatActivity() {
                                 binding.tvContentKandunganDesc.text = result.data.data.kandungan
                                 binding.tvBenefitDesc.text = result.data.data.manfaat
                                 liveData.removeObservers(this)
+                                binding.tvDetectionItemName.hideSkeleton()
+                                binding.tvContentKandunganDesc.hideSkeleton()
+                                binding.expandTextView.hideSkeleton()
+                                binding.tvBenefitDesc.hideSkeleton()
                             }
                             is Result.Error -> {
                                 binding.loadingModule.visibility = View.GONE
+                                binding.expandTextView.text = getString(R.string.no_data)
                                 ContextCompat.getDrawable(this, R.drawable.ic_baseline_error_24)
                                     ?.let { showDialog(result.error, it) }
                                 liveData.removeObservers(this)
+                                binding.tvDetectionItemName.hideSkeleton()
+                                binding.tvContentKandunganDesc.hideSkeleton()
+                                binding.expandTextView.hideSkeleton()
+                                binding.tvBenefitDesc.hideSkeleton()
                             }
                         }
                     }

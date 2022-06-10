@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.lifecycleScope
 import id.capstone.tanamin.R
 import id.capstone.tanamin.data.Result
 import id.capstone.tanamin.data.remote.response.DetectionResponse
@@ -33,6 +34,7 @@ import id.capstone.tanamin.utils.reduceFileImage
 import id.capstone.tanamin.utils.rotateBitmap
 import id.capstone.tanamin.view.ViewModelFactory
 import id.capstone.tanamin.view.detectionresult.DetectionResultActivity
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -269,18 +271,14 @@ class DetectionFragment : Fragment() {
             bindAlert.logoutConfirm.setOnClickListener {
                 val intent = Intent(requireActivity(), DetectionResultActivity::class.java)
                 intent.putExtra(INFO_ID, data.id)
-                var compressQuality = 100
-                var streamLength: Int
-                var bmpPicByteArray: ByteArray
-                do {
+                lifecycleScope.launch {
+                    val bmpPicByteArray: ByteArray
                     val bmpStream = ByteArrayOutputStream()
-                    photo.compress(Bitmap.CompressFormat.JPEG, 100, bmpStream)
+                    photo.compress(Bitmap.CompressFormat.JPEG, 10, bmpStream)
                     bmpPicByteArray = bmpStream.toByteArray()
-                    streamLength = bmpPicByteArray.size
-                    compressQuality -= 5
-                } while (streamLength > 1000000)
-                intent.putExtra(BITMAP_DETECTION, bmpPicByteArray)
-                startActivity(intent)
+                    intent.putExtra(BITMAP_DETECTION, bmpPicByteArray)
+                    startActivity(intent)
+                }
                 builder.dismiss()
             }
             builder.show()

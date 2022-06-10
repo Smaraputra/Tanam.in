@@ -3,7 +3,6 @@
     package="id.capstone.tanamin">
 
     <uses-feature android:name="android.hardware.camera" />
-
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -17,7 +16,9 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".view.quiz.QuizActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"/>
         <activity
             android:name=".view.onboarding.OnBoardingActivity"
             android:exported="true"
