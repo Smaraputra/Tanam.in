@@ -15,6 +15,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL_TANAMIN", '"https://tanamin-351905.as.r.appspot.com/"')
+        buildConfigField("String", "BASE_URL_IMAGE", '"https://storage.googleapis.com/tanamin/gambar/"')
+        buildConfigField("String", "BASE_URL_IMAGE_PROFILE", '"https://storage.googleapis.com/tanamin/profile/"')
+        buildConfigField("String", "BASE_URL_DETECTION_TANAMIN", '"https://asia-southeast1-tanamin-351905.cloudfunctions.net/"')
     }
 
     buildTypes {
@@ -110,4 +114,7 @@ dependencies {
     implementation 'androidx.room:room-ktx:2.4.2'
     implementation 'androidx.room:room-runtime:2.4.2'
     kapt 'androidx.room:room-compiler:2.4.2'
+    implementation 'com.github.smarteist:Android-Image-Slider:1.4.0'
+    implementation 'com.ms-square:expandableTextView:0.1.4'
+    implementation "com.ericktijerou.koleton:koleton:1.0.0-beta01"
 }

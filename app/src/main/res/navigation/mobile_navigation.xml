@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="id.capstone.tanamin.view.home.HomeFragment"
+        android:label="@string/home_nav"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_class"
+        android:name="id.capstone.tanamin.view.classes.ClassesFragment"
+        android:label="@string/class_nav"
+        tools:layout="@layout/fragment_classes" />
+
+    <fragment
+        android:id="@+id/navigation_detection"
+        android:name="id.capstone.tanamin.view.detection.DetectionFragment"
+        android:label="@string/detection_nav"
+        tools:layout="@layout/fragment_detection" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="id.capstone.tanamin.view.profile.ProfileFragment"
+        android:label="@string/profile_nav"
+        tools:layout="@layout/fragment_profile" />
+</navigation>

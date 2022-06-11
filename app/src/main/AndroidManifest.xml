@@ -2,49 +2,88 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="id.capstone.tanamin">
 
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Tanamin">
+        android:theme="@style/Theme.Tanamin"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".view.quiz.QuizActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"/>
+        <activity
+            android:name=".view.onboarding.OnBoardingActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor" />
         <activity
             android:name=".view.futurefeature.FutureFeatureActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor" />
         <activity
             android:name=".view.register.RegisterActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor" />
         <activity
             android:name=".view.profileedit.ProfileEditActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor" />
         <activity
             android:name=".view.login.LoginActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor" />
         <activity
             android:name=".view.forumresult.ForumResultActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor" />
         <activity
             android:name=".view.forumcreate.ForumCreateActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor" />
         <activity
             android:name=".view.detectionresult.DetectionResultActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor" />
         <activity
             android:name=".view.classmodule.ClassModuleActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor" />
         <activity
             android:name=".view.classfinished.ClassFinishedActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor" />
         <activity
             android:name=".view.classdetail.ClassDetailActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor" />
         <activity
             android:name=".view.MainActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor" />
         <activity
             android:name=".view.splashscreen.SplashScreenActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,12 +1,30 @@
 package id.capstone.tanamin.view.futurefeature
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import id.capstone.tanamin.R
+import androidx.appcompat.app.AppCompatActivity
+import id.capstone.tanamin.databinding.ActivityFutureFeatureBinding
 
 class FutureFeatureActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityFutureFeatureBinding
+    private var title = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_future_feature)
+        binding = ActivityFutureFeatureBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+        supportActionBar?.hide()
+        title= intent.getStringExtra(FEATURE_FUTURE).toString()
+        setupView()
+    }
+
+    private fun setupView(){
+        binding.ivBackButton.setOnClickListener{
+            finish()
+        }
+        binding.tvFutureFeature.text = title
+    }
+
+    companion object {
+        const val FEATURE_FUTURE = "feature_future"
     }
 }
