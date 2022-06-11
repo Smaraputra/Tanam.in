@@ -51,8 +51,8 @@ class ForumFragment : Fragment() {
         setupViewModel()
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         getForumList()
     }
 
